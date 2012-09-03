@@ -14,7 +14,8 @@ LIBS            = @abs_top_srcdir@/lib/jsoncpp/libjsoncpp.la
 
 include ../Makefile.include.am
 
-INCLUDES+=-Isrc -I@abs_top_srcdir@/lib/jsoncpp/include
+INCLUDES+=-Isrc -Isrc/lib/filesystem -I@abs_top_srcdir@/lib/jsoncpp/include
+DEFINES+=-DTSREADER
 
 libfortherecord_addon_la_SOURCES = src/activerecording.cpp \
                                    src/channel.cpp \
