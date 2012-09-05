@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\lib\platform\windows\dlfcn-win32.cpp" />
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\iso639.cpp" />
+    <ClCompile Include="..\..\src\requestpacket.cpp" />
+    <ClCompile Include="..\..\src\thread.cpp" />
+    <ClCompile Include="..\..\src\tools.cpp" />
+    <ClCompile Include="..\..\src\XVDRChannelScan.cpp" />
+    <ClCompile Include="..\..\src\XVDRData.cpp" />
+    <ClCompile Include="..\..\src\XVDRDemux.cpp" />
+    <ClCompile Include="..\..\src\XVDRRecording.cpp" />
+    <ClCompile Include="..\..\src\XVDRResponsePacket.cpp" />
+    <ClCompile Include="..\..\src\XVDRSession.cpp" />
+    <ClCompile Include="..\..\src\XVDRSettings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\codecids.h" />
+    <ClInclude Include="..\..\src\iso639.h" />
+    <ClInclude Include="..\..\src\requestpacket.h" />
+    <ClInclude Include="..\..\src\thread.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+    <ClInclude Include="..\..\src\XVDRChannelScan.h" />
+    <ClInclude Include="..\..\src\xvdrcommand.h" />
+    <ClInclude Include="..\..\src\XVDRData.h" />
+    <ClInclude Include="..\..\src\XVDRDemux.h" />
+    <ClInclude Include="..\..\src\XVDRRecording.h" />
+    <ClInclude Include="..\..\src\XVDRResponsePacket.h" />
+    <ClInclude Include="..\..\src\XVDRSession.h" />
+    <ClInclude Include="..\..\src\XVDRSettings.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>pvrclient_vdr_xvdr</ProjectName>
+    <ProjectGuid>{F1A76C52-27D7-4E95-9D97-9AA796B024ED}</ProjectGuid>
+    <RootNamespace>XBMC_VDR_vnsi</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\addon\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>XBMC_VDR_xvdr_win32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetExt>.pvr</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.pvr</ExtensionsToDeleteOnClean>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\..\..\addons\pvr.vdr.xvdr\</OutDir>
+    <TargetName>XBMC_VDR_xvdr_win32</TargetName>
+    <TargetExt>.pvr</TargetExt>
+    <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.pvr</ExtensionsToDeleteOnClean>
+    <IncludePath>..\..\..\..\include;..\..\..\..\addons;..\..\..\;..\..\..\..\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;_WIN32;__WINDOWS__;USE_DEMUX;__STDC_CONSTANT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies);$(SolutionDir)\libs\libTcpSocket\$(Configuration)\libTcpSocket.lib;$(SolutionDir)../../lib/pthread_win32/pthreadVC2.lib</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\;..\..\..\..\..\;..\..\..\..\addons\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;_WIN32;__WINDOWS__;USE_DEMUX;__STDC_CONSTANT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\..\..\addons\pvr.vdr.xvdr\XBMC_VDR_xvdr_win32.pvr</OutputFile>
+      <AdditionalDependencies>ws2_32.lib;$(SolutionDir)\..\..\src\libPlatform\pthread_win32\pthreadVC2.lib;$(SolutionDir)\libs\libTcpSocket\$(Configuration)\libTcpSocket.lib;$(SolutionDir)\libs\libPlatform\$(Configuration)\libPlatform.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
