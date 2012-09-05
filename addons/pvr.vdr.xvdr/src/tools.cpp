@@ -26,7 +26,7 @@
 
 #include <stdint.h>
 #include "tools.h"
-#include "lib/libPlatform/os-dependent.h"
+#include "platform/os.h"
 #include "platform/util/timeutils.h"
 #include "client.h"
 

@@ -29,7 +29,7 @@
 #include <sstream>
 
 extern "C" {
-#include "lib/libPlatform/os-dependent_socket.h"
+#include "libTcpSocket/os-dependent_socket.h"
 }
 
 using namespace ADDON;

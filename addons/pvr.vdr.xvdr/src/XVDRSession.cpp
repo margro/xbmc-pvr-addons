@@ -24,7 +24,11 @@
 #include "XVDRResponsePacket.h"
 #include "client.h"
 
+#if defined(__LINUX__)
 #include <unistd.h>
+#endif
+
+#include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -35,6 +39,9 @@
 #include "tools.h"
 #include "iso639.h"
 
+extern "C" {
+#include "libTcpSocket/os-dependent_socket.h"
+}
 /* Needed on Mac OS/X */
  
 #ifndef SOL_TCP

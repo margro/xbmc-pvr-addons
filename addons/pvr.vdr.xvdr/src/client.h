@@ -21,9 +21,9 @@
  *
  */
 
-#include "addons/library.xbmc.addon/libXBMC_addon.h"
-#include "addons/library.xbmc.gui/libXBMC_gui.h"
-#include "addons/library.xbmc.pvr/libXBMC_pvr.h"
+#include "libXBMC_addon.h"
+#include "libXBMC_gui.h"
+#include "libXBMC_pvr.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_gui   *GUI;

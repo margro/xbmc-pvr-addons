@@ -24,9 +24,11 @@
 #include <stdint.h>
 #include <string>
 
-extern "C" {
-#include "lib/libPlatform/os-dependent_socket.h"
-}
+#include "platform/os.h"
+
+//extern "C" {
+//#include "libTcpSocket/os-dependent_socket.h"
+//}
 
 class cXVDRResponsePacket;
 class cRequestPacket;
@@ -79,7 +81,7 @@ private:
 
   bool readData(uint8_t* buffer, int totalBytes);
 
-  socket_t    m_fd;
+  tcp_socket_t    m_fd;
   int         m_protocol;
   std::string m_server;
   std::string m_version;
