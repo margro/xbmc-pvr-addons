@@ -15,6 +15,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_mediaportaltvserv
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_vdr_vnsi", "..\..\addons\pvr.vdr.vnsi\project\VS2010Express\pvrclient_vdr_vnsi.vcxproj", "{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_vdr_xvdr", "..\..\addons\pvr.vdr.xvdr\project\VS2010Express\pvrclient_xvdr.vcxproj", "{F1A76C52-27D7-4E95-9D97-9AA796B024ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0F78AAF3-A188-4491-8BA6-203DC0B8D7F5} = {0F78AAF3-A188-4491-8BA6-203DC0B8D7F5}
+		{FE4573F6-A794-4AD3-B37F-49E51F1140E6} = {FE4573F6-A794-4AD3-B37F-49E51F1140E6}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libTcpSocket", "..\..\lib\libTcpSocket\project\libTcpSocket_2010.vcxproj", "{0F78AAF3-A188-4491-8BA6-203DC0B8D7F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +57,14 @@ Global
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Debug|Win32.Build.0 = Debug|Win32
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.ActiveCfg = Release|Win32
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.Build.0 = Release|Win32
+		{F1A76C52-27D7-4E95-9D97-9AA796B024ED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F1A76C52-27D7-4E95-9D97-9AA796B024ED}.Debug|Win32.Build.0 = Debug|Win32
+		{F1A76C52-27D7-4E95-9D97-9AA796B024ED}.Release|Win32.ActiveCfg = Release|Win32
+		{F1A76C52-27D7-4E95-9D97-9AA796B024ED}.Release|Win32.Build.0 = Release|Win32
+		{0F78AAF3-A188-4491-8BA6-203DC0B8D7F5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0F78AAF3-A188-4491-8BA6-203DC0B8D7F5}.Debug|Win32.Build.0 = Debug|Win32
+		{0F78AAF3-A188-4491-8BA6-203DC0B8D7F5}.Release|Win32.ActiveCfg = Release|Win32
+		{0F78AAF3-A188-4491-8BA6-203DC0B8D7F5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
