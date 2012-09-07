@@ -10,21 +10,16 @@ LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/$(ADDONBINNAME).pvr
 
 clean:
 	-rm -r -f $(LIB) $(ADDONBINNAME).pvr @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
+if IS_INTREE_BUILD
+	rm -rf ../../../addons/$(ADDONNAME)
+endif
 
 release: $(lib_LTLIBRARIES)
-if HOST_IS_OSX
-	cp -f .libs/$(LIBNAME).dylib $(ADDONBINNAME).pvr
-else
-	cp -f .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
-endif
+	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
 	$(STRIP) -x $(ADDONBINNAME).pvr
 
 debug: $(lib_LTLIBRARIES)
-if HOST_IS_OSX
-	cp -f .libs/$(LIBNAME).dylib $(ADDONBINNAME).pvr
-else
-	cp -f .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
-endif
+	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
 
 $(LIB): @BUILD_TYPE@
 	cp -f $(ADDONBINNAME).pvr $(LIB)
@@ -35,9 +30,19 @@ zip: $(LIB)
 	cd @abs_top_srcdir@/addons/.build ; zip -9 -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
 
 install: @BUILD_TYPE@
+if IS_INTREE_BUILD
+	@echo "PVR-ADDONS: Leaving make install to xbmc"
+else
 	mkdir -m 755 -p $(DESTDIR)@LIBDIR@/$(ADDONNAME)
 	mkdir -m 755 -p $(DESTDIR)@DATADIR@/$(ADDONNAME)
 	cp -f $(ADDONBINNAME).pvr $(DESTDIR)@LIBDIR@/$(ADDONNAME) ; chmod 655 $(DESTDIR)@LIBDIR@/$(ADDONNAME)/$(ADDONBINNAME).pvr
 	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon/* $(DESTDIR)@DATADIR@/$(ADDONNAME) ; chmod -R o+rx $(DESTDIR)@DATADIR@/$(ADDONNAME)
+endif
 
 all: @BUILD_TYPE@
+if IS_INTREE_BUILD
+	@echo "copying pvr-addons to xbmc/addons"
+	rm -rf ../../../addons/$(ADDONNAME)
+	cp -r -p -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon ../../../addons/$(ADDONNAME)
+	cp -f -p $(ADDONBINNAME).pvr ../../../addons/$(ADDONNAME)
+endif
