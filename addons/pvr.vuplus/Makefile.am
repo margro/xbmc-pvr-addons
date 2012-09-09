@@ -10,7 +10,7 @@ ADDONNAME       = pvr.vuplus
 LIBNAME         = libvuplus-addon
 lib_LTLIBRARIES = libvuplus-addon.la
 
-LIBS            = -ldl
+LIBS            = -ldl -lcurl
 
 include ../Makefile.include.am
 

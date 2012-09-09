@@ -10,7 +10,7 @@ ADDONNAME       = pvr.fortherecord.argus
 LIBNAME         = libfortherecord-addon
 lib_LTLIBRARIES = libfortherecord-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/jsoncpp/libjsoncpp.la
+LIBS            = @abs_top_srcdir@/lib/jsoncpp/libjsoncpp.la -ldl -lcurl
 
 include ../Makefile.include.am
 

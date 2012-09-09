@@ -582,6 +582,13 @@ namespace ForTheRecord
     {
       XBMC->Log(LOG_ERROR, "GetRecordingDisksInfo failed");
     }
+
+    if (response.type() != Json::objectValue)
+    {
+      retval = E_FAILED;
+      XBMC->Log(LOG_NOTICE, "GetRecordingDisksInfo did not return a Json::objectValue [%d].", response.type());
+    }
+
     return retval;
   }
 
