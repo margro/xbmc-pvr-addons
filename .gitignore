@@ -53,3 +53,5 @@ addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
+lib/curl-7.21.6/project/VS2012Express/Debug
+lib/curl-7.21.6/project/VS2012Express/Release
