@@ -142,5 +142,6 @@ AC_OUTPUT([Makefile
            addons/pvr.mediaportal.tvserver/Makefile
            addons/pvr.njoy/Makefile
            addons/pvr.vdr.vnsi/Makefile
+           addons/pvr.vdr.xvdr/Makefile
            addons/pvr.vuplus/Makefile])
 
