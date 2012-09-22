@@ -10,7 +10,7 @@ ADDONNAME       = pvr.njoy
 LIBNAME         = libpvrnjoy-addon
 lib_LTLIBRARIES = libpvrnjoy-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la -lcurl
+LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
 
 include ../Makefile.include.am
 
