@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>pvrlib_curl</ProjectName>
+    <ProjectName>pvrlib.curl</ProjectName>
     <ProjectGuid>{87EE9DA4-DE1E-4448-8324-183C98DCA588}</ProjectGuid>
     <RootNamespace>libcurl</RootNamespace>
   </PropertyGroup>
