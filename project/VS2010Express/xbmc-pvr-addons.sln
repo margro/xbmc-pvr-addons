@@ -5,7 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.platform", "platform
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.tinyxml", "tinyxml\tinyxml.vcxproj", "{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libhts", "..\..\lib\libhts\Win32\pvrlib_libhts_2010.vcxproj", "{00700E12-A63B-4E54-B962-4011A90584BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libhts", "..\..\lib\libhts\Win32\pvrlib_libhts_2010.vcxproj", "{9203056B-6FD4-47E0-A598-DDD7045D7939}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.hts", "..\..\addons\pvr.hts\project\VS2010Express\pvrclient_tvheadend.vcxproj", "{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}"
 EndProject
@@ -35,7 +35,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\
 		{87EE9DA4-DE1E-4448-8324-183C98DCA588} = {87EE9DA4-DE1E-4448-8324-183C98DCA588}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib_curl", "..\..\lib\curl-7.21.6\project\VS2012Express\libcurl.vcxproj", "{87EE9DA4-DE1E-4448-8324-183C98DCA588}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.curl", "..\..\lib\curl-7.21.6\project\VS2012Express\libcurl.vcxproj", "{87EE9DA4-DE1E-4448-8324-183C98DCA588}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +51,10 @@ Global
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Debug|Win32.Build.0 = Debug|Win32
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Release|Win32.ActiveCfg = Release|Win32
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Release|Win32.Build.0 = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.Build.0 = Debug|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.Build.0 = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Debug|Win32.Build.0 = Debug|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Release|Win32.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Release|Win32.Build.0 = Release|Win32
 		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.Build.0 = Debug|Win32
 		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Release|Win32.ActiveCfg = Release|Win32
