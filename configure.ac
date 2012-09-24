@@ -136,6 +136,7 @@ AC_OUTPUT([Makefile
            lib/tinyxml/Makefile
            addons/Makefile
            addons/pvr.demo/Makefile
+           addons/pvr.dvbviewer/Makefile
            addons/pvr.fortherecord.argus/Makefile
            addons/pvr.hts/Makefile
            addons/pvr.mediaportal.tvserver/Makefile
