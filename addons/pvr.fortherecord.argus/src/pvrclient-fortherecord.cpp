@@ -31,15 +31,12 @@
 #include "platform/util/timeutils.h"
 #include "platform/util/StdString.h"
 
-#ifdef TSREADER
 #include "lib/tsreader/TSReader.h"
-#endif
 
 using namespace std;
 using namespace ADDON;
 
 #if !defined(TARGET_WINDOWS)
-#include "lib/filesystem/DirectorySMB.h"
 using namespace PLATFORM;
 #endif
 
@@ -55,9 +52,7 @@ cPVRClientForTheRecord::cPVRClientForTheRecord()
   m_bTimeShiftStarted      = false;
   m_BackendUTCoffset       = 0;
   m_BackendTime            = 0;
-#if defined TSREADER
   m_tsreader               = NULL;
-#endif
   m_channel_id_offset      = 0;
   m_epg_id_offset          = 0;
   m_iCurrentChannel        = -1;
@@ -237,9 +232,7 @@ bool cPVRClientForTheRecord::ShareErrorsFound(void)
       }
       CIFSname.erase(0,2);
       CIFSname.insert(0, SMBPrefix);
-      CSMBDirectory smbDir;
-      int iRc = smbDir.Open(CIFSname);
-      isAccessibleByAddon = (iRc > 0);
+      isAccessibleByAddon = XBMC->CanOpenDirectory(CIFSname.c_str());
 #else
 #error implement for your OS!
 #endif
@@ -507,17 +500,8 @@ PVR_ERROR cPVRClientForTheRecord::GetChannels(ADDON_HANDLE handle, bool bRadio)
         tag.bIsRadio = (channel.Type() == ForTheRecord::Radio ? true : false);
         tag.bIsHidden = false;
         //Use OpenLiveStream to read from the timeshift .ts file or an rtsp stream
-#ifdef TSREADER
         memset(tag.strStreamURL, 0, sizeof(tag.strStreamURL));
         strncpy(tag.strInputFormat, "video/x-mpegts", sizeof(tag.strInputFormat));
-#else
-        //Use GetLiveStreamURL to fetch an rtsp stream
-        if(bRadio)
-          strncpy(tag.strStreamURL, "pvr://stream/radio/%i.ts", sizeof(tag.strStreamURL)); //stream.c_str();
-        else
-          strncpy(tag.strStreamURL, "pvr://stream/tv/%i.ts", sizeof(tag.strStreamURL)); //stream.c_str();
-        memset(tag.strInputFormat, 0, sizeof(tag.strInputFormat));
-#endif
 
         if (!tag.bIsRadio)
         {
@@ -1218,7 +1202,6 @@ bool cPVRClientForTheRecord::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     }
 #endif
 
-#ifdef TSREADER
     if (m_tsreader != NULL)
     {
       //XBMC->Log(LOG_DEBUG, "Re-using existing TsReader...");
@@ -1236,8 +1219,6 @@ bool cPVRClientForTheRecord::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     m_tsreader->OnZap();
     XBMC->Log(LOG_DEBUG, "Delaying %ld milliseconds.", (1000 * g_iTuneDelay));
     usleep(1000 * g_iTuneDelay);
-
-#endif
     return true;
   }
   else
@@ -1252,17 +1233,11 @@ bool cPVRClientForTheRecord::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 bool cPVRClientForTheRecord::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 {
-#ifdef TSREADER
   return _OpenLiveStream(channelinfo);
-#else
-  // RTSP version will start stream when GetLiveStreamURL is called
-  return true;
-#endif
 }
 
 int cPVRClientForTheRecord::ReadLiveStream(unsigned char* pBuffer, unsigned int iBufferSize)
 {
-#ifdef TSREADER
   unsigned long read_wanted = iBufferSize;
   unsigned long read_done   = 0;
   static int read_timeouts  = 0;
@@ -1308,51 +1283,36 @@ int cPVRClientForTheRecord::ReadLiveStream(unsigned char* pBuffer, unsigned int 
   // XBMC->Log(LOG_DEBUG, "ReadLiveStream(buf_size=%i), %d timeouts", iBufferSize, read_timeouts);
   read_timeouts = 0;
   return read_done;
-#else
-  return 0;
-#endif //TSREADER
 }
 
 long long cPVRClientForTheRecord::SeekLiveStream(long long pos, int whence)
 {
   static std::string zz[] = { "Begin", "Current", "End" };
   XBMC->Log(LOG_DEBUG, "SeekLiveStream (%lld, %s).", pos, zz[whence].c_str());
-#ifdef TSREADER
   if (!m_tsreader)
   {
     return -1;
   }
   return m_tsreader->SetFilePointer(pos, whence);
-#else
-  return -1;
-#endif
 }
 
 
 long long cPVRClientForTheRecord::PositionLiveStream(void)
 {
-#ifdef TSREADER
   if (!m_tsreader)
   {
     return -1;
   }
   return m_tsreader->GetFilePointer();
-#else
-  return -1;
-#endif
 }
 
 long long cPVRClientForTheRecord::LengthLiveStream(void)
 {
-#ifdef TSREADER
   if (!m_tsreader)
   {
     return -1;
   }
   return m_tsreader->GetFileSize();
-#else
-  return -1;
-#endif
 }
 
 
@@ -1382,7 +1342,6 @@ void cPVRClientForTheRecord::CloseLiveStream()
 
   if (m_bTimeShiftStarted)
   {
-#ifdef TSREADER
     if (m_tsreader)
     {
       XBMC->Log(LOG_DEBUG, "Close TsReader");
@@ -1392,7 +1351,6 @@ void cPVRClientForTheRecord::CloseLiveStream()
 #endif
       SAFE_DELETE(m_tsreader);
     }
-#endif
     ForTheRecord::StopLiveStream();
     m_bTimeShiftStarted = false;
     m_iCurrentChannel = -1;
@@ -1407,13 +1365,7 @@ bool cPVRClientForTheRecord::SwitchChannel(const PVR_CHANNEL &channelinfo)
   XBMC->Log(LOG_DEBUG, "->SwitchChannel(%i)", channelinfo.iUniqueId);
   bool fRc = false;
 
-#ifndef TSREADER
-  CloseLiveStream();
-  usleep(10000000);
-  fRc = _OpenLiveStream(channelinfo);
-#else
   fRc = OpenLiveStream(channelinfo);
-#endif
   return fRc;
 }
 
@@ -1481,7 +1433,6 @@ PVR_ERROR cPVRClientForTheRecord::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 /** Record stream handling */
 bool cPVRClientForTheRecord::OpenRecordedStream(const PVR_RECORDING &recinfo)
 {
-#ifdef TSREADER
   XBMC->Log(LOG_DEBUG, "->OpenRecordedStream(index=%s)", recinfo.strRecordingId);
   cRecording recording;
   if (!FetchRecordingDetails(recinfo.strRecordingId, recording))
@@ -1520,28 +1471,22 @@ bool cPVRClientForTheRecord::OpenRecordedStream(const PVR_RECORDING &recinfo)
   }
 
   return true;
-#else
-  return false;
-#endif
 }
 
 
 void cPVRClientForTheRecord::CloseRecordedStream(void)
 {
   XBMC->Log(LOG_DEBUG, "->CloseRecordedStream()");
-#ifdef TSREADER
   if (m_tsreader)
   {
     XBMC->Log(LOG_DEBUG, "Close TsReader");
     m_tsreader->Close();
     SAFE_DELETE(m_tsreader);
   }
-#endif //TSREADER
 }
 
 int cPVRClientForTheRecord::ReadRecordedStream(unsigned char* pBuffer, unsigned int iBuffersize)
 {
-#ifdef TSREADER
   unsigned long read_done   = 0;
 
   // XBMC->Log(LOG_DEBUG, "->ReadRecordedStream(buf_size=%i)", iBufferSize);
@@ -1554,14 +1499,10 @@ int cPVRClientForTheRecord::ReadRecordedStream(unsigned char* pBuffer, unsigned 
     XBMC->Log(LOG_NOTICE, "ReadRecordedStream requested %d but only read %d bytes.", iBuffersize, read_done);
   }
   return read_done;
-#else
-  return -1;
-#endif //TSREADER
 }
 
 long long cPVRClientForTheRecord::SeekRecordedStream(long long iPosition, int iWhence)
 {
-#ifdef TSREADER
   if (!m_tsreader)
   {
     return -1;
@@ -1571,35 +1512,24 @@ long long cPVRClientForTheRecord::SeekRecordedStream(long long iPosition, int iW
     return m_tsreader->GetFilePointer();
   }
   return m_tsreader->SetFilePointer(iPosition, iWhence);
-#else
-  return -1;
-#endif //TSREADER
 }
 
 long long cPVRClientForTheRecord::PositionRecordedStream(void)
 { 
-#ifdef TSREADER
   if (!m_tsreader)
   {
     return -1;
   }
   return m_tsreader->GetFilePointer();
-#else
-  return -1;
-#endif //TSREADER
 }
 
 long long cPVRClientForTheRecord::LengthRecordedStream(void)
 {
-#ifdef TSREADER
   if (!m_tsreader)
   {
     return -1;
   }
   return m_tsreader->GetFileSize();
-#else
-  return -1;
-#endif //TSREADER
 }
 
 /*
