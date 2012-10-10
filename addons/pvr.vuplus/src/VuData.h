@@ -1,16 +1,21 @@
 #pragma once 
 
 #include "platform/util/StdString.h"
-#include "xmlParser.h"
 #include "client.h"
 #include "platform/threads/threads.h"
+#include "tinyxml/tinyxml.h"
     
-struct VuWebResponse {
-  char *response;
-  int iSize;
+#define CHANNELDATAVERSION  2
+
+class CCurlFile
+{
+public:
+  CCurlFile(void) {};
+  ~CCurlFile(void) {};
+
+  bool Get(const std::string &strURL, std::string &strResult);
 };
 
-#define CHANNELDATAVERSION  1
 
 typedef enum VU_UPDATE_STATE
 {
@@ -173,14 +178,11 @@ private:
  
 
   // functions
-
   void StoreChannelData();
   void LoadChannelData();
   CStdString GetHttpXML(CStdString& url);
   int GetChannelNumber(CStdString strServiceReference);
-  CStdString URLEncodeInline(const CStdString& strData);
   bool SendSimpleCommand(const CStdString& strCommandURL, CStdString& strResult, bool bIgnoreResult = false);
-  static int VuWebResponseCallback(void *contents, int iLength, int iSize, void *memPtr); 
   CStdString GetGroupServiceReference(CStdString strGroupName);
   bool LoadChannels(CStdString strServerReference, CStdString strGroupName);
   bool LoadChannels();
@@ -188,18 +190,16 @@ private:
   bool LoadLocations();
   std::vector<VuTimer> LoadTimers();
   void TimerUpdates();
+  bool GetDeviceInfo();
 
   // helper functions
-  static bool GetInt(XMLNode xRootNode, const char* strTag, int& iIntValue);
-  static bool GetBoolean(XMLNode xRootNode, const char* strTag, bool& bBoolValue);
-  static bool GetString(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
   static long TimeStringToSeconds(const CStdString &timeString);
   static int SplitString(const CStdString& input, const CStdString& delimiter, CStdStringArray &results, unsigned int iMaxStrings = 0);
   bool CheckForGroupUpdate();
   bool CheckForChannelUpdate();
   std::string& Escape(std::string &s, std::string from, std::string to);
-  bool GetDeviceInfo();
-
+  char toHex(const char& code);
+  CStdString URLEncodeInline(const CStdString&);
 
 protected:
   virtual void *Process(void);

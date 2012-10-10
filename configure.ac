@@ -5,6 +5,8 @@ AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [http://www.xbmc.org])
 
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([no])])
+
 PREFIX_DEFAULT="/usr/local"
 AC_PREFIX_DEFAULT($PREFIX_DEFAULT)
 
@@ -20,6 +22,13 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
+### External libraries options
+AC_ARG_ENABLE([external-ffmpeg],
+  [AS_HELP_STRING([--enable-external-ffmpeg],
+  [enable use of external ffmpeg libraries (default is no) 'Linux only'])],
+  [use_external_ffmpeg=$enableval],
+  [use_external_ffmpeg=no])
+
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
@@ -31,8 +40,17 @@ HOST_INCLUDES=""
 HOST_CXXFLAGS=""
 ARCH_DEFINES="-DTARGET_POSIX -DTARGET_LINUX -D_LINUX"
 DYN_LIB_EXT="so"
-
+TARGET_LDFLAGS=""
+BIN_EXT=".pvr"
+BINPREFIX=""
 case "${host}" in
+  arm-*-linux-androideabi)
+    TARGET_LDFLAGS="-avoid-version -no-undefined"
+    OS="android"
+    ARCHITECTURE="arm"
+    BIN_EXT=".so"
+    BINPREFIX="lib"
+    ;;
   arm*-*-linux*)
     OS="linux"
     ARCHITECTURE="arm"
@@ -67,13 +85,32 @@ case "${host}" in
   *-freebsd*)
     OS="freebsd"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
+    use_external_ffmpeg="yes"  # same as on xbmc
     ;;
 esac
 
 ### External libraries checks
 # Curl
 use_libcurl="no"
-PKG_CHECK_MODULES([CURL],[libcurl],use_libcurl="yes",AC_MSG_WARN("CURL was not found, N7 add-on will not be available"))
+PKG_CHECK_MODULES([CURL],[libcurl],use_libcurl="yes",AC_MSG_WARN("CURL was not found"))
+
+# FFmpeg
+if test "$use_external_ffmpeg" = "yes"; then
+  PKG_CHECK_MODULES([FFMPEG], [libavcodec],
+                    [FFMPEG_INCLUDES="$FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"],
+                    AC_MSG_ERROR(cannot find libavcodec))
+
+  # Possible places the ffmpeg headers may be
+  AC_CHECK_HEADERS([libavcodec/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/libavcodec"],
+    [AC_CHECK_HEADERS([ffmpeg/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/ffmpeg"],
+      [AC_MSG_ERROR(avcodec.h not found)])
+  ])
+
+  echo "FFMPEG_INCLUDES: $FFMPEG_INCLUDES"
+fi
+AC_SUBST(FFMPEG_INCLUDES)
+
+### End external Libraries 
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -95,19 +132,14 @@ AC_SUBST(HOST_INCLUDES)
 AC_SUBST(OS)
 AC_SUBST(ARCH_DEFINES)
 AC_SUBST(DYN_LIB_EXT)
+AC_SUBST(TARGET_LDFLAGS)
+AC_SUBST(BINPREFIX)
+AC_SUBST(BIN_EXT)
 
 if test "x$host_os_osx" = "xyes"; then
   AM_CONDITIONAL(HOST_IS_OSX, true)
 else
   AM_CONDITIONAL(HOST_IS_OSX, false)
-fi
-
-if test "x$use_libcurl" = "xyes"; then
-  INCLUDES="$INCLUDES $CURL_CFLAGS"
-  LIBS="$LIBS $CURL_LIBS"
-  AM_CONDITIONAL(USE_CURL, true)
-else
-  AM_CONDITIONAL(USE_CURL, false)
 fi
 
 if test "x${libdir}" != 'x${exec_prefix}/lib'; then
@@ -140,8 +172,9 @@ AC_OUTPUT([Makefile
            addons/pvr.fortherecord.argus/Makefile
            addons/pvr.hts/Makefile
            addons/pvr.mediaportal.tvserver/Makefile
+           addons/pvr.nextpvr/Makefile
            addons/pvr.njoy/Makefile
+           addons/pvr.vuplus/Makefile
            addons/pvr.vdr.vnsi/Makefile
-           addons/pvr.vdr.xvdr/Makefile
-           addons/pvr.vuplus/Makefile])
+           addons/pvr.vdr.xvdr/Makefile])
 

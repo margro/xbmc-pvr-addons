@@ -2,13 +2,14 @@ SUBDIRS = pvr.demo \
           pvr.dvbviewer \
           pvr.hts \
           pvr.mediaportal.tvserver \
+          pvr.nextpvr \
           pvr.vdr.vnsi \
-          pvr.vdr.xvdr \
-          pvr.njoy
+          pvr.njoy \
+          pvr.vuplus \
+          pvr.vdr.xvdr
 
 if USE_CURL
-SUBDIRS += pvr.fortherecord.argus \
-           pvr.vuplus
+SUBDIRS += pvr.fortherecord.argus
 endif
 
 clean:

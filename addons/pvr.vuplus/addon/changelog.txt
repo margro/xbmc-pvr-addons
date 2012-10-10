@@ -1,3 +1,14 @@
+0.3.2:
+- fix: continue to load channels even if we do not have any radio channels
+
+0.3.1:
+- change: remove XMLParser
+- change: add enigma2 to the displayname  
+
+0.3.0:
+- change: remove curl dependancy
+- change: adjust to new PVR API
+
 0.2.8:
 - add: option to only fetch one TV bouquet which can be specified via the addon settings
 

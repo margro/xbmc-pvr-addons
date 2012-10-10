@@ -10,11 +10,10 @@ ADDONNAME       = pvr.vuplus
 LIBNAME         = libvuplus-addon
 lib_LTLIBRARIES = libvuplus-addon.la
 
-LIBS            = -ldl -lcurl
+LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
 
 include ../Makefile.include.am
 
 libvuplus_addon_la_SOURCES = src/client.cpp \
-                             src/VuData.cpp \
-                             src/xmlParser.cpp
+                             src/VuData.cpp 
 
