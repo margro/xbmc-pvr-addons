@@ -56,10 +56,9 @@ using namespace ADDON;
 #define READ_BITRATE   0x10
 
 FileReader::FileReader() :
-  m_hFileHandle(NULL),
+  m_hFile(NULL),
   m_pFileName(0),
   m_fileSize(0),
-  m_llBufferPointer(0),
   m_bDebugOutput(false)
 {
 }
@@ -128,11 +127,10 @@ long FileReader::OpenFile()
   do
   {
     XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_pFileName);
-    // Open in readonly mode with this filename
     void* fileHandle = XBMC->OpenFile(m_pFileName, READ_CHUNKED);
     if (fileHandle)
     {
-      m_hFileHandle = fileHandle;
+      m_hFile = fileHandle;
       break;
     }
 
@@ -154,7 +152,6 @@ long FileReader::OpenFile()
   XBMC->Log(LOG_DEBUG, "%s: OpenFile(%s) succeeded.", __FUNCTION__, m_pFileName );
 
   SetFilePointer(0, SEEK_SET);
-  m_llBufferPointer = 0;
 
   return S_OK;
 
@@ -172,34 +169,26 @@ long FileReader::CloseFile()
     return S_OK;
   }
 
-  if (m_hFileHandle)
+  if (m_hFile)
   {
-    XBMC->CloseFile(m_hFileHandle);
-    m_hFileHandle = NULL;
+    XBMC->CloseFile(m_hFile);
+    m_hFile = NULL;
   }
 
-  m_llBufferPointer = 0;
   return S_OK;
 } // CloseFile
 
 
 inline bool FileReader::IsFileInvalid()
 {
-  return m_hFileHandle == NULL;
-}
-
-
-long FileReader::GetStartPosition(int64_t *lpllpos)
-{
-  *lpllpos = 0;
-  return S_OK;
+  return m_hFile == NULL;
 }
 
 
 int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
   //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
-  int64_t rc = XBMC->SeekFile(m_hFileHandle, llDistanceToMove, dwMoveMethod);
+  int64_t rc = XBMC->SeekFile(m_hFile, llDistanceToMove, dwMoveMethod);
   //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
   return rc;
 }
@@ -207,13 +196,13 @@ int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMov
 
 int64_t FileReader::GetFilePointer()
 {
-  return XBMC->GetFilePosition(m_hFileHandle);
+  return XBMC->GetFilePosition(m_hFile);
 }
 
 
 long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
 {
-  *dwReadBytes = XBMC->ReadFile(m_hFileHandle, (void*)pbData, lDataLength);//Read file data into buffer
+  *dwReadBytes = XBMC->ReadFile(m_hFile, (void*)pbData, lDataLength);//Read file data into buffer
   //XBMC->Log(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
 
   if (*dwReadBytes < lDataLength)
@@ -227,10 +216,10 @@ long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned
 
 int64_t FileReader::GetFileSize()
 {
-  return XBMC->GetFileLength(m_hFileHandle);
+  return XBMC->GetFileLength(m_hFile);
 }
 
 int64_t FileReader::OnChannelChange(void)
 {
-  return XBMC->GetFilePosition(m_hFileHandle);
+  return XBMC->GetFilePosition(m_hFile);
 }

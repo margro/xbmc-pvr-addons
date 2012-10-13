@@ -58,10 +58,7 @@ MultiFileReader::MultiFileReader():
   m_filesAdded = 0;
   m_filesRemoved = 0;
   m_TSFileId = 0;
-  m_bReadOnly = 1;
   m_bDelay = 0;
-  m_llBufferPointer = 0;
-  m_cachedFileSize = 0;
   m_bDebugOutput = false;
 }
 
@@ -102,7 +99,6 @@ long MultiFileReader::OpenFile()
   }
 
   m_currentPosition = 0;
-  m_llBufferPointer = 0;
 
   return hr;
 }
@@ -125,7 +121,6 @@ long MultiFileReader::CloseFile()
   m_tsFiles.clear();
 
   m_TSFileId = 0;
-  m_llBufferPointer = 0;
   return hr;
 }
 
@@ -136,7 +131,7 @@ bool MultiFileReader::IsFileInvalid()
 
 int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
-  RefreshTSBufferFile(); // This one was disabled by mepo tsreader..
+  RefreshTSBufferFile();
 
   if (dwMoveMethod == FILE_END)
   {
@@ -160,13 +155,11 @@ int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long 
     m_currentPosition = m_endPosition;
   }
 
-  //RefreshTSBufferFile(); // This one is used by mepo tsreader..
   return m_currentPosition;
 }
 
 int64_t MultiFileReader::GetFilePointer()
 {
-//  RefreshTSBufferFile();
   return m_currentPosition;
 }
 
@@ -177,7 +170,6 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
     return S_FALSE;
 
   RefreshTSBufferFile();
-  RefreshFileSize();
 
   if (m_currentPosition < m_startPosition)
   {
@@ -461,7 +453,7 @@ long MultiFileReader::RefreshTSBufferFile()
     {
       // Convert the current filename (wchar to normal char)
       char* wide2normal = new char[length + 1];
-      WcsToMbs( wide2normal, pwCurrFile, length );
+      WcsToMbs(wide2normal, pwCurrFile, length);
       wide2normal[length] = '\0';
       std::string sCurrFile = wide2normal;
       //XBMC->Log(LOG_DEBUG, "%s: filename %s (%s).", __FUNCTION__, wide2normal, sCurrFile.c_str());
@@ -579,8 +571,9 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
   //USES_CONVERSION;
 
   length = 0;
-  CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(pFilename);
+
   // Try to open the file
+  CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(pFilename);
   HANDLE hFile = ::CreateFileW(strWFile,   // The filename
             (DWORD) GENERIC_READ,          // File access
              (DWORD) (FILE_SHARE_READ |
@@ -638,19 +631,6 @@ int64_t MultiFileReader::GetFileSize()
 {
   RefreshTSBufferFile();
   return m_endPosition - m_startPosition;
-}
-
-void MultiFileReader::RefreshFileSize()
-{
-  int64_t fileLength = 0;
-  std::vector<MultiFileReaderFile *>::iterator it = m_tsFiles.begin();
-  for ( ; it < m_tsFiles.end(); ++it )
-  {
-    MultiFileReaderFile *file = *it;
-    fileLength+=file->length;
-  }
-  m_cachedFileSize = fileLength;
-  // XBMC->Log(LOG_DEBUG, "%s: m_cachedFileSize %d.", __FUNCTION__, m_cachedFileSize);
 }
 
 int64_t MultiFileReader::OnChannelChange(void)
