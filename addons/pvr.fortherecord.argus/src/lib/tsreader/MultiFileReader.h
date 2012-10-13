@@ -1,6 +1,6 @@
 #pragma once
 /*
- *      Copyright (C) 2005-2010 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,16 +15,22 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
+ *
+ *************************************************************************
+ *  This file is a modified version from Team MediaPortal's
+ *  TsReader DirectShow filter
+ *  MediaPortal is a GPL'ed HTPC-Application
+ *  Copyright (C) 2005-2012 Team MediaPortal
+ *  http://www.team-mediaportal.com
+ *
+ * Changes compared to Team MediaPortal's version:
+ * - Code cleanup for PVR addon usage
+ * - Code refactoring for cross platform usage
+ *************************************************************************
  *  This file originates from TSFileSource, a GPL directshow push
  *  source filter that provides an MPEG transport stream output.
- *  Copyright (C) 2005      nate
- *  Copyright (C) 2006      bear
- *
- *  nate can be reached on the forums at
- *    http://forums.dvbowners.com/
+ *  Copyright (C) 2005-2006 nate, bear
+ *  http://forums.dvbowners.com/
  */
 
 #include "FileReader.h"
@@ -46,7 +52,6 @@ class MultiFileReader : public FileReader
     MultiFileReader();
     virtual ~MultiFileReader();
 
-    virtual long GetFileName(char* *lpszFileName);
     virtual long SetFileName(const char* pszFileName);
     virtual long OpenFile();
     virtual long CloseFile();
@@ -65,10 +70,10 @@ class MultiFileReader : public FileReader
     FileReader m_TSBufferFile;
     int64_t m_startPosition;
     int64_t m_endPosition;
-    int64_t m_currentReadPosition;
-    long m_filesAdded;
-    long m_filesRemoved;
+    int64_t m_currentPosition;
     int64_t m_lastZapPosition;
+    int32_t m_filesAdded;
+    int32_t m_filesRemoved;
 
     std::vector<MultiFileReaderFile *> m_tsFiles;
 

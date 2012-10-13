@@ -1,5 +1,5 @@
 /*
- *      Copyright (C) 2005-2011 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -14,16 +14,22 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
+ *
+ *************************************************************************
+ *  This file is a modified version from Team MediaPortal's
+ *  TsReader DirectShow filter
+ *  MediaPortal is a GPL'ed HTPC-Application
+ *  Copyright (C) 2005-2012 Team MediaPortal
+ *  http://www.team-mediaportal.com
+ *
+ * Changes compared to Team MediaPortal's version:
+ * - Code cleanup for PVR addon usage
+ * - Code refactoring for cross platform usage
+ *************************************************************************
  *  This file originates from TSFileSource, a GPL directshow push
  *  source filter that provides an MPEG transport stream output.
- *  Copyright (C) 2005      nate
- *  Copyright (C) 2006      bear
- *
- *  nate can be reached on the forums at
- *    http://forums.dvbowners.com/
+ *  Copyright (C) 2005-2006 nate, bear
+ *  http://forums.dvbowners.com/
  */
 
 #include "MultiFileReader.h"
@@ -54,7 +60,7 @@ MultiFileReader::MultiFileReader():
 {
   m_startPosition = 0;
   m_endPosition = 0;
-  m_currentReadPosition = 0;
+  m_currentPosition = 0;
   m_lastZapPosition = 0;
   m_filesAdded = 0;
   m_filesRemoved = 0;
@@ -68,12 +74,6 @@ MultiFileReader::~MultiFileReader()
   //CloseFile called by ~FileReader
 }
 
-
-long MultiFileReader::GetFileName(char* *lpszFileName)
-{
-//  CheckPointer(lpszFileName,E_POINTER);
-  return m_TSBufferFile.GetFileName(lpszFileName);
-}
 
 long MultiFileReader::SetFileName(const char* pszFileName)
 {
@@ -104,7 +104,7 @@ long MultiFileReader::OpenFile()
     } while (RefreshTSBufferFile() == S_FALSE);
   }
 
-  m_currentReadPosition = 0;
+  m_currentPosition = 0;
 
   return hr;
 }
@@ -115,13 +115,17 @@ long MultiFileReader::OpenFile()
 long MultiFileReader::CloseFile()
 {
   long hr;
+  std::vector<MultiFileReaderFile *>::iterator it;
+
   hr = m_TSBufferFile.CloseFile();
   hr = m_TSFile.CloseFile();
-  std::vector<MultiFileReaderFile *>::iterator it;
-  for (it = m_tsFiles.begin(); it < m_tsFiles.end(); it++)
+
+  for (it = m_tsFiles.begin(); it < m_tsFiles.end(); ++it)
   {
     delete (*it);
   }
+  m_tsFiles.clear();
+
   m_TSFileId = 0;
   return hr;
 }
@@ -137,63 +141,61 @@ int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long 
 
   if (dwMoveMethod == FILE_END)
   {
-    m_currentReadPosition = m_endPosition + llDistanceToMove;
+    m_currentPosition = m_endPosition + llDistanceToMove;
   }
   else if (dwMoveMethod == FILE_CURRENT)
   {
-    m_currentReadPosition += llDistanceToMove;
+    m_currentPosition += llDistanceToMove;
   }
   else // if (dwMoveMethod == FILE_BEGIN)
   {
-    m_currentReadPosition = m_startPosition + llDistanceToMove;
+    m_currentPosition = m_startPosition + llDistanceToMove;
   }
 
-  if (m_currentReadPosition < m_startPosition)
-    m_currentReadPosition = m_startPosition;
+  if (m_currentPosition < m_startPosition)
+    m_currentPosition = m_startPosition;
 
-  if (m_currentReadPosition > m_endPosition) {
-    XBMC->Log(LOG_ERROR, "Seeking beyond the end position: %I64d > %I64d", m_currentReadPosition, m_endPosition);
-    m_currentReadPosition = m_endPosition;
+  if (m_currentPosition > m_endPosition)
+  {
+    XBMC->Log(LOG_ERROR, "Seeking beyond the end position: %I64d > %I64d", m_currentPosition, m_endPosition);
+    m_currentPosition = m_endPosition;
   }
 
-//  RefreshTSBufferFile();
+  // RefreshTSBufferFile();
   return S_OK;
 }
 
 int64_t MultiFileReader::GetFilePointer()
 {
 //  RefreshTSBufferFile();
-  return m_currentReadPosition;
+  return m_currentPosition;
 }
 
 long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
 {
-  long hr;
-
   // If the file has already been closed, don't continue
   if (m_TSBufferFile.IsFileInvalid())
     return S_FALSE;
 
   RefreshTSBufferFile();
 
-  if (m_currentReadPosition < m_startPosition)
+  if (m_currentPosition < m_startPosition)
   {
-    XBMC->Log(LOG_DEBUG, "%s: current position adjusted from %%I64dd to %%I64dd.", __FUNCTION__, m_currentReadPosition, m_startPosition);
-    m_currentReadPosition = m_startPosition;
+    XBMC->Log(LOG_INFO, "%s: current position adjusted from %%I64dd to %%I64dd.", __FUNCTION__, m_currentPosition, m_startPosition);
+    m_currentPosition = m_startPosition;
   }
 
   // Find out which file the currentPosition is in.
   MultiFileReaderFile *file = NULL;
   std::vector<MultiFileReaderFile *>::iterator it = m_tsFiles.begin();
-  for ( ; it < m_tsFiles.end() ; it++ )
+  for ( ; it < m_tsFiles.end(); ++it )
   {
     file = *it;
-    if (m_currentReadPosition < (file->startPosition + file->length))
+    if (m_currentPosition < (file->startPosition + file->length))
       break;
   };
 
   // XBMC->Log(LOG_DEBUG, "%s: reading %ld bytes. File %s, start %d, current %d, end %d.", __FUNCTION__, lDataLength, file->filename.c_str(), m_startPosition, m_currentPosition, m_endPosition);
-
 
   if(!file)
   {
@@ -201,7 +203,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
     XBMC->QueueNotification(QUEUE_ERROR, "No buffer file");
     return S_FALSE;
   }
-  if (m_currentReadPosition < (file->startPosition + file->length))
+  if (m_currentPosition < (file->startPosition + file->length))
   {
     if (m_TSFileId != file->filePositionId)
     {
@@ -217,20 +219,21 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       }
     }
 
-    int64_t seekPosition = m_currentReadPosition - file->startPosition;
+    int64_t seekPosition = m_currentPosition - file->startPosition;
 
     int64_t posSeeked=m_TSFile.GetFilePointer();
     if (posSeeked != seekPosition)
     {
       m_TSFile.SetFilePointer(seekPosition, FILE_BEGIN);
-      posSeeked=m_TSFile.GetFilePointer();
-      if (posSeeked!=seekPosition)
+      posSeeked = m_TSFile.GetFilePointer();
+      if (posSeeked != seekPosition)
       {
         XBMC->Log(LOG_ERROR, "SEEK FAILED");
       }
     }
 
     unsigned long bytesRead = 0;
+    long hr;
 
     int64_t bytesToRead = file->length - seekPosition;
     if ((int64_t)lDataLength > bytesToRead)
@@ -241,7 +244,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       {
         XBMC->Log(LOG_ERROR, "READ FAILED1");
       }
-      m_currentReadPosition += bytesToRead;
+      m_currentPosition += bytesToRead;
 
       hr = this->Read(pbData + bytesToRead, lDataLength - (unsigned long)bytesToRead, dwReadBytes);
       if (FAILED(hr))
@@ -257,7 +260,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       {
         XBMC->Log(LOG_ERROR, "READ FAILED3");
       }
-      m_currentReadPosition += lDataLength;
+      m_currentPosition += lDataLength;
     }
   }
   else
@@ -378,23 +381,23 @@ long MultiFileReader::RefreshTSBufferFile()
 
     Loop--;
   } while ( Error && Loop ); // If Error is set, try again...until Loop reaches 0.
- 
+
   if (Loop < 8)
   {
-    XBMC->Log(LOG_DEBUG, "MultiFileReader has waited %d times for TSbuffer integrity.", 10-Loop) ;
+    XBMC->Log(LOG_DEBUG, "MultiFileReader has waited %d times for TSbuffer integrity.", 10-Loop);
 
-    if(Error)
+    if (Error)
     {
-      XBMC->Log(LOG_ERROR, "MultiFileReader has failed for TSbuffer integrity. Error : %x", Error) ;
-      return E_FAIL ;
+      XBMC->Log(LOG_ERROR, "MultiFileReader has failed for TSbuffer integrity. Error : %x", Error);
+      return E_FAIL;
     }
   }
 
   if ((m_filesAdded != filesAdded) || (m_filesRemoved != filesRemoved))
   {
-    long filesToRemove = filesRemoved - m_filesRemoved;
-    long filesToAdd = filesAdded - m_filesAdded;
-    long fileID = filesRemoved;
+    int32_t filesToRemove = filesRemoved - m_filesRemoved;
+    int32_t filesToAdd = filesAdded - m_filesAdded;
+    int32_t fileID = filesRemoved;
     int64_t nextStartPosition = 0;
 
     if (m_bDebugOutput)
@@ -403,7 +406,7 @@ long MultiFileReader::RefreshTSBufferFile()
     }
 
     // Removed files that aren't present anymore.
-    while ((filesToRemove > 0) && (m_tsFiles.size() > 0))
+    while ((filesToRemove > 0) && (!m_tsFiles.empty()))
     {
       MultiFileReaderFile *file = m_tsFiles.at(0);
 
@@ -420,7 +423,7 @@ long MultiFileReader::RefreshTSBufferFile()
 
 
     // Figure out what the start position of the next new file will be
-    if (m_tsFiles.size() > 0)
+    if (!m_tsFiles.empty())
     {
       file = m_tsFiles.back();
 
@@ -428,10 +431,7 @@ long MultiFileReader::RefreshTSBufferFile()
       {
         // If we're adding files the changes are the one at the back has a partial length
         // so we need update it.
-        if (m_bDebugOutput)
-          GetFileLength(file->filename.c_str(), file->length);
-        else
-          GetFileLength(file->filename.c_str(), file->length);
+        GetFileLength(file->filename.c_str(), file->length);
       }
 
       nextStartPosition = file->startPosition + file->length;
@@ -447,7 +447,6 @@ long MultiFileReader::RefreshTSBufferFile()
     sFilename = filename;
     pos = sFilename.find_last_of(PATH_SEPARATOR_CHAR);
     path = sFilename.substr(0, pos+1);
-    //name3 = filename1.substr(pos+1);
 
     // Create a list of files in the .tsbuffer file.
     std::vector<std::string> filenames;
@@ -455,21 +454,14 @@ long MultiFileReader::RefreshTSBufferFile()
     Wchar_t* pwCurrFile = pBuffer;    //Get a pointer to the first wchar filename string in pBuffer
     long length = WcsLen(pwCurrFile);
 
-    //XBMC->Log(LOG_DEBUG, "%s: WcsLen(%d), sizeof(wchar_t) == %d.", __FUNCTION__, length, sizeof(wchar_t));
+    //XBMC->Log(LOG_DEBUG, "%s: WcsLen(%d), sizeof(Wchar_t) == %d sizeof(wchar_t) == %d.", __FUNCTION__, length, sizeof(Wchar_t), sizeof(wchar_t));
 
-    while(length > 0)
+    while (length > 0)
     {
       // Convert the current filename (wchar to normal char)
       char* wide2normal = new char[length + 1];
-      WcsToMbs( wide2normal, pwCurrFile, length);
+      WcsToMbs(wide2normal, pwCurrFile, length);
       wide2normal[length] = '\0';
-
-      //unsigned char* pb = (unsigned char*) wide2normal;
-      //for (unsigned long i = 0; i < rc; i++)
-      //{
-      //  XBMC->Log(LOG_DEBUG, "%s: pBuffer byte[%d] == %x.", __FUNCTION__, i, pb[i]);
-      //}
-
       std::string sCurrFile = wide2normal;
       //XBMC->Log(LOG_DEBUG, "%s: filename %s (%s).", __FUNCTION__, wide2normal, sCurrFile.c_str());
       delete[] wide2normal;
@@ -495,20 +487,19 @@ long MultiFileReader::RefreshTSBufferFile()
 
     // Go through files
     std::vector<MultiFileReaderFile *>::iterator itFiles = m_tsFiles.begin();
-    //std::vector<char*>::iterator itFilenames = filenames.begin();
     std::vector<std::string>::iterator itFilenames = filenames.begin();
 
     while (itFiles < m_tsFiles.end())
     {
       file = *itFiles;
 
-      itFiles++;
+      ++itFiles;
       fileID++;
 
       if (itFilenames < filenames.end())
       {
         // TODO: Check that the filenames match. ( Ambass : With buffer integrity check, probably no need to do this !)
-        itFilenames++;
+        ++itFilenames;
       }
       else
       {
@@ -539,7 +530,7 @@ long MultiFileReader::RefreshTSBufferFile()
 
       nextStartPosition = file->startPosition + file->length;
 
-      itFilenames++;
+      ++itFilenames;
     }
 
     m_filesAdded = filesAdded;
@@ -548,7 +539,7 @@ long MultiFileReader::RefreshTSBufferFile()
     delete[] pBuffer;
   }
 
-  if (m_tsFiles.size() > 0)
+  if (!m_tsFiles.empty())
   {
     file = m_tsFiles.front();
     m_startPosition = file->startPosition;
@@ -557,7 +548,7 @@ long MultiFileReader::RefreshTSBufferFile()
     // channel change, or the real start position, whichever is larger
     if (m_lastZapPosition > m_startPosition)
     {
-        m_startPosition = m_lastZapPosition;
+      m_startPosition = m_lastZapPosition;
     }
 
     file = m_tsFiles.back();
@@ -568,7 +559,7 @@ long MultiFileReader::RefreshTSBufferFile()
     {
       int64_t stPos = m_startPosition;
       int64_t endPos = m_endPosition;
-      int64_t curPos = m_currentReadPosition;
+      int64_t curPos = m_currentPosition;
       XBMC->Log(LOG_DEBUG, "StartPosition %lli, EndPosition %lli, CurrentPosition %lli\n", stPos, endPos, curPos);
     }
   }
@@ -604,7 +595,7 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
     li.QuadPart = 0;
     li.LowPart = ::SetFilePointer(hFile, 0, &li.HighPart, FILE_END);
     ::CloseHandle(hFile);
-    
+
     length = li.QuadPart;
   }
   else
@@ -636,7 +627,6 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
     XBMC->QueueNotification(QUEUE_ERROR, "Failed to open file %s", pFilename);
     return S_FALSE;
   }
-  XBMC->Log(LOG_DEBUG, "GetFileLength(%s) == %lli.\n", pFilename, length);
   return S_OK;
 #else
 #error FIXME: Add MultiFileReader::GetFileLenght implementation for your OS.
@@ -653,5 +643,5 @@ int64_t MultiFileReader::GetFileSize()
 void MultiFileReader::OnZap(void)
 {
   SetFilePointer(0, FILE_END);
-  m_lastZapPosition = m_currentReadPosition;
+  m_lastZapPosition = m_currentPosition;
 }
