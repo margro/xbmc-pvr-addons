@@ -80,5 +80,4 @@ class MultiFileReader : public FileReader
     FileReader m_TSFile;
     long     m_TSFileId;
     bool     m_bDelay;
-    bool     m_bDebugOutput;
 };

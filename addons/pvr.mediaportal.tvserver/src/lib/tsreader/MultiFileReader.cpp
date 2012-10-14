@@ -34,6 +34,7 @@
 
 #include "MultiFileReader.h"
 #include "client.h" //for XBMC->Log
+#include "TSDebug.h"
 #include <string>
 #include "utils.h"
 #include <algorithm>
@@ -59,7 +60,6 @@ MultiFileReader::MultiFileReader():
   m_filesRemoved = 0;
   m_TSFileId = 0;
   m_bDelay = 0;
-  m_bDebugOutput = false;
 }
 
 MultiFileReader::~MultiFileReader()
@@ -205,10 +205,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
 
       m_TSFileId = file->filePositionId;
 
-      if (m_bDebugOutput)
-      {
-        XBMC->Log(LOG_DEBUG, "MultiFileReader::Read() Current File Changed to %s\n", file->filename.c_str());
-      }
+      TSDEBUG(LOG_DEBUG, "MultiFileReader::Read() Current File Changed to %s\n", file->filename.c_str());
     }
 
     int64_t seekPosition = m_currentPosition - file->startPosition;
@@ -297,10 +294,7 @@ long MultiFileReader::RefreshTSBufferFile()
     // Min file length is Header ( int64_t + int32_t + int32_t ) + filelist ( > 0 ) + Footer ( int32_t + int32_t )
     if (fileLength <= (int64_t)(sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved) + sizeof(wchar_t) + sizeof(filesAdded2) + sizeof(filesRemoved2)))
     {
-      if (m_bDebugOutput)
-      {
-        XBMC->Log(LOG_DEBUG, "MultiFileReader::RefreshTSBufferFile() TSBufferFile too short");
-      }
+      TSDEBUG(LOG_DEBUG, "MultiFileReader::RefreshTSBufferFile() TSBufferFile too short");
       return S_FALSE;
     }
 
@@ -393,20 +387,14 @@ long MultiFileReader::RefreshTSBufferFile()
     int32_t fileID = filesRemoved;
     int64_t nextStartPosition = 0;
 
-    if (m_bDebugOutput)
-    {
-      XBMC->Log(LOG_DEBUG, "MultiFileReader: Files Added %i, Removed %i\n", filesToAdd, filesToRemove);
-    }
+    TSDEBUG(LOG_DEBUG, "MultiFileReader: Files Added %i, Removed %i\n", filesToAdd, filesToRemove);
 
     // Removed files that aren't present anymore.
     while ((filesToRemove > 0) && (!m_tsFiles.empty()))
     {
       MultiFileReaderFile *file = m_tsFiles.at(0);
 
-      if (m_bDebugOutput)
-      {
-        XBMC->Log(LOG_DEBUG, "MultiFileReader: Removing file %s\n", file->filename.c_str());
-      }
+      TSDEBUG(LOG_DEBUG, "MultiFileReader: Removing file %s\n", file->filename.c_str());
       
       delete file;
       m_tsFiles.erase(m_tsFiles.begin());
@@ -504,11 +492,7 @@ long MultiFileReader::RefreshTSBufferFile()
     {
       std::string pFilename = *itFilenames;
 
-      if (m_bDebugOutput)
-      {
-        int nextStPos = (int)nextStartPosition;
-        XBMC->Log(LOG_DEBUG, "MultiFileReader: Adding file %s (%i)\n", pFilename.c_str(), nextStPos);
-      }
+      TSDEBUG(LOG_DEBUG, "MultiFileReader: Adding file %s (%lli)\n", pFilename.c_str(), nextStartPosition);
 
       file = new MultiFileReaderFile();
       file->filename = pFilename;
@@ -548,13 +532,7 @@ long MultiFileReader::RefreshTSBufferFile()
     file->length = currentPosition;
     m_endPosition = file->startPosition + currentPosition;
   
-    if (m_bDebugOutput)
-    {
-      int64_t stPos = m_startPosition;
-      int64_t endPos = m_endPosition;
-      int64_t curPos = m_currentPosition;
-      XBMC->Log(LOG_DEBUG, "StartPosition %lli, EndPosition %lli, CurrentPosition %lli\n", stPos, endPos, curPos);
-    }
+    TSDEBUG(LOG_DEBUG, "StartPosition %lli, EndPosition %lli, CurrentPosition %lli\n", m_startPosition, m_endPosition, m_currentPosition);
   }
   else
   {

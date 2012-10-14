@@ -34,9 +34,11 @@
 
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
+#include "TSDebug.h"
 #include "platform/threads/threads.h"
 #include <algorithm> //std::min, std::max
 #include "platform/util/timeutils.h" // for usleep
+#include "platform/util/util.h"
 
 using namespace ADDON;
 
@@ -58,16 +60,14 @@ using namespace ADDON;
 FileReader::FileReader() :
   m_hFile(NULL),
   m_pFileName(0),
-  m_fileSize(0),
-  m_bDebugOutput(false)
+  m_fileSize(0)
 {
 }
 
 FileReader::~FileReader()
 {
   CloseFile();
-  if (m_pFileName)
-    delete m_pFileName;
+  SAFE_DELETE_ARRAY(m_pFileName);
 }
 
 
@@ -86,8 +86,7 @@ long FileReader::SetFileName(const char *pszFileName)
   // Take a copy of the filename
   if (m_pFileName)
   {
-    delete[] m_pFileName;
-    m_pFileName = NULL;
+    SAFE_DELETE_ARRAY(m_pFileName);
   }
 
   m_pFileName = new char[1 + strlen(pszFileName)];
@@ -121,8 +120,6 @@ long FileReader::OpenFile()
     XBMC->Log(LOG_ERROR, "FileReader::OpenFile() no filename");
     return ERROR_INVALID_NAME;
   }
-
-  XBMC->Log(LOG_DEBUG, "FileReader::OpenFile() Trying to open %s\n", m_pFileName);
 
   do
   {
@@ -187,9 +184,9 @@ inline bool FileReader::IsFileInvalid()
 
 int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
-  //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
+  TSDEBUG(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
   int64_t rc = XBMC->SeekFile(m_hFile, llDistanceToMove, dwMoveMethod);
-  //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
+  TSDEBUG(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
   return rc;
 }
 
@@ -203,7 +200,7 @@ int64_t FileReader::GetFilePointer()
 long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
 {
   *dwReadBytes = XBMC->ReadFile(m_hFile, (void*)pbData, lDataLength);//Read file data into buffer
-  //XBMC->Log(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
+  TSDEBUG(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
 
   if (*dwReadBytes < lDataLength)
   {

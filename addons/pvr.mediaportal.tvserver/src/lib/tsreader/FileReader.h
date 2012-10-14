@@ -51,13 +51,11 @@ class FileReader
     virtual int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
     virtual int64_t GetFilePointer();
     virtual int64_t GetFileSize();
-    virtual bool IsBuffer(){return false;};
+    virtual bool IsBuffer() { return false; };
     virtual int64_t OnChannelChange(void);
 
   protected:
     void*    m_hFile;               // Handle to file for streaming
-    char*    m_pFileName;           // The filename where we stream
+    char*    m_pFileName;           // The filename where we read from
     int64_t  m_fileSize;
-
-    bool     m_bDebugOutput;
 };
