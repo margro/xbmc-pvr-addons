@@ -195,8 +195,8 @@ long CTsReader::Open(const char* pszFileName)
     m_fileReader = new CMemoryReader(*m_buffer);
     m_State = State_Running;
 #else
-    XBMC->Log(LOG_ERROR, "Failed to open %s. PVR client is compiled without LIVE555 RTSP support.", url);
-    XBMC->QueueNotification(QUEUE_ERROR, "PVR client has no RTSP support: %s", url);
+    XBMC->Log(LOG_ERROR, "Failed to open %s. PVR client is compiled without LIVE555 RTSP support.", m_fileName.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "PVR client has no RTSP support: %s", m_fileName.c_str());
     return E_FAIL;
 #endif //LIVE555
   }
