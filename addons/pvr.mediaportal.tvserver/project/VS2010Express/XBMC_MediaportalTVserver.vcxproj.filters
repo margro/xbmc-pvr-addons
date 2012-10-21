@@ -77,6 +77,18 @@
     <ClCompile Include="..\..\src\lib\tsreader\TSReader.cpp">
       <Filter>Source Files\lib%255ctsreader</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\MepoRTSPClient.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\MemoryBuffer.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\MemoryReader.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\MemorySink.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cards.h">
@@ -125,6 +137,21 @@
       <Filter>Header Files\lib%255ctsreader</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\lib\tsreader\TSReader.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\MemoryBuffer.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\MemoryReader.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\MemorySink.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\MepoRTSPClient.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\TSDebug.h">
       <Filter>Header Files\lib%255ctsreader</Filter>
     </ClInclude>
   </ItemGroup>

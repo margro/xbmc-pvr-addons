@@ -55,8 +55,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>TARGET_WINDOWS;_WINSOCKAPI_;_DEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src;..\..\src\lib\live555\liveMedia\include;..\..\src\lib\live555\BasicUsageEnvironment\include;..\..\src\lib\live555\UsageEnvironment\include;..\..\src\lib\live555\groupsock\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TARGET_WINDOWS;LIVE555;_WINSOCKAPI_;_DEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -82,8 +82,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src;..\..\src\lib\live555\liveMedia\include;..\..\src\lib\live555\BasicUsageEnvironment\include;..\..\src\lib\live555\UsageEnvironment\include;..\..\src\lib\live555\groupsock\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TARGET_WINDOWS;LIVE555;_WINSOCKAPI_;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -119,6 +119,9 @@
     <ProjectReference Include="..\..\..\..\project\VS2010Express\tinyxml\tinyxml.vcxproj">
       <Project>{bdc7d21d-9fd9-41aa-bec8-8b70e1448c50}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\lib\live555\LiveMedia555.vcxproj">
+      <Project>{3c398bd4-5714-4802-ab86-d43add15b3c0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Cards.cpp" />
@@ -127,6 +130,10 @@
     <ClCompile Include="..\..\src\epg.cpp" />
     <ClCompile Include="..\..\src\GenreTable.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\FileReader.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\MemoryBuffer.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\MemoryReader.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\MemorySink.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\MepoRTSPClient.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\MultiFileReader.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\TSReader.cpp" />
     <ClCompile Include="..\..\src\pvrclient-mediaportal.cpp" />
@@ -146,7 +153,12 @@
     <ClInclude Include="..\..\src\FileUtils.h" />
     <ClInclude Include="..\..\src\GenreTable.h" />
     <ClInclude Include="..\..\src\lib\tsreader\FileReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\MemoryBuffer.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\MemoryReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\MemorySink.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\MepoRTSPClient.h" />
     <ClInclude Include="..\..\src\lib\tsreader\MultiFileReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\TSDebug.h" />
     <ClInclude Include="..\..\src\lib\tsreader\TSReader.h" />
     <ClInclude Include="..\..\src\pvrclient-mediaportal.h" />
     <ClInclude Include="..\..\src\recordings.h" />
