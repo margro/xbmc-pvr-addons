@@ -710,13 +710,15 @@ Boolean MediaSubsession::initiate(int useSpecialRTPoffset) {
         fReadSource = MPEG2TransportStreamFramer::createNew(env(), fReadSource);
         // this sets "durationInMicroseconds" correctly, based on the PCR values
       }
-    } else {
+    }
+    else {
       // Check "fCodecName" against the set of codecs that we support,
       // and create our RTP source accordingly
       // (Later make this code more efficient, as this set grows #####)
       // (Also, add more fmts that can be implemented by SimpleRTPSource#####)
       Boolean createSimpleRTPSource = False; // by default; can be changed below
       Boolean doNormalMBitRule = False; // default behavior if "createSimpleRTPSource" is True
+#if 0
       if (strcmp(fCodecName, "QCELP") == 0) { // QCELP audio
         fReadSource = QCELPAudioRTPSource::createNew(env(), fRTPSocket, fRTPSource,
                                          fRTPPayloadFormat,
@@ -783,13 +785,17 @@ Boolean MediaSubsession::initiate(int useSpecialRTPoffset) {
         fReadSource = fRTPSource = MPEG1or2VideoRTPSource::createNew(env(), fRTPSocket,
                                          fRTPPayloadFormat,
                                          fRTPTimestampFrequency);
-      } else if (strcmp(fCodecName, "MP2T") == 0) { // MPEG-2 Transport Stream
+      } else 
+#endif // 0
+      if (strcmp(fCodecName, "MP2T") == 0) { // MPEG-2 Transport Stream
         fRTPSource = SimpleRTPSource::createNew(env(), fRTPSocket, fRTPPayloadFormat,
                                         fRTPTimestampFrequency, "video/MP2T",
                                         0, False);
         fReadSource = MPEG2TransportStreamFramer::createNew(env(), fRTPSource);
         // this sets "durationInMicroseconds" correctly, based on the PCR values
-      } else if (strcmp(fCodecName, "H261") == 0) { // H.261
+      }
+#if 0
+      else if (strcmp(fCodecName, "H261") == 0) { // H.261
         fReadSource = fRTPSource = H261VideoRTPSource::createNew(env(), fRTPSocket,
                                          fRTPPayloadFormat,
                                          fRTPTimestampFrequency);
@@ -855,6 +861,7 @@ Boolean MediaSubsession::initiate(int useSpecialRTPoffset) {
         env().setResultMsg("RTP payload format unknown or not supported");
         break;
       }
+#endif // 0
 
       if (createSimpleRTPSource) {
         char* mimeType = new char[strlen(mediumName()) + strlen(codecName()) + 2] ;
