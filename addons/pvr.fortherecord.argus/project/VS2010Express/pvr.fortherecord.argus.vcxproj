@@ -130,9 +130,6 @@
     <ClInclude Include="..\..\src\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\lib\curl-7.21.6\project\VS2012Express\libcurl.vcxproj">
-      <Project>{87ee9da4-de1e-4448-8324-183c98dca588}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\lib\jsoncpp\project\VS2010Express\libjsoncpp.vcxproj">
       <Project>{f3a72a50-e295-49ba-acd7-8696907e0351}</Project>
     </ProjectReference>

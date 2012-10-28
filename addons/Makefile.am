@@ -1,16 +1,18 @@
+if ADDON_MYTHTV
+          ADDITIONAL_SUBDIRS = pvr.mythtv.cmyth
+endif
+
 SUBDIRS = pvr.demo \
           pvr.dvbviewer \
           pvr.hts \
           pvr.mediaportal.tvserver \
           pvr.nextpvr \
           pvr.vdr.vnsi \
+          pvr.vdr.xvdr \
           pvr.njoy \
           pvr.vuplus \
-          pvr.vdr.xvdr
-
-if USE_CURL
-SUBDIRS += pvr.fortherecord.argus
-endif
+          pvr.fortherecord.argus \
+          $(ADDITIONAL_SUBDIRS)
 
 clean:
 	-rm -f *.zip

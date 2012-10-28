@@ -64,6 +64,7 @@ bool cVNSIDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
     props->stream[i].iWidth          = m_Streams.stream[i].iWidth;
     props->stream[i].iFPSRate        = m_Streams.stream[i].iFPSRate;
     props->stream[i].iFPSScale       = m_Streams.stream[i].iFPSScale;
+    props->stream[i].fAspect         = m_Streams.stream[i].fAspect;
     props->stream[i].strLanguage[0]  = m_Streams.stream[i].strLanguage[0];
     props->stream[i].strLanguage[1]  = m_Streams.stream[i].strLanguage[1];
     props->stream[i].strLanguage[2]  = m_Streams.stream[i].strLanguage[2];
@@ -180,7 +181,7 @@ bool cVNSIDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
 bool cVNSIDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
 {
   if (m_Quality.fe_name.empty())
-    return false;
+    return true;
 
   strncpy(qualityinfo.strAdapterName, m_Quality.fe_name.c_str(), sizeof(qualityinfo.strAdapterName));
   strncpy(qualityinfo.strAdapterStatus, m_Quality.fe_status.c_str(), sizeof(qualityinfo.strAdapterStatus));

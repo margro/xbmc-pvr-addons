@@ -14,7 +14,7 @@ AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_LIBTOOL
 
-AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR("required library 'pthread' is missing"))
+AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
 
 AC_ARG_ENABLE([release],
   [AS_HELP_STRING([--enable-release],
@@ -29,9 +29,28 @@ AC_ARG_ENABLE([external-ffmpeg],
   [use_external_ffmpeg=$enableval],
   [use_external_ffmpeg=no])
 
+### External dependencies option
+AC_ARG_ENABLE([addons-with-dependencies],
+  [AS_HELP_STRING([--enable-addons-with-dependencies],
+  [enable build of addons that depend on external libraries (default is no)])],
+  [build_addons_with_dependencies=$enableval],
+  [build_addons_with_dependencies=no])
+
+AC_ARG_ENABLE([mysql],
+  [AS_HELP_STRING([--disable-mysql],
+  [disable mysql])],
+  [use_mysql=$enableval],
+  [use_mysql=yes])
+
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
+fi
+
+AC_CHECK_PROG(HAVE_PKG_CONFIG, pkg-config, yes)
+if test "x$HAVE_PKG_CONFIG" != "xyes" ; then
+  AC_MSG_WARN([pkg-config was not found on your system. external ffmpeg will be disabled])
+  use_external_ffmpeg="no"
 fi
 
 OS="unknown"
@@ -90,10 +109,6 @@ case "${host}" in
 esac
 
 ### External libraries checks
-# Curl
-use_libcurl="no"
-PKG_CHECK_MODULES([CURL],[libcurl],use_libcurl="yes",AC_MSG_WARN("CURL was not found"))
-
 # FFmpeg
 if test "$use_external_ffmpeg" = "yes"; then
   PKG_CHECK_MODULES([FFMPEG], [libavcodec],
@@ -111,6 +126,29 @@ fi
 AC_SUBST(FFMPEG_INCLUDES)
 
 ### End external Libraries 
+
+### Build addons with dependencies
+if test "$build_addons_with_dependencies" = "yes"; then
+  echo "Building addons with dependencies"
+
+  ### Libs that addons depend on
+  if test "$use_mysql" = "yes"; then
+    AC_PATH_PROG(MYSQL_CONFIG, mysql_config, "no")
+    if test "x$MYSQL_CONFIG" != "xno"; then
+      AC_DEFINE([HAVE_MYSQL],[1],["Define to 1 if you have the `mysql' library (-lmysqlclient)."])
+      MYSQL_INCLUDES=`$MYSQL_CONFIG --include`
+      MYSQL_LIBS=`$MYSQL_CONFIG --libs`
+      AC_SUBST(MYSQL_INCLUDES)
+      AC_SUBST(MYSQL_LIBS)
+    else
+      echo "MySQL not found"
+      use_mysql=no
+    fi
+  fi
+fi
+
+### Addons with dependencies
+AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addons_with_dependencies" = "yes" -a "$use_mysql" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -160,21 +198,25 @@ else
 fi
 AC_SUBST(DATADIR)
 
+AC_CONFIG_FILES([Makefile \
+                 lib/Makefile \
+                 lib/jsoncpp/Makefile \
+                 lib/libhts/Makefile \
+                 lib/tinyxml/Makefile \
+                 lib/cmyth/Makefile \
+                 lib/cmyth/libcmyth/Makefile \
+                 lib/cmyth/librefmem/Makefile \
+                 addons/Makefile \
+                 addons/pvr.demo/Makefile \
+                 addons/pvr.dvbviewer/Makefile \
+                 addons/pvr.fortherecord.argus/Makefile \
+                 addons/pvr.hts/Makefile \
+                 addons/pvr.mediaportal.tvserver/Makefile \
+                 addons/pvr.nextpvr/Makefile \
+                 addons/pvr.njoy/Makefile \
+                 addons/pvr.vuplus/Makefile \
+                 addons/pvr.vdr.vnsi/Makefile \
+                 addons/pvr.vdr.xvdr/Makefile \
+                 addons/pvr.mythtv.cmyth/Makefile])
 
-AC_OUTPUT([Makefile
-           lib/Makefile
-           lib/jsoncpp/Makefile
-           lib/libhts/Makefile
-           lib/tinyxml/Makefile
-           addons/Makefile
-           addons/pvr.demo/Makefile
-           addons/pvr.dvbviewer/Makefile
-           addons/pvr.fortherecord.argus/Makefile
-           addons/pvr.hts/Makefile
-           addons/pvr.mediaportal.tvserver/Makefile
-           addons/pvr.nextpvr/Makefile
-           addons/pvr.njoy/Makefile
-           addons/pvr.vuplus/Makefile
-           addons/pvr.vdr.vnsi/Makefile
-           addons/pvr.vdr.xvdr/Makefile])
-
+AC_OUTPUT
