@@ -42,8 +42,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.fortherecord.argus", ".
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vdr.xvdr", "..\..\addons\pvr.vdr.xvdr\project\VS2010Express\pvr.vdr.xvdr.vcxproj", "{C5EB52C1-2427-45BE-B955-1543E3EA83A3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.dvbviewer", "..\..\addons\pvr.dvbviewer\project\VS2010Express\pvr.dvbviewer.vcxproj", "{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.live555", "..\..\addons\pvr.mediaportal.tvserver\src\lib\live555\LiveMedia555.vcxproj", "{3C398BD4-5714-4802-AB86-D43ADD15B3C0}"
 EndProject
 Global
@@ -112,10 +110,6 @@ Global
 		{C5EB52C1-2427-45BE-B955-1543E3EA83A3}.Debug|Win32.Build.0 = Debug|Win32
 		{C5EB52C1-2427-45BE-B955-1543E3EA83A3}.Release|Win32.ActiveCfg = Release|Win32
 		{C5EB52C1-2427-45BE-B955-1543E3EA83A3}.Release|Win32.Build.0 = Release|Win32
-		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Debug|Win32.Build.0 = Debug|Win32
-		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Release|Win32.ActiveCfg = Release|Win32
-		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Release|Win32.Build.0 = Release|Win32
 		{3C398BD4-5714-4802-AB86-D43ADD15B3C0}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3C398BD4-5714-4802-AB86-D43ADD15B3C0}.Debug|Win32.Build.0 = Debug|Win32
 		{3C398BD4-5714-4802-AB86-D43ADD15B3C0}.Release|Win32.ActiveCfg = Release|Win32

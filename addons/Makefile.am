@@ -3,7 +3,6 @@ if ADDON_MYTHTV
 endif
 
 SUBDIRS = pvr.demo \
-          pvr.dvbviewer \
           pvr.hts \
           pvr.mediaportal.tvserver \
           pvr.nextpvr \
