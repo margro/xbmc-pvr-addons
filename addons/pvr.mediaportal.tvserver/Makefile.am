@@ -35,12 +35,22 @@ libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/timers.cpp \
                                   src/uri.cpp \
                                   src/utils.cpp \
+                                  src/lib/tsreader/ChannelInfo.cpp \
+                                  src/lib/tsreader/DeMultiplexer.cpp \
+                                  src/lib/tsreader/DvbUtil.cpp \
                                   src/lib/tsreader/FileReader.cpp \
                                   src/lib/tsreader/MemoryBuffer.cpp \
                                   src/lib/tsreader/MemoryReader.cpp \
                                   src/lib/tsreader/MemorySink.cpp \
                                   src/lib/tsreader/MepoRTSPClient.cpp \
                                   src/lib/tsreader/MultiFileReader.cpp \
+                                  src/lib/tsreader/PacketSync.cpp \
+                                  src/lib/tsreader/PatParser.cpp \
+                                  src/lib/tsreader/PidTable.cpp \
+                                  src/lib/tsreader/PmtParser.cpp \
+                                  src/lib/tsreader/Section.cpp \
+                                  src/lib/tsreader/SectionDecoder.cpp \
+                                  src/lib/tsreader/TSHeader.cpp \
                                   src/lib/tsreader/TSReader.cpp \
                                   src/lib/live555/BasicUsageEnvironment/BasicHashTable.cpp \
                                   src/lib/live555/BasicUsageEnvironment/BasicTaskScheduler.cpp \

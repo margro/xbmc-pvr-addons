@@ -42,6 +42,7 @@ class CMemoryReader : public FileReader
     unsigned long setFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
     bool IsBuffer() { return true; };
     long CloseFile() { return S_OK; };
+    int HasData();
 
   private:
     CMemoryBuffer& m_buffer;

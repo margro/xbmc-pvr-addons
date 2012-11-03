@@ -53,4 +53,9 @@ unsigned long CMemoryReader::setFilePointer(int64_t llDistanceToMove, unsigned l
   return 0;
 }
 
+int CMemoryReader::HasData()
+{
+  return (m_buffer.Size());
+}
+
 #endif //LIVE555
