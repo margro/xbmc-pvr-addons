@@ -19,6 +19,7 @@
 *
 */
 
+#include "os-dependent.h"
 #include "client.h" // XBMC->Log
 #include "PmtParser.h"
 #include "ChannelInfo.h"
@@ -265,8 +266,8 @@ void CPmtParser::OnNewSection(CSection& section)
             //ISO_639_language_code[1] = section.Data[pointer + varBytes*j + 3];
             //ISO_639_language_code[2] = section.Data[pointer + varBytes*j + 4];
 
-            BYTE b3 = section.Data[pointer + varBytes*j + 5];
-            BYTE teletext_type = (b3 & 0xF8) >> 3; // 5 first(msb) bits
+            byte b3 = section.Data[pointer + varBytes*j + 5];
+            byte teletext_type = (b3 & 0xF8) >> 3; // 5 first(msb) bits
 
             assert(teletext_type <= 0x05); // 0x06 and upwards reserved for future use and shouldnt appear
             //for (int i = 0; i < 8; i++){

@@ -44,7 +44,7 @@ void CDeMultiplexer::Start()
   {
     int BytesRead = ReadFromFile(false,false);
     if (0 == BytesRead)
-      Sleep(10);
+      usleep(10000);
     //if (dwBytesProcessed > INITIAL_READ_SIZE || GetAudioStreamCount() > 0)
     //{
     //  #ifdef USE_DYNAMIC_PINS

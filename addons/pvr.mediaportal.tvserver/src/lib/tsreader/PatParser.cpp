@@ -20,6 +20,7 @@
  */
 
 #include "os-dependent.h"
+#include <stdint.h>
 #include "client.h" //XBMC->Log
 #include <time.h>
 #include "PatParser.h"
@@ -109,7 +110,7 @@ bool CPatParser::GetChannel(int index, CChannelInfo& info)
   return true;
 }
 
-void CPatParser::SkipPacketsAtStart(__int64 packets)
+void CPatParser::SkipPacketsAtStart(int64_t packets)
 {
   m_packetsToSkip = packets;
   m_packetsReceived = 0;
