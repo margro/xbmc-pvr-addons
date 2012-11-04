@@ -54,8 +54,8 @@ public:
     }
   }
 
-  unsigned short Pid;
-  unsigned short SubtitleServiceType;
+  short Pid;
+  short SubtitleServiceType;
   byte Lang[4];
 };
 
@@ -96,9 +96,9 @@ public:
     }
   }
 
-  unsigned short Pid;
+  short Pid;
   byte Lang[7];
-  unsigned short AudioServiceType;
+  short AudioServiceType;
 };
 
 // This class used to store video stream specific information
@@ -124,7 +124,7 @@ public:
     }
   }
 
-  unsigned short Pid;
+  short Pid;
   int VideoServiceType;
 };
 
@@ -144,7 +144,7 @@ public:
     Lang[6] = 0;
   }
 
-  unsigned short Pid;
+  short Pid;
   byte Lang[7];
 };
 
@@ -169,7 +169,7 @@ public:
 
   unsigned long PcrPid;
   unsigned long PmtPid;
-  unsigned short TeletextPid; // which PID contains the teletext data
+  short TeletextPid; // which PID contains the teletext data
   //std::vector<TeletextServiceInfo> TeletextInfo;
 
   int  ServiceId;

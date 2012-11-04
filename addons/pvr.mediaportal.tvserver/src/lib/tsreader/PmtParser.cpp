@@ -85,8 +85,8 @@ void CPmtParser::OnNewSection(CSection& section)
     }
     // loop 2
     int stream_type = 0;
-    int elementary_PID = 0;
-    int ES_info_length = 0;
+    short elementary_PID = 0;
+    short ES_info_length = 0;
     vector<TempPid> tempPids;
 
     m_pidInfo.Reset();
@@ -120,7 +120,7 @@ void CPmtParser::OnNewSection(CSection& section)
       {
         AudioPid pid;
         pid.Pid = elementary_PID;
-        pid.AudioServiceType = stream_type;
+        pid.AudioServiceType = (short) stream_type;
         m_pidInfo.audioPids.push_back(pid);
       }
       m_pidInfo.PcrPid = pcr_pid;
@@ -332,7 +332,7 @@ void CPmtParser::OnNewSection(CSection& section)
           {
             AudioPid pid;
             pid.Pid = elementary_PID;
-            pid.AudioServiceType = stream_type;
+            pid.AudioServiceType = (short) stream_type;
             m_pidInfo.audioPids.push_back(pid);
             lpcm_audio_found = true;
           }
