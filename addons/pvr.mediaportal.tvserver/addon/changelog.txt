@@ -1,5 +1,14 @@
+v1.2.3.118
+- Added: Fast channel switching: PAT detection on channel switch to find the new channel in the Timeshift buffer file.
+  This should fix SD<->HD channel switching
+- Restored: Live555 RTSP streaming support
+- Added: Set recording play count on backend (requires TVServerXBMC build 118)
+- Added: Enable/Disable support for individual programs on Series Schedules  (requires TVServerXBMC build 118)
+
 v1.2.3.117
 - Added: timeshift support for XBMC Frodo
+- Timers: Fixed: MarginStart and MarginEnd are in minuted
+- Timers: Fixed: Update and Delete of timers for series Schedules
 
 v1.2.3.116:
 - Fixed: playback of recordings with non-ASCII characters
