@@ -8,11 +8,13 @@ SUBDIRS = pvr.demo \
           pvr.mediaportal.tvserver \
           pvr.nextpvr \
           pvr.vdr.vnsi \
-          pvr.vdr.xvdr \
           pvr.njoy \
           pvr.vuplus \
           pvr.fortherecord.argus \
           $(ADDITIONAL_SUBDIRS)
+
+#          pvr.vdr.xvdr \
+
 
 clean:
 	-rm -f *.zip
