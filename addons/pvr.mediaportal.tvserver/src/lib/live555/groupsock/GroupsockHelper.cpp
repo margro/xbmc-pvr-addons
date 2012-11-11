@@ -752,7 +752,7 @@ int gettimeofday(struct timeval* tp, int* /*tz*/) {
   if (isFirstCall) {
     struct timeb tb;
     ftime(&tb);
-    tp->tv_sec = tb.time;
+    tp->tv_sec = (long) tb.time;
     tp->tv_usec = 1000*tb.millitm;
 
     // Also get our counter frequency:
