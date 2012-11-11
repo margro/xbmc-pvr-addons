@@ -14,7 +14,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 **********/
 // "liveMedia"
-// Copyright (c) 1996-2010 Live Networks, Inc.  All rights reserved.
+// Copyright (c) 1996-2012 Live Networks, Inc.  All rights reserved.
 // Common routines used by both RTSP clients and servers
 // C++ header
 
@@ -23,6 +23,10 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef _BOOLEAN_HH
 #include "Boolean.hh"
+#endif
+
+#ifndef _MEDIA_HH
+#include <Media.hh> // includes some definitions perhaps needed for Borland compilers?
 #endif
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(_QNX4)
