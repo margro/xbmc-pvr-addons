@@ -37,7 +37,7 @@ void CDeMultiplexer::Start()
   m_ReqPatVersion = -1;
   //m_bSetAudioDiscontinuity=false;
   //m_bSetVideoDiscontinuity=false;
-  unsigned long dwBytesProcessed=0;
+  //unsigned long dwBytesProcessed=0;
   unsigned long m_Time = GetTickCount();
 
   while( (GetTickCount() - m_Time) < 5000  && m_bGotNewChannel == false)
@@ -61,7 +61,7 @@ void CDeMultiplexer::Start()
     //  m_bStarting=false;
     //  return;
     //}
-    dwBytesProcessed+=BytesRead;
+    //dwBytesProcessed+=BytesRead;
   }
   //m_streamPcr.Reset();
   //m_iAudioReadCount=0;

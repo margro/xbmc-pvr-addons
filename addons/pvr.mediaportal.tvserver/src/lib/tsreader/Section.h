@@ -40,7 +40,6 @@ public:
   int section_number;
   int version_number;
   int section_syntax_indicator;
-  int last_section_number;
 
   int BufferPos;
   byte Data[MAX_SECTION_LENGTH*5];

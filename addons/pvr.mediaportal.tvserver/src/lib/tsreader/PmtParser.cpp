@@ -136,7 +136,6 @@ void CPmtParser::OnNewSection(CSection& section)
           XBMC->Log(LOG_DEBUG, "pmt parser check1");
           return;
         }
-        x = 0;
 
         int indicator = section.Data[pointer];
         x = section.Data[pointer + 1] + 2;

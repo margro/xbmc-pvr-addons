@@ -68,7 +68,6 @@ public:
   CPidTable&  GetPidInfo();
 
 private:
-  int           m_pmtPid;
   bool          m_isFound;
   IPmtCallBack* m_pmtCallback;
   CTsHeader     m_tsHeader;

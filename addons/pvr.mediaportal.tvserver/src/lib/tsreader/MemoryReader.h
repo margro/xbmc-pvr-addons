@@ -46,5 +46,6 @@ class CMemoryReader : public FileReader
 
   private:
     CMemoryBuffer& m_buffer;
+    CMemoryReader& operator=(const CMemoryReader& memoryreader) {};
 };
 #endif //LIVE555

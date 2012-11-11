@@ -28,7 +28,7 @@
 
 using namespace ADDON;
 
-CTsHeader::CTsHeader()
+CTsHeader::CTsHeader(): SyncByte(0)
 {
 }
 
