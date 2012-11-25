@@ -404,7 +404,6 @@ bool CRTSPClient::OpenStream(const char* url)
           if (socketInputBufferSize > 0)
           {
             // Set the RTP source's input buffer size as specified:
-            int socketNum = subsession->rtpSource()->RTPgs()->socketNum();
             unsigned int curBufferSize = getReceiveBufferSize(*m_env, socketNum);
             unsigned int newBufferSize = setReceiveBufferTo(*m_env, socketNum, socketInputBufferSize);
 
