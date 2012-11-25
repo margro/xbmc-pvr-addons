@@ -121,6 +121,12 @@ unsigned long CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, long lDataLen
     }
     BufferItem *item = m_Array.at(0);
 
+    if (NULL == item)
+    {
+      XBMC->Log(LOG_DEBUG, "memorybuffer: item==NULL\n");
+      return 0;
+    }
+
     long copyLength;
     if ( (long) (item->nDataLength - item->nOffset) < (lDataLength - bytesWritten) )
     {
@@ -130,6 +136,13 @@ unsigned long CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, long lDataLen
     {
       copyLength = (lDataLength - bytesWritten);
     }
+
+    if (NULL == item->data)
+    {
+      XBMC->Log(LOG_DEBUG, "memorybuffer: item->data==NULL\n");
+      return 0;
+    }
+
     memcpy(&pbData[bytesWritten], &item->data[item->nOffset], copyLength);
 
     bytesWritten += copyLength;
@@ -166,13 +179,13 @@ long CMemoryBuffer::PutBuffer(unsigned char *pbData, long lDataLength)
     {
       sleep = true;
       XBMC->Log(LOG_DEBUG, "memorybuffer:put full buffer (%d)",m_BytesInBuffer);
-      BufferItem *item = m_Array.at(0);
-      int copyLength=item->nDataLength - item->nOffset;
+      BufferItem *item2 = m_Array.at(0);
+      int copyLength = item2->nDataLength - item2->nOffset;
 
       m_BytesInBuffer -= copyLength;
       m_Array.erase(m_Array.begin());
-      SAFE_DELETE_ARRAY(item->data);
-      SAFE_DELETE(item);
+      SAFE_DELETE_ARRAY(item2->data);
+      SAFE_DELETE(item2);
     }
     if (m_BytesInBuffer > 0)
     {
