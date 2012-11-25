@@ -202,14 +202,14 @@ void CPmtParser::OnNewSection(CSection& section)
             }
             // Find corresponding subtitle stream by PID, if not found
             // the stream type is be unknown to us
-            for (unsigned int i(0); i < m_pidInfo.subtitlePids.size(); i++)
+            for (unsigned int j(0); j < m_pidInfo.subtitlePids.size(); j++)
             {
-              if(m_pidInfo.subtitlePids[i].Pid == elementary_PID)
+              if(m_pidInfo.subtitlePids[j].Pid == elementary_PID)
               {
-                m_pidInfo.subtitlePids[i].Lang[0] = section.Data[pointer+2];
-                m_pidInfo.subtitlePids[i].Lang[1] = section.Data[pointer+3];
-                m_pidInfo.subtitlePids[i].Lang[2] = section.Data[pointer+4];
-                m_pidInfo.subtitlePids[i].Lang[3] = 0;
+                m_pidInfo.subtitlePids[j].Lang[0] = section.Data[pointer+2];
+                m_pidInfo.subtitlePids[j].Lang[1] = section.Data[pointer+3];
+                m_pidInfo.subtitlePids[j].Lang[2] = section.Data[pointer+4];
+                m_pidInfo.subtitlePids[j].Lang[3] = 0;
                 pidFound = true;
               }
             }
