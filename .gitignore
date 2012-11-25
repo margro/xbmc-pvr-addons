@@ -55,10 +55,10 @@ project/BuildDependencies/lib
 project/BuildDependencies/include
 addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
+lib/cmyth/Win32/Debug
+lib/cmyth/Win32/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
 addons/*/addon/*.so
-lib/curl-7.21.6/project/VS2012Express/Debug
-lib/curl-7.21.6/project/VS2012Express/Release
 addons/pvr.mediaportal.tvserver/src/lib/live555/obj
 addons/pvr.mediaportal.tvserver/src/lib/live555/shared
