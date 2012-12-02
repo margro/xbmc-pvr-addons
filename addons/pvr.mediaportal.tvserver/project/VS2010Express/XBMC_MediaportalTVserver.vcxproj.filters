@@ -27,6 +27,9 @@
     <Filter Include="Header Files\lib%255ctsreader\windows">
       <UniqueIdentifier>{d246253c-65e8-4771-8007-8f6863e0234d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{12a093c6-9e77-40bf-b82e-400fe194aa32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Cards.cpp">
@@ -220,5 +223,13 @@
     <ClInclude Include="..\..\src\os-dependent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\addon\changelog.txt">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

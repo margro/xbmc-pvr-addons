@@ -94,8 +94,22 @@ case "${host}" in
     OS="linux"
     ARCHITECTURE="i486"
     ;;
+  arm-apple-darwin*)
+    OS="ios"
+    HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
+    host_os_osx="yes"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
+    DYN_LIB_EXT="dylib"
+    ;;
+  x86_64-apple-darwin*)
+    OS="osx64"
+    HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
+    host_os_osx="yes"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
+    DYN_LIB_EXT="dylib"
+    ;;
   *-apple-darwin*)
-    OS="darwin"
+    OS="osx32"
     HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
     host_os_osx="yes"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
@@ -170,6 +184,39 @@ else
   echo "Intree build: $intree"
 fi
 
+# Check for intrinsics
+AC_MSG_CHECKING([for __sync_add_and_fetch(temp, 1)])
+AC_TRY_COMPILE([],[long* temp=0; __sync_add_and_fetch(temp, 1);],
+                [have_builtin_sync_add_and_fetch=yes],
+                [have_builtin_sync_add_and_fetch=no])
+AC_MSG_RESULT($have_builtin_sync_add_and_fetch)
+if test "x$have_builtin_sync_add_and_fetch" = "xyes"; then
+    AC_DEFINE(HAS_BUILTIN_SYNC_ADD_AND_FETCH, 1,
+        [Define to 1 if your compiler supports the __sync_add_and_fetch() intrinsic.])
+fi
+
+AC_MSG_CHECKING([for __sync_sub_and_fetch(temp, 1)])
+AC_TRY_COMPILE([],[long* temp=0; __sync_sub_and_fetch(temp, 1);],
+                [have_builtin_sync_sub_and_fetch=yes],
+                [have_builtin_sync_sub_and_fetch=no])
+AC_MSG_RESULT($have_builtin_sync_sub_and_fetch)
+if test "x$have_builtin_sync_sub_and_fetch" = "xyes"; then
+    AC_DEFINE(HAS_BUILTIN_SYNC_SUB_AND_FETCH, 1,
+        [Define to 1 if your compiler supports the __sync_sub_and_fetch() intrinsic.])
+fi
+
+AC_MSG_CHECKING([for __sync_val_compare_and_swap(temp, 1, 1)])
+AC_TRY_COMPILE([],[long *temp = 0; __sync_val_compare_and_swap(temp, 1, 1);],
+                [have_builtin_sync_val_compare_and_swap=yes],
+                [have_builtin_sync_val_compare_and_swap=no])
+AC_MSG_RESULT($have_builtin_sync_val_compare_and_swap)
+if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
+    AC_DEFINE(HAS_BUILTIN_SYNC_VAL_COMPARE_AND_SWAP, 1,
+        [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
+fi
+
+
+
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
 
 AC_SUBST(ARCHITECTURE)
@@ -218,7 +265,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/Makefile \
                  addons/pvr.demo/Makefile \
                  addons/pvr.dvbviewer/Makefile \
-                 addons/pvr.fortherecord.argus/Makefile \
+                 addons/pvr.argustv/Makefile \
                  addons/pvr.hts/Makefile \
                  addons/pvr.mediaportal.tvserver/Makefile \
                  addons/pvr.nextpvr/Makefile \
@@ -226,6 +273,17 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.vuplus/Makefile \
                  addons/pvr.vdr.vnsi/Makefile \
                  addons/pvr.vdr.xvdr/Makefile \
-                 addons/pvr.mythtv.cmyth/Makefile])
+                 addons/pvr.mythtv.cmyth/Makefile \
+                 addons/pvr.argustv/addon/addon.xml
+                 addons/pvr.demo/addon/addon.xml
+                 addons/pvr.dvbviewer/addon/addon.xml
+                 addons/pvr.hts/addon/addon.xml
+                 addons/pvr.mediaportal.tvserver/addon/addon.xml
+                 addons/pvr.mythtv.cmyth/addon/addon.xml
+                 addons/pvr.nextpvr/addon/addon.xml
+                 addons/pvr.njoy/addon/addon.xml
+                 addons/pvr.vdr.vnsi/addon/addon.xml
+                 addons/pvr.vdr.xvdr/addon/addon.xml
+                 addons/pvr.vuplus/addon/addon.xml])
 
 AC_OUTPUT
