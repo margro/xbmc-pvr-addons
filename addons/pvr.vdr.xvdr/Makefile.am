@@ -18,14 +18,13 @@ libvdrxvdr_addon_la_SOURCES = xvdr/XBMCAddon.cpp \
                               xvdr/XBMCCallbacks.cpp \
                               xvdr/XBMCChannelScan.cpp \
                               xvdr/XBMCSettings.cpp \
+                              libxvdr/src/clientinterface.cpp \
+                              libxvdr/src/connection.cpp \
+                              libxvdr/src/dataset.cpp \
+                              libxvdr/demux.cpp \
                               libxvdr/src/iso639.cpp \
-                              libxvdr/src/requestpacket.cpp \
-                              libxvdr/src/tools.cpp \
-                              libxvdr/src/XVDRData.cpp \
-                              libxvdr/src/XVDRDemux.cpp \
-                              libxvdr/src/XVDRRecording.cpp \
-                              libxvdr/src/XVDRResponsePacket.cpp \
-                              libxvdr/src/XVDRSession.cpp \
-                              libxvdr/src/XVDRThread.cpp \
-                              libxvdr/src/libTcpSocket/linux/net_posix.c
+                              libxvdr/src/msgtpacket.cpp \
+                              libxvdr/src/os-config.cpp \
+                              libxvdr/src/session.cpp \
+                              libxvdr/src/thread.cpp
 

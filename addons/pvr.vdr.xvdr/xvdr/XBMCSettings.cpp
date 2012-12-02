@@ -25,10 +25,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#define strdup _strdup
-#endif
-
 std::list<cXBMCConfigParameterBase*> cXBMCConfigParameterBase::m_parameters;
 
 
@@ -141,7 +137,6 @@ bool cXBMCConfigParameter<std::string>::load()
     return true;
   }
 
-  XVDRLog(XVDR_ERROR, "Couldn't get '%s' setting, falling back to default", m_setting.c_str());
   m_value = m_default;
 
   return true;
@@ -154,7 +149,6 @@ bool cXBMCConfigParameter<std::string>::set(const void* value)
   if(strcmp(str, m_value.c_str()) == 0)
     return false;
 
-  XVDRLog(XVDR_INFO, "Changed Setting '%s'", m_setting.c_str());
   m_value = str;
   return true;
 }

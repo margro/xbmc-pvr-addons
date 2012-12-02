@@ -21,10 +21,11 @@
  *
  */
 
-#include "XVDRData.h"
-#include "XVDRResponsePacket.h"
-#include "XVDRThread.h"
+#include "xvdr/connection.h"
+#include "xvdr/msgpacket.h"
+#include "xvdr/thread.h"
 #include "XBMCAddon.h"
+#include "XBMCCallbacks.h"
 #include <string>
 #include <map>
 
@@ -39,11 +40,11 @@ typedef enum scantype
 } scantype_t;
 
 
-class cXBMCChannelScan : public cXVDRData
+class cXBMCChannelScan : public XVDR::Connection
 {
 public:
 
-  cXBMCChannelScan();
+  cXBMCChannelScan(cXBMCCallbacks* client);
   ~cXBMCChannelScan();
 
   bool Open(const std::string& hostname, const char* name = "XBMC channel scanner");
@@ -60,7 +61,7 @@ public:
 
 protected:
 
-  bool OnResponsePacket(cXVDRResponsePacket* resp);
+  void OnResponsePacket(MsgPacket* resp);
 
 private:
 

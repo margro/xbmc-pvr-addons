@@ -56,13 +56,13 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\libxvdr\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>TARGET_WINDOWS;_WINDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_WINDOWS;WIN32;_WINDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>pthreadVC2d.lib;ws2_32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../libxvdr/src/libPlatform/pthread_win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>pthreadVC2.lib;ws2_32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../libxvdr/src/pthreads-win32</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>"$(ProjectDir)\..\..\..\..\scripts\copy_pvr_addon.bat" "$(TargetDir)" "$(ProjectName)"</Command>
@@ -76,7 +76,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\libxvdr\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>TARGET_WINDOWS;_WINDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_WINDOWS;WIN32;_WINDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>pthreadVC2.lib;ws2_32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../libxvdr/src/libPlatform/pthread_win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../libxvdr/src/pthreads-win32</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>"$(ProjectDir)\..\..\..\..\scripts\copy_pvr_addon.bat" "$(TargetDir)" "$(ProjectName)"</Command>
@@ -96,39 +96,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\libxvdr\src\clientinterface.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\connection.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\dataset.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\demux.cpp" />
     <ClCompile Include="..\..\libxvdr\src\iso639.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\libPlatform\windows\os_windows.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\libTcpSocket\windows\net_winsock.c" />
-    <ClCompile Include="..\..\libxvdr\src\requestpacket.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\tools.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRCallbacks.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRData.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRDemux.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRRecording.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRResponsePacket.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRSession.cpp" />
-    <ClCompile Include="..\..\libxvdr\src\XVDRThread.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\msgpacket.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\os-config.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\session.cpp" />
+    <ClCompile Include="..\..\libxvdr\src\thread.cpp" />
     <ClCompile Include="..\..\xvdr\XBMCAddon.cpp" />
     <ClCompile Include="..\..\xvdr\XBMCCallbacks.cpp" />
     <ClCompile Include="..\..\xvdr\XBMCChannelScan.cpp" />
     <ClCompile Include="..\..\xvdr\XBMCSettings.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\libxvdr\include\codecids.h" />
-    <ClInclude Include="..\..\libxvdr\include\iso639.h" />
-    <ClInclude Include="..\..\libxvdr\include\requestpacket.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRCallbacks.h" />
-    <ClInclude Include="..\..\libxvdr\include\xvdrcommand.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRData.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRDemux.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRRecording.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRResponsePacket.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRSession.h" />
-    <ClInclude Include="..\..\libxvdr\include\XVDRThread.h" />
-    <ClInclude Include="..\..\libxvdr\src\libPlatform\os-dependent.h" />
-    <ClInclude Include="..\..\libxvdr\src\libPlatform\windows\os_windows.h" />
-    <ClInclude Include="..\..\libxvdr\src\libTcpSocket\os-dependent_socket.h" />
-    <ClInclude Include="..\..\libxvdr\src\libTcpSocket\windows\net_winsock.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\clientinterface.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\command.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\connection.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\dataset.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\demux.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\msgpacket.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\session.h" />
+    <ClInclude Include="..\..\libxvdr\include\xvdr\thread.h" />
+    <ClInclude Include="..\..\libxvdr\src\avcodec.h" />
+    <ClInclude Include="..\..\libxvdr\src\iso639.h" />
+    <ClInclude Include="..\..\libxvdr\src\os-config.h" />
+    <ClInclude Include="..\..\libxvdr\src\pthreads-win32\pthread.h" />
+    <ClInclude Include="..\..\libxvdr\src\pthreads-win32\sched.h" />
     <ClInclude Include="..\..\xvdr\XBMCAddon.h" />
     <ClInclude Include="..\..\xvdr\XBMCCallbacks.h" />
     <ClInclude Include="..\..\xvdr\XBMCChannelScan.h" />

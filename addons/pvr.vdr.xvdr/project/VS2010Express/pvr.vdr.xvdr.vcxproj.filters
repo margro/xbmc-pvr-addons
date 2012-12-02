@@ -17,17 +17,11 @@
     <Filter Include="libxvdr\include">
       <UniqueIdentifier>{a891b966-5413-49fc-b1ae-6b335edf0d2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="libxvdr\src\libplatform">
-      <UniqueIdentifier>{c2ddbf41-7ac0-4637-bd91-551b760641ce}</UniqueIdentifier>
+    <Filter Include="libxvdr\include\xvdr">
+      <UniqueIdentifier>{ec658240-e590-4f46-abde-fc402bb6d603}</UniqueIdentifier>
     </Filter>
-    <Filter Include="libxvdr\src\libplatform\windows">
-      <UniqueIdentifier>{1b07b954-07e8-4753-a919-2b67aed2b38e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="libxvdr\src\libTcpSocket">
-      <UniqueIdentifier>{c5409645-6bed-4082-b40e-825bfa9491d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="libxvdr\src\libTcpSocket\windows">
-      <UniqueIdentifier>{9b50a285-ac11-41ce-86a5-43bdac265ead}</UniqueIdentifier>
+    <Filter Include="libxvdr\src\pthreads-win32">
+      <UniqueIdentifier>{386f9e11-5521-4ed6-a451-95fda3618774}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,41 +37,32 @@
     <ClCompile Include="..\..\xvdr\XBMCSettings.cpp">
       <Filter>xvdr</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libxvdr\src\clientinterface.cpp">
+      <Filter>libxvdr\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libxvdr\src\connection.cpp">
+      <Filter>libxvdr\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libxvdr\src\dataset.cpp">
+      <Filter>libxvdr\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libxvdr\src\demux.cpp">
+      <Filter>libxvdr\src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\libxvdr\src\iso639.cpp">
       <Filter>libxvdr\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRThread.cpp">
+    <ClCompile Include="..\..\libxvdr\src\msgpacket.cpp">
       <Filter>libxvdr\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\requestpacket.cpp">
+    <ClCompile Include="..\..\libxvdr\src\os-config.cpp">
       <Filter>libxvdr\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\tools.cpp">
+    <ClCompile Include="..\..\libxvdr\src\session.cpp">
       <Filter>libxvdr\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRCallbacks.cpp">
+    <ClCompile Include="..\..\libxvdr\src\thread.cpp">
       <Filter>libxvdr\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRData.cpp">
-      <Filter>libxvdr\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRDemux.cpp">
-      <Filter>libxvdr\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRRecording.cpp">
-      <Filter>libxvdr\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRResponsePacket.cpp">
-      <Filter>libxvdr\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\XVDRSession.cpp">
-      <Filter>libxvdr\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\libPlatform\windows\os_windows.cpp">
-      <Filter>libxvdr\src\libplatform\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libxvdr\src\libTcpSocket\windows\net_winsock.c">
-      <Filter>libxvdr\src\libTcpSocket\windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,50 +78,44 @@
     <ClInclude Include="..\..\xvdr\XBMCChannelScan.h">
       <Filter>xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\codecids.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\clientinterface.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\iso639.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\thread.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\requestpacket.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\command.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRCallbacks.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\connection.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\xvdrcommand.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\dataset.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRData.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\demux.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRDemux.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\msgpacket.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRRecording.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\include\xvdr\session.h">
+      <Filter>libxvdr\include\xvdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRResponsePacket.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\src\avcodec.h">
+      <Filter>libxvdr\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRSession.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\src\iso639.h">
+      <Filter>libxvdr\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\include\XVDRThread.h">
-      <Filter>libxvdr\include</Filter>
+    <ClInclude Include="..\..\libxvdr\src\os-config.h">
+      <Filter>libxvdr\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\src\libPlatform\windows\os_windows.h">
-      <Filter>libxvdr\src\libplatform\windows</Filter>
+    <ClInclude Include="..\..\libxvdr\src\pthreads-win32\sched.h">
+      <Filter>libxvdr\src\pthreads-win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libxvdr\src\libPlatform\os-dependent.h">
-      <Filter>libxvdr\src\libplatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libxvdr\src\libTcpSocket\windows\net_winsock.h">
-      <Filter>libxvdr\src\libTcpSocket\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libxvdr\src\libTcpSocket\os-dependent_socket.h">
-      <Filter>libxvdr\src\libTcpSocket</Filter>
+    <ClInclude Include="..\..\libxvdr\src\pthreads-win32\pthread.h">
+      <Filter>libxvdr\src\pthreads-win32</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

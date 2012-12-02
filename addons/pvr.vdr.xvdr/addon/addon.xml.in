@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.vdr.xvdr"
-  version="1.6.0.9.5"
+  version="1.6 [0.9.6]"
   name="VDR XVDR Client"
   provider-name="Alexander Pipelka, Alwin Esch, Team XBMC">
   <requires>
@@ -9,8 +9,8 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_VDR_xvdr.pvr"
     library_osx="XBMC_VDR_xvdr.pvr"
+    library_linux="XBMC_VDR_xvdr.pvr"
     library_wingl="XBMC_VDR_xvdr_WIN32.dll"
     library_windx="XBMC_VDR_xvdr_WIN32.dll"
     library_android="libXBMC_VDR_xvdr.so"/>
