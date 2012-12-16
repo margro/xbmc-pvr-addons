@@ -500,7 +500,7 @@ void cXBMCChannelScan::OnResponsePacket(MsgPacket* resp)
   {
     uint32_t strength = resp->get_U32();
     uint32_t locked   = resp->get_U32();
-    SetSignal(strength, locked);
+    SetSignal(strength, (locked>0));
   }
   else if (requestID == XVDR_SCANNER_DEVICE)
   {

@@ -298,7 +298,7 @@ EPG_TAG& operator<< (EPG_TAG& lhs, const EpgItem& rhs) {
 Timer& operator<< (Timer& lhs, const PVR_TIMER& rhs) {
 	lhs.IsRepeating = rhs.bIsRepeating;
 	lhs.EndTime = rhs.endTime + rhs.iMarginEnd * 60;
-	lhs.FirstDay = rhs.firstDay;
+	lhs.FirstDay = (uint8_t) rhs.firstDay;
 	lhs.ChannelUID = rhs.iClientChannelUid;
 	lhs.Index = rhs.iClientIndex;
 	lhs.EpgUID = rhs.iEpgUid;
@@ -415,7 +415,7 @@ PVR_CHANNEL_GROUP_MEMBER& operator<< (PVR_CHANNEL_GROUP_MEMBER& lhs, const Chann
 PVR_STREAM_PROPERTIES::PVR_STREAM& operator<< (PVR_STREAM_PROPERTIES::PVR_STREAM& lhs, const Stream& rhs) {
 	memset(&lhs, 0, sizeof(lhs));
 
-	lhs.fAspect = rhs.Aspect;
+	lhs.fAspect = (float) rhs.Aspect;
 	lhs.iBitRate = rhs.BitRate;
 	lhs.iBitsPerSample = rhs.BitsPerSample;
 	lhs.iBlockAlign = rhs.BlockAlign;
