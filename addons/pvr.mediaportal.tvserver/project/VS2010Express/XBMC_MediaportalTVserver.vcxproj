@@ -54,7 +54,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src;..\..\src\lib\live555\liveMedia\include;..\..\src\lib\live555\BasicUsageEnvironment\include;..\..\src\lib\live555\UsageEnvironment\include;..\..\src\lib\live555\groupsock\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>TARGET_WINDOWS;LIVE555;_WINSOCKAPI_;_DEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_WINDOWS;LIVE555;_WINSOCKAPI_;_DEBUG;_USE_32BIT_TIME_T;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -81,7 +81,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src;..\..\src\lib\live555\liveMedia\include;..\..\src\lib\live555\BasicUsageEnvironment\include;..\..\src\lib\live555\UsageEnvironment\include;..\..\src\lib\live555\groupsock\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>TARGET_WINDOWS;LIVE555;_WINSOCKAPI_;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_WINDOWS;LIVE555;_WINSOCKAPI_;_USE_32BIT_TIME_T;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
