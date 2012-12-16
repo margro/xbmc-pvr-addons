@@ -137,29 +137,13 @@ bool Dvb::Open()
   if (!LoadChannels())
     return false;
 
-  m_strEPGLanguage = GetPreferredLanguage();
-
-  CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/status.html"); 
-
-  CStdString strXML;
-  strXML = GetHttpXML(url);
-
-  XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-  
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
-  }
-  else {
-    XMLNode xNode = xMainNode.getChildNode("status");
-    GetInt(xNode, "timezone", m_iTimezone);
-  }
+  GetPreferredLanguage();
+  GetTimeZone();
 
   TimerUpdates();
 
   XBMC->Log(LOG_INFO, "%s Starting separate client update thread...", __FUNCTION__);
-  CreateThread(); 
+  CreateThread();
   
   return IsRunning(); 
 }
@@ -230,32 +214,43 @@ bool Dvb::LoadChannels()
   std::vector<DvbChannelGroup> groupsdat;
   DvbChannel datChannel;
   DvbChannelGroup datGroup;
+  char channel_group[26] = "";
 
   for (int i=0; i<num_channels; i++)
   {
-    if (i) channel++;
-    if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG) continue;
-    char channel_group[26] = "";
-    if ((strcmp(channel_group, channel->Category) != 0) && (channel->Flags & VIDEO_FLAG))
+    if (i)
+      channel++;
+
+    if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG)
     {
-      strncpy(channel_group, channel->Category, channel->Category_len);
+      if (!g_bUseFavourites || !(channel->Flags & VIDEO_FLAG))
+        continue;
+    }
+    else
+      channel_pos++;
+
+    char channel_group_dat[26] = "";
+    strncpy(channel_group_dat, channel->Category, channel->Category_len);
+    if (strcmp(channel_group, channel_group_dat))
+    {
+      memset(channel_group, 0, sizeof(channel_group));
+      strncpy(channel_group, channel_group_dat, channel->Category_len);
       char* strGroupNameUtf8 = XBMC->UnknownToUTF8(channel_group);
       datGroup.strGroupName = strGroupNameUtf8;
       groupsdat.push_back(datGroup);
       m_iNumChannelGroups++;
       XBMC->FreeString(strGroupNameUtf8);
     }
-    channel_pos++;
 
     /* EPGChannelID = (TunerType + 1)*2^48 + NID*2^32 + TID*2^16 + SID */
-    datChannel.llEpgId = ((uint64_t)(channel->TunerType + 1)<<48) + ((uint64_t)channel->OriginalNetwork_ID<<32) + ((uint64_t)channel->TransportStream_ID<<16) + channel->Service_ID;
+    datChannel.llEpgId = ((uint64_t)(channel->TunerType + 1) << 48) + ((uint64_t)channel->OriginalNetwork_ID << 32) + ((uint64_t)channel->TransportStream_ID << 16) + channel->Service_ID;
     datChannel.Encrypted = channel->Flags & ENCRYPTED_FLAG;
     /* ChannelID = (tunertype + 1) * 536870912 + APID * 65536 + SID */
     datChannel.iChannelId = ((channel->TunerType + 1) << 29) + (channel->Audio_PID << 16) + channel->Service_ID;
     datChannel.bRadio = (channel->Flags & VIDEO_FLAG) == 0;
     datChannel.strGroupName = datGroup.strGroupName;
-    datChannel.iUniqueId = channelsdat.size()+1;
-    datChannel.iChannelNumber = channelsdat.size()+1;
+    datChannel.iUniqueId = channelsdat.size() + 1;
+    datChannel.iChannelNumber = channelsdat.size() + 1;
 
     char channel_name[26] = "";
     CStdString strChannelName = strncpy(channel_name, channel->ChannelName, channel->ChannelName_len);
@@ -265,12 +260,14 @@ bool Dvb::LoadChannels()
       {
         char channel_root[26] = "";
         CStdString strRoot = strncpy(channel_root, channel->Root, 25);
-        strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
+        if (channel->Root_len < 25)
+          strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
         if (channel->Category[channel->Category_len] > 0)
         {
           char channel_category[26] = "";
           CStdString strCategory = strncpy(channel_category, channel->Category, 25);
-          strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
+          if (channel->Category_len < 25)
+            strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
         }
       }
     }
@@ -279,7 +276,7 @@ bool Dvb::LoadChannels()
     XBMC->FreeString(strChannelNameUtf8);
   
     CStdString strTmp;
-    strTmp.Format("%supnp/channelstream/%d.ts", m_strURLStream.c_str(), channel_pos-1);
+    strTmp.Format("%supnp/channelstream/%d.ts", m_strURLStream.c_str(), channel_pos - 1);
     datChannel.strStreamURL = strTmp;
 
     strTmp.Format("%sLogos/%s.png", m_strURL.c_str(), URLEncodeInline(datChannel.strChannelName.c_str())); 
@@ -418,7 +415,7 @@ unsigned int Dvb::GetRecordingsAmount() {
 
 PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
-    for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
+  for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
   {
     DvbChannel &channel = m_channels.at(iChannelPtr);
     if (channel.bRadio == bRadio)
@@ -616,7 +613,7 @@ PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
 std::vector<DvbTimer> Dvb::LoadTimers()
 {
   CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/timerlist.html"); 
+  url.Format("%s%s", m_strURL.c_str(), "api/timerlist.html?utf8");
 
   CStdString strXML;
   strXML = GetHttpXML(url);
@@ -722,15 +719,21 @@ void Dvb::GenerateTimer(const PVR_TIMER &timer, bool bNewTimer)
 {
   XBMC->Log(LOG_DEBUG, "%s - channelUid=%d title=%s epgid=%d", __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
 
-  struct tm * timeinfo;
-  time_t startTime = timer.startTime;
-  if (startTime == 0)
-    startTime = time(NULL);
-  int dor = ((startTime + m_iTimezone*60 - timer.iMarginStart) / DAY_SECS) + DELPHI_DATE;
-  timeinfo = gmtime (&startTime);
-  int start = (timeinfo->tm_hour*60 + m_iTimezone + timeinfo->tm_min - timer.iMarginStart) % DAY_MINS;
-  timeinfo = gmtime (&timer.endTime);
-  int stop = (timeinfo->tm_hour*60 + m_iTimezone + timeinfo->tm_min + timer.iMarginEnd) % DAY_MINS;
+  struct tm *timeinfo;
+  time_t startTime = timer.startTime, endTime = timer.endTime;
+  if (!startTime)
+    time(&startTime);
+  else
+  {
+    startTime -= timer.iMarginStart*60;
+    endTime += timer.iMarginEnd*60;
+  }
+
+  int dor = ((startTime + m_iTimezone*60) / DAY_SECS) + DELPHI_DATE;
+  timeinfo = localtime(&startTime);
+  int start = timeinfo->tm_hour*60 + timeinfo->tm_min;
+  timeinfo = localtime(&endTime);
+  int stop = timeinfo->tm_hour*60 + timeinfo->tm_min;
 
   char strWeek[8] = "-------";
   for (int i = 0; i<7; i++)
@@ -741,18 +744,13 @@ void Dvb::GenerateTimer(const PVR_TIMER &timer, bool bNewTimer)
   int iChannelId = m_channels.at(timer.iClientChannelUid-1).iChannelId;
   CStdString strTmp;
   if (bNewTimer)
-  {
-    if (timer.startTime)
-      strTmp.Format("api/timeradd.html?ch=%d&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s", iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
-    else
-      strTmp.Format("api/timeradd.html?ch=%d&dor=%d&enable=1&start=%d&stop=%d&prio=%d&title=%s", iChannelId, dor, start+timer.iMarginStart, stop-timer.iMarginEnd, timer.iPriority, URLEncodeInline(timer.strTitle));
-  }
+    strTmp.Format("api/timeradd.html?ch=%d&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255", iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
   else
   {
     int enabled = 1;
     if (timer.state == PVR_TIMER_STATE_CANCELLED)
       enabled = 0;
-    strTmp.Format("api/timeredit.html?id=%d&ch=%d&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s", GetTimerID(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+    strTmp.Format("api/timeredit.html?id=%d&ch=%d&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255", GetTimerID(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
   }
   
   SendSimpleCommand(strTmp);
@@ -795,7 +793,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
   m_recordings.clear();
 
   CStdString url;
-  url.Format("%s%s", m_strURL.c_str(), "api/recordings.html?utf8=");
+  url.Format("%s%s", m_strURL.c_str(), "api/recordings.html?utf8");
  
   CStdString strXML;
   strXML = GetHttpXML(url);
@@ -1023,14 +1021,34 @@ bool Dvb::GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStr
   return false;
 }
 
-CStdString Dvb::GetPreferredLanguage()
+void Dvb::GetPreferredLanguage()
 {
   CStdString strXML, url;
   url.Format("%s%s",  m_strURL.c_str(), "config.html?aktion=config"); 
   strXML = GetHttpXML(url);
   unsigned int iLanguagePos = strXML.find("EPGLanguage");
   iLanguagePos = strXML.find(" selected>", iLanguagePos);
-  return (strXML.substr(iLanguagePos-4, 3));
+  m_strEPGLanguage = strXML.substr(iLanguagePos-4, 3);
+}
+
+void Dvb::GetTimeZone()
+{
+  CStdString url; 
+  url.Format("%s%s", m_strURL.c_str(), "api/status.html"); 
+
+  CStdString strXML;
+  strXML = GetHttpXML(url);
+
+  XMLResults xe;
+  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
+  
+  if(xe.error != 0)  {
+    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
+  }
+  else {
+    XMLNode xNode = xMainNode.getChildNode("status");
+    GetInt(xNode, "timezone", m_iTimezone);
+  }
 }
 
 void Dvb::RemoveNullChars(CStdString &String)

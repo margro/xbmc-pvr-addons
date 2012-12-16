@@ -26,7 +26,6 @@
 #define VNSI_DEMUXER_H
 
 #include <vdr/device.h>
-#include <queue>
 
 #define DVD_TIME_BASE 1000000
 #define DVD_NOPTS_VALUE    (-1LL<<52) // should be possible to represent in both double and __int64
@@ -174,7 +173,8 @@ enum eStreamType
   stAC3,
   stMPEG2AUDIO,
   stEAC3,
-  stAAC,
+  stAACADST,
+  stAACLATM,
   stDTS,
   stMPEG2VIDEO,
   stH264,
@@ -233,8 +233,6 @@ public:
 
 protected:
   bool        m_FoundFrame;
-
-  std::queue<sStreamPacket*> m_queue;
 };
 
 
@@ -242,9 +240,9 @@ class cTSDemuxer
 {
 private:
   cLiveStreamer        *m_Streamer;
+  eStreamType           m_streamType;
   const int             m_pID;
   eStreamContent        m_streamContent;
-  eStreamType           m_streamType;
 
   bool                  m_pesError;
   cParser              *m_pesParser;

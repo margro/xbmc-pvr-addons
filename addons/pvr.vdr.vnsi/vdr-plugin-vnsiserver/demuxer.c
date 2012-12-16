@@ -167,19 +167,6 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
   return hdr_len;
 }
 
-void cParser::BufferPacket(sStreamPacket *pkt)
-{
-  // create new packet
-  sStreamPacket* p = new sStreamPacket(*pkt);
-
-  // copy payload
-  p->data = (uint8_t*)malloc(pkt->size);
-  memcpy(p->data, pkt->data, pkt->size);
-
-  // push to queue
-  m_queue.push(p);
-}
-
 void cParser::SendPacket(sStreamPacket *pkt)
 {
   if(pkt->dts == DVD_NOPTS_VALUE) return;
@@ -193,32 +180,12 @@ void cParser::SendPacket(sStreamPacket *pkt)
   pkt->pts      = Rescale(pts);
   pkt->duration = Rescale(pkt->duration);
 
-  // buffer packets if we are not ready to send
+  // discard packets until we have seen an i-frame
   if (m_Streamer->IsStarting()) {
-    BufferPacket(pkt);
     return;
   }
 
-  // stream packet if queue is empty
-  if(m_queue.size() == 0) {
-    m_Streamer->sendStreamPacket(pkt);
-    return;
-  }
-
-  BufferPacket(pkt);
-
-  // send buffered data first
-  INFOLOG("sending %i buffered packets", (int)m_queue.size());
-
-  while(m_queue.size() > 0) {
-    sStreamPacket* p = m_queue.front();
-    if(p != NULL) {
-      m_Streamer->sendStreamPacket(p);
-      free(p->data);
-      delete p;
-    }
-    m_queue.pop();
-  }
+  m_Streamer->sendStreamPacket(pkt);
 }
 
 
@@ -226,8 +193,8 @@ void cParser::SendPacket(sStreamPacket *pkt)
 
 cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, eStreamType type, int pid)
   : m_Streamer(streamer)
-  , m_pID(pid)
   , m_streamType(type)
+  , m_pID(pid)
 {
   m_pesError        = false;
   m_pesParser       = NULL;
@@ -249,7 +216,9 @@ cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, eStreamType type, int pid)
     m_pesParser = new cParserH264(this, m_Streamer, m_pID);
   else if (m_streamType == stMPEG2AUDIO)
     m_pesParser = new cParserMPEG2Audio(this, m_Streamer, m_pID);
-  else if (m_streamType == stAAC)
+  else if (m_streamType == stAACADST)
+    m_pesParser = new cParserAAC(this, m_Streamer, m_pID);
+  else if (m_streamType == stAACLATM)
     m_pesParser = new cParserAAC(this, m_Streamer, m_pID);
   else if (m_streamType == stAC3)
     m_pesParser = new cParserAC3(this, m_Streamer, m_pID);
