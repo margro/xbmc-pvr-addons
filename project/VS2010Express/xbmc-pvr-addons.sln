@@ -46,6 +46,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.argustv", "..\..\addons
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vdr.xvdr", "..\..\addons\pvr.vdr.xvdr\project\VS2010Express\pvr.vdr.xvdr.vcxproj", "{C5EB52C1-2427-45BE-B955-1543E3EA83A3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.fortherecord.argus", "..\..\addons\pvr.fortherecord.argus\project\VS2010Express\pvr.fortherecord.argus.vcxproj", "{8A82D2E1-F76F-427C-9479-FE70DA02825D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -120,6 +122,10 @@ Global
 		{C5EB52C1-2427-45BE-B955-1543E3EA83A3}.Debug|Win32.Build.0 = Debug|Win32
 		{C5EB52C1-2427-45BE-B955-1543E3EA83A3}.Release|Win32.ActiveCfg = Release|Win32
 		{C5EB52C1-2427-45BE-B955-1543E3EA83A3}.Release|Win32.Build.0 = Release|Win32
+		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.Build.0 = Debug|Win32
+		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.ActiveCfg = Release|Win32
+		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
