@@ -6,7 +6,7 @@
 
 namespace OS
 {
-  bool CFile::Exists(const std::string& strFileName)
+  bool CFile::Exists(const std::string& strFileName, long* errCode)
   {
     CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(strFileName.c_str());
     DWORD dwAttr = GetFileAttributesW(strWFile.c_str());
@@ -15,6 +15,10 @@ namespace OS
     {
       return true;
     }
+
+    if (errCode)
+      *errCode = GetLastError();
+
     return false;
   }
 }
