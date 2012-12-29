@@ -28,7 +28,19 @@
 
 using namespace ADDON;
 
-CTsHeader::CTsHeader(): SyncByte(0)
+CTsHeader::CTsHeader(): SyncByte(0),
+  TransportError(false),
+  PayloadUnitStart(false),
+  TransportPriority(false),
+  Pid(0),
+  TScrambling(0),
+  AdaptionControl(0),
+  ContinuityCounter(0),
+  AdaptionFieldLength(0),
+  PayLoadStart(0),
+  HasAdaptionField(false),
+  HasPayload(false),
+  m_packet(NULL)
 {
 }
 
