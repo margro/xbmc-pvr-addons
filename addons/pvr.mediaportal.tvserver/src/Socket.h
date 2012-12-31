@@ -45,7 +45,7 @@ namespace MPTV //Prevent name clash with Live555 Socket
   #ifndef sa_family_t
     #define sa_family_t ADDRESS_FAMILY
   #endif
-#elif defined TARGET_LINUX || defined TARGET_DARWIN
+#elif defined TARGET_LINUX || defined TARGET_DARWIN || defined TARGET_FREEBSD
 #ifdef SOCKADDR_IN
 #undef SOCKADDR_IN
 #endif
