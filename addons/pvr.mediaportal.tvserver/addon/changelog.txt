@@ -3,9 +3,12 @@ Development:
   This should fix SD<->HD channel switching
 - Restored: Live555 RTSP streaming support
 
-v1.6.7
+v1.6.8
 - Channels: Use MediaPortal VisibleInGuide property as inverted IsHidden flag in XBMC. (requires TVServerXBMC build 120)
 - Channelgroups: Don't import other channel groups when the user selected to import channels from a single group.
+
+v1.6.7
+- Updated language files from Transifex
 
 v1.6.6
 - Added: Set recording play count on backend (requires TVServerXBMC build 118)
