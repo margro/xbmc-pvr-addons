@@ -2,6 +2,7 @@ Development:
 - Added: Fast channel switching: PAT detection on channel switch to find the new channel in the Timeshift buffer file.
   This should fix SD<->HD channel switching
 - Restored: Live555 RTSP streaming support
+- Recordings: Trigger a recording list update when the backend couldn't find the selected recording
 
 v1.6.8
 - Channels: Use MediaPortal VisibleInGuide property as inverted IsHidden flag in XBMC. (requires TVServerXBMC build 120)
