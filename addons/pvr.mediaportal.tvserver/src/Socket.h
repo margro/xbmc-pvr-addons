@@ -283,6 +283,7 @@ class Socket
     bool set_non_blocking ( const bool );
 
     bool ReadResponse (int &code, vector<string> &lines);
+    bool ReadLine (string& line);
 
     bool is_valid() const;
 

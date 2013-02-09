@@ -351,6 +351,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     {
       XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
       lines.push_back("ERROR: Select failed");
+      errormessage(GetLastError(), __FUNCTION__);
       code = 1; //error
       _sd = INVALID_SOCKET;
       return false;
@@ -364,10 +365,9 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
          retries--;
         continue;
       } else {
-         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Failed after 10 retries.", __FUNCTION__);
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Stopping after 10 retries.", __FUNCTION__);
          lines.push_back("ERROR: Failed after 10 retries");
          code = 1; //error
-        _sd = INVALID_SOCKET;
          return false;
       }
     }
@@ -377,6 +377,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     {
       XBMC->Log(LOG_DEBUG, "%s: recv failed", __FUNCTION__);
       lines.push_back("ERROR: Recv failed");
+      errormessage(GetLastError(), __FUNCTION__);
       code = 1; //error
       _sd = INVALID_SOCKET;
       return false;
@@ -388,6 +389,72 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
 
   return true;
 }
+
+//Receive until error or \n
+bool Socket::ReadLine (string& line)
+{
+  fd_set         set_r, set_e;
+  timeval        timeout;
+  int            result;
+  int            retries = 6;
+  char           buffer[2048];
+  size_t         pos1 = 0;
+
+  while (true)
+  {
+    if ((pos1 = line.find("\r\n", 0)) != std::string::npos)
+    {
+      line.erase(pos1,  string::npos);
+      return true;
+    }
+
+    timeout.tv_sec  = RECEIVE_TIMEOUT;
+    timeout.tv_usec = 0;
+
+    // fill with new data
+    FD_ZERO(&set_r);
+    FD_ZERO(&set_e);
+    FD_SET(_sd, &set_r);
+    FD_SET(_sd, &set_e);
+    result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
+
+    if (result < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
+      errormessage(GetLastError(), __FUNCTION__);
+      _sd = INVALID_SOCKET;
+      return false;
+    }
+
+    if (result == 0)
+    {
+      if (retries != 0)
+      {
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response, retrying... (%i)", __FUNCTION__, retries);
+         retries--;
+        continue;
+      } else {
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Aborting after 10 retries.", __FUNCTION__);
+         return false;
+      }
+    }
+
+    result = recv(_sd, buffer, sizeof(buffer) - 1, 0);
+    if (result < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "%s: recv failed", __FUNCTION__);
+      errormessage(GetLastError(), __FUNCTION__);
+      _sd = INVALID_SOCKET;
+      return false;
+    }
+    buffer[result] = 0;
+
+    line.append(buffer);
+  }
+
+  return true;
+}
+
 
 int Socket::receive ( std::string& data) const
 {
