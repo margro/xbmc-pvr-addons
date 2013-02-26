@@ -32,7 +32,7 @@ bool CCards::ParseLines(vector<string>& lines)
 
   for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
   {
-    string& data(*it);
+    string data = *it;
 
     if (!data.empty())
     {
@@ -60,6 +60,8 @@ bool CCards::ParseLines(vector<string>& lines)
       // field 16 = stopgraph
       // field 17 = UNC path recording folder (when shared)
       // field 18 = UNC path timeshift folder (when shared)
+      if (fields.empty())
+        return false;
 
       card.IdCard = atoi(fields[0].c_str());
       card.DevicePath = fields[1];
