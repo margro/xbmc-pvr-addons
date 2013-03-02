@@ -11,11 +11,7 @@ SUBDIRS = pvr.demo \
           pvr.njoy \
           pvr.vuplus \
           pvr.fortherecord.argus \
-          pvr.argustv \
-          $(ADDITIONAL_SUBDIRS)
-
-#          pvr.vdr.xvdr \
-
+          pvr.argustv $(ADDITIONAL_SUBDIRS)
 
 clean:
 	-rm -f *.zip
