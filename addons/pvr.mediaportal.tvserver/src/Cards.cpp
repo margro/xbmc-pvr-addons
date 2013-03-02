@@ -60,7 +60,7 @@ bool CCards::ParseLines(vector<string>& lines)
       // field 16 = stopgraph
       // field 17 = UNC path recording folder (when shared)
       // field 18 = UNC path timeshift folder (when shared)
-      if (fields.empty())
+      if (fields.size() < 17)
         return false;
 
       card.IdCard = atoi(fields[0].c_str());
@@ -81,7 +81,7 @@ bool CCards::ParseLines(vector<string>& lines)
       card.NetProvider = atoi(fields[15].c_str());
       card.StopGraph = stringtobool(fields[16]);
 
-      if (fields.size() > 17) // since TVServerXBMC build 115
+      if (fields.size() >= 19) // since TVServerXBMC build 115
       {
         card.RecordingFolderUNC = fields[17];
         card.TimeshiftFolderUNC = fields[18];
