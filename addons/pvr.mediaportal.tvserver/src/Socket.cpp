@@ -351,7 +351,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     {
       XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
       lines.push_back("ERROR: Select failed");
-      errormessage(GetLastError(), __FUNCTION__);
+      errormessage(getLastError(), __FUNCTION__);
       code = 1; //error
       _sd = INVALID_SOCKET;
       return false;
@@ -377,7 +377,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     {
       XBMC->Log(LOG_DEBUG, "%s: recv failed", __FUNCTION__);
       lines.push_back("ERROR: Recv failed");
-      errormessage(GetLastError(), __FUNCTION__);
+      errormessage(getLastError(), __FUNCTION__);
       code = 1; //error
       _sd = INVALID_SOCKET;
       return false;
@@ -421,7 +421,7 @@ bool Socket::ReadLine (string& line)
     if (result < 0)
     {
       XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
-      errormessage(GetLastError(), __FUNCTION__);
+      errormessage(getLastError(), __FUNCTION__);
       _sd = INVALID_SOCKET;
       return false;
     }
@@ -443,7 +443,7 @@ bool Socket::ReadLine (string& line)
     if (result < 0)
     {
       XBMC->Log(LOG_DEBUG, "%s: recv failed", __FUNCTION__);
-      errormessage(GetLastError(), __FUNCTION__);
+      errormessage(getLastError(), __FUNCTION__);
       _sd = INVALID_SOCKET;
       return false;
     }
