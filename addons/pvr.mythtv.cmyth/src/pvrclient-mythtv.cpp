@@ -198,6 +198,7 @@ bool PVRClientMythTV::Connect()
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300));
     return false;
   }
+  m_pEventHandler->RegisterObserver(this);
 
   // Create database connection
   m_db = MythDatabase(g_szDBHostname, g_szDBName, g_szDBUser, g_szDBPassword, g_iDBPort);
@@ -249,6 +250,22 @@ bool PVRClientMythTV::GetDriveSpace(long long *iTotal, long long *iUsed)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
   return m_con.GetDriveSpace(*iTotal, *iUsed);
+}
+
+void PVRClientMythTV::OnSleep()
+{
+  if (m_pEventHandler)
+    m_pEventHandler->Suspend();
+  if (m_fileOps)
+    m_fileOps->Suspend();
+}
+
+void PVRClientMythTV::OnWake()
+{
+  if (m_pEventHandler)
+    m_pEventHandler->Resume();
+  if (m_fileOps)
+    m_fileOps->Resume();
 }
 
 PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
@@ -467,7 +484,7 @@ int PVRClientMythTV::GetRecordingsAmount(void)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_recordingsLock.Lock();
-  if (m_recordings.size() == 0)
+  if (m_recordings.empty())
     // Load recorings list
     res = FillRecordings();
   else
@@ -490,7 +507,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_recordingsLock.Lock();
-  if (m_recordings.size() == 0)
+  if (m_recordings.empty())
     // Load recorings list
     FillRecordings();
   else
@@ -507,6 +524,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.recordingTime = it->second.StartTime();
       tag.iDuration = it->second.Duration();
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
+      tag.iLastPlayedPosition = GetRecordingLastPlayedPosition(it->second);
 
       CStdString id = it->second.UID();
       CStdString title = it->second.Title();
@@ -533,7 +551,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       if (!it->second.Coverart().IsEmpty())
         strIconPath = GetArtWork(FileOps::FileTypeCoverart, it->second.Coverart());
       else
-        strIconPath = m_fileOps->GetPreviewIconPath(it->second.IconPath());
+        strIconPath = m_fileOps->GetPreviewIconPath(it->second.IconPath(), it->second.RecordingGroup());
 
       CStdString strFanartPath;
       if (!it->second.Fanart().IsEmpty())
@@ -764,7 +782,6 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
 {
   // MythTV provides it's bookmarks as frame offsets whereas XBMC expects a time offset.
   // The frame offset is calculated by: frameOffset = bookmark * frameRate.
-  long long frameOffset = 0;
 
   if (g_bExtraDebug)
   {
@@ -779,7 +796,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     if (it->second.Framterate() < 0)
       it->second.SetFramerate(m_db.GetRecordingFrameRate(it->second));
     // Calculate the frame offset
-    frameOffset = (long long)(lastplayedposition * it->second.Framterate() / 1000.0f);
+    long long frameOffset = (long long)(lastplayedposition * it->second.Framterate() / 1000.0f);
     if (frameOffset < 0) frameOffset = 0;
     if (g_bExtraDebug)
     {
@@ -808,6 +825,104 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
   return PVR_ERROR_FAILED;
 }
 
+int PVRClientMythTV::GetRecordingLastPlayedPosition(MythProgramInfo &programInfo)
+{
+  // MythTV provides it's bookmarks as frame offsets whereas XBMC expects a time offset.
+  // The bookmark in seconds is calculated by: bookmark = frameOffset / frameRate.
+  int bookmark = 0;
+
+  if (programInfo.HasBookmark())
+  {
+    long long frameOffset = m_con.GetBookmark(programInfo); // returns 0 if no bookmark was found
+    if (frameOffset > 0)
+    {
+      if (g_bExtraDebug)
+      {
+        XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
+      }
+      // Pin framerate value
+      if (programInfo.Framterate() < 0)
+        programInfo.SetFramerate(m_db.GetRecordingFrameRate(programInfo));
+      float frameRate = (float)programInfo.Framterate() / 1000.0f;
+      if (frameRate > 0)
+      {
+        bookmark = (int)((float)frameOffset / frameRate);
+        if (g_bExtraDebug)
+        {
+          XBMC->Log(LOG_DEBUG, "%s - Bookmark: %d)", __FUNCTION__, bookmark);
+        }
+      }
+    }
+  }
+  else
+  {
+    if (g_bExtraDebug)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Recording %s has no bookmark", __FUNCTION__, programInfo.Title().c_str());
+    }
+  }
+
+  if (bookmark < 0) bookmark = 0;
+  return bookmark;
+}
+
+PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size)
+{
+  if (g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Reading edl for: %s", __FUNCTION__, recording.strTitle);
+  }
+
+  CLockObject lock(m_recordingsLock);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it == m_recordings.end())
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    *size = 0;
+    return PVR_ERROR_FAILED;
+  }
+
+  float frameRate = m_db.GetRecordingFrameRate(it->second) / 1000.0f;
+  if (frameRate <= 0)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Failed to read framerate for %s", __FUNCTION__, recording.strRecordingId);
+    *size = 0;
+    return PVR_ERROR_FAILED;
+  }
+
+  Edl commbreakList = m_con.GetCommbreakList(it->second);
+  int commbreakCount = commbreakList.size();
+  XBMC->Log(LOG_DEBUG, "%s - Found %d commercial breaks for: %s", __FUNCTION__, commbreakCount, recording.strTitle);
+
+  Edl cutList = m_con.GetCutList(it->second);
+  XBMC->Log(LOG_DEBUG, "%s - Found %d cut list entries for: %s", __FUNCTION__, cutList.size(), recording.strTitle);
+
+  commbreakList.insert(commbreakList.end(), cutList.begin(), cutList.end());
+
+  int index = 0;
+  Edl::const_iterator edlIt;
+  for (edlIt = commbreakList.begin(); edlIt != commbreakList.end(); ++edlIt)
+  {
+    if (index < *size)
+    {
+      PVR_EDL_ENTRY entry;
+      entry.start = (int64_t)(edlIt->start_mark / frameRate * 1000);
+      entry.end = (int64_t)(edlIt->end_mark / frameRate * 1000);
+      entry.type = index < commbreakCount ? PVR_EDL_TYPE_COMBREAK : PVR_EDL_TYPE_CUT;
+      entries[index] = entry;
+      index++;
+    }
+    else
+    {
+      XBMC->Log(LOG_ERROR, "%s - Maximum number of edl entries reached for: %s", __FUNCTION__, recording.strTitle);
+      break;
+    }
+  }
+
+  *size = index;
+  return PVR_ERROR_NO_ERROR;
+}
+
 int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
   // MythTV provides it's bookmarks as frame offsets whereas XBMC expects a time offset.
@@ -821,43 +936,11 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
 
   CLockObject lock(m_recordingsLock);
   ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
-  if (it != m_recordings.end() && it->second.HasBookmark())
-  {
-    long long frameOffset = m_con.GetBookmark(it->second); // returns 0 if no bookmark was found
-    if (frameOffset > 0)
-    {
-      if (g_bExtraDebug)
-      {
-        XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
-      }
-      // Pin framerate value
-      if (it->second.Framterate() <0)
-        it->second.SetFramerate(m_db.GetRecordingFrameRate(it->second));
-      float frameRate = (float)it->second.Framterate() / 1000.0f;
-      if (frameRate > 0)
-      {
-        bookmark = (int)((float)frameOffset / frameRate);
-        if (g_bExtraDebug)
-        {
-          XBMC->Log(LOG_DEBUG, "%s - Bookmark: %d)", __FUNCTION__, bookmark);
-        }
-      }
-    }
-  }
+  if (it != m_recordings.end())
+    bookmark = GetRecordingLastPlayedPosition(it->second);
   else
-  {
-    if (it == m_recordings.end())
-    {
-      XBMC->Log(LOG_ERROR, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
-    }
-    else if (!it->second.HasBookmark() && g_bExtraDebug)
-    {
-      XBMC->Log(LOG_DEBUG, "%s - Recording %s has no bookmark", __FUNCTION__, recording.strRecordingId);
-    }
-    return bookmark;
-  }
+    XBMC->Log(LOG_ERROR, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
 
-  if (bookmark < 0) bookmark = 0;
   return bookmark;
 }
 
@@ -878,13 +961,13 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
   RecordingRuleMap rules = m_db.GetRecordingRules();
   m_recordingRules.clear();
 
-  for (RecordingRuleMap::iterator it = rules.begin(); it != rules.end(); it++)
+  for (RecordingRuleMap::iterator it = rules.begin(); it != rules.end(); ++it)
     m_recordingRules.push_back(it->second);
 
   //Search for modifiers and add links to them
-  for (RecordingRuleList::iterator it = m_recordingRules.begin(); it != m_recordingRules.end(); it++)
+  for (RecordingRuleList::iterator it = m_recordingRules.begin(); it != m_recordingRules.end(); ++it)
     if (it->Type() == MythRecordingRule::DontRecord || it->Type() == MythRecordingRule::OverrideRecord)
-      for (RecordingRuleList::iterator it2 = m_recordingRules.begin(); it2 != m_recordingRules.end(); it2++)
+      for (RecordingRuleList::iterator it2 = m_recordingRules.begin(); it2 != m_recordingRules.end(); ++it2)
         if (it2->Type() != MythRecordingRule::DontRecord && it2->Type() != MythRecordingRule::OverrideRecord)
           if (it->SameTimeslot(*it2) && !it->GetParent())
           {
@@ -893,7 +976,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
           }
 
   ProgramInfoMap upcomingRecordings = m_con.GetPendingPrograms();
-  for (ProgramInfoMap::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); it++)
+  for (ProgramInfoMap::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); ++it)
   {
     // When deleting a timer from mythweb, it might happen that it's removed from database
     // but it's still present over mythprotocol. Skip those timers, because timers.at would crash.
@@ -1171,7 +1254,6 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
     if (oldTimer.iClientChannelUid != timer.iClientChannelUid ||
       oldTimer.endTime != timer.endTime ||
       oldTimer.startTime != timer.startTime ||
-      oldTimer.startTime != timer.startTime ||
       strcmp(oldTimer.strTitle, timer.strTitle) ||
       timer.bIsRepeating
       )
@@ -1401,7 +1483,7 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - chanID: %u", __FUNCTION__, channelinfo.iUniqueId);
 
-  bool retval = false;
+  bool retval;
 
   //Close current live stream for reopening
   //Keep playback mode enabled

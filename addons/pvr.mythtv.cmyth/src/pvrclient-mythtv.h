@@ -53,11 +53,11 @@ private:
 
 typedef std::vector<RecordingRule> RecordingRuleList;
 
-class PVRClientMythTV
+class PVRClientMythTV : public MythEventObserver
 {
 public:
   PVRClientMythTV();
-  ~PVRClientMythTV();
+  virtual ~PVRClientMythTV();
 
   // Server
   bool Connect();
@@ -65,6 +65,8 @@ public:
   const char *GetBackendVersion();
   const char *GetConnectionString();
   bool GetDriveSpace(long long *iTotal, long long *iUsed);
+  void OnSleep();
+  void OnWake();
 
   // EPG
   PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
@@ -85,6 +87,7 @@ public:
   PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
   PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
   int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
+  PVR_ERROR GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size);
 
   // Timers
   int GetTimersAmount();
@@ -146,6 +149,7 @@ private:
   void EventUpdateRecordings();
   void ForceUpdateRecording(ProgramInfoMap::iterator it);
   int FillRecordings();
+  int GetRecordingLastPlayedPosition(MythProgramInfo &programInfo);
 
   // Timers
   RecordingRuleList m_recordingRules;
