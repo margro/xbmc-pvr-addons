@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>pvrlib.libhts</ProjectName>
-    <ProjectGuid>{00700E12-A63B-4E54-B962-4011A90584BD}</ProjectGuid>
+    <ProjectGuid>{B38CDB6B-4E39-4231-AB31-580998EED0CA}</ProjectGuid>
     <RootNamespace>libhts</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
