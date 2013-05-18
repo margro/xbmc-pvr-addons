@@ -62,6 +62,7 @@ class MultiFileReader : public FileReader
     virtual int64_t GetFilePointer();
     virtual int64_t GetFileSize();
     virtual int64_t OnChannelChange(void);
+    int64_t SetCurrentFilePointer(int64_t timeShiftBufferFilePos, long timeshiftBufferFileID);
 
   protected:
     long RefreshTSBufferFile();
@@ -69,6 +70,7 @@ class MultiFileReader : public FileReader
 
     FileReader m_TSBufferFile;
     int64_t m_startPosition;
+    int64_t m_currentFileStartOffset;
     int64_t m_endPosition;
     int64_t m_currentPosition;
     int64_t m_lastZapPosition;
