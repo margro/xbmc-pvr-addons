@@ -5,6 +5,10 @@ Development:
 - Recordings: Trigger a recording list update when the backend couldn't find the selected recording
 - Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
 
+v1.8.8
+
+- sync with PVR API v1.8.0
+
 v1.7.8
 - Bump after PVR API version bump
 
