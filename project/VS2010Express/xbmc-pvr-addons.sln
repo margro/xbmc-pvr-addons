@@ -48,6 +48,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vdr.xvdr", "..\..\addon
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.fortherecord.argus", "..\..\addons\pvr.fortherecord.argus\project\VS2010Express\pvr.fortherecord.argus.vcxproj", "{8A82D2E1-F76F-427C-9479-FE70DA02825D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.iptvsimple", "..\..\addons\pvr.iptvsimple\project\VS2010Express\pvr.iptvsimple.vcxproj", "{6C67B057-CE98-4732-AABF-0E374C718815}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -126,6 +128,10 @@ Global
 		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.Build.0 = Debug|Win32
 		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.ActiveCfg = Release|Win32
 		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.Build.0 = Release|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Debug|Win32.Build.0 = Debug|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Release|Win32.ActiveCfg = Release|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
