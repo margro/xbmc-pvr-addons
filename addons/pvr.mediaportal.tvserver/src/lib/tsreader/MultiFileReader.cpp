@@ -69,9 +69,15 @@ MultiFileReader::~MultiFileReader()
 }
 
 
-long MultiFileReader::SetFileName(const char* pszFileName)
+long MultiFileReader::SetFileName(const std::string& fileName)
 {
-  return m_TSBufferFile.SetFileName(pszFileName);
+  return m_TSBufferFile.SetFileName(fileName);
+}
+
+long MultiFileReader::OpenFile(const std::string& fileName)
+{
+  SetFileName(fileName);
+  return OpenFile();
 }
 
 //
@@ -79,8 +85,12 @@ long MultiFileReader::SetFileName(const char* pszFileName)
 //
 long MultiFileReader::OpenFile()
 {
-  long hr = m_TSBufferFile.OpenFile();
-  XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file opened return code %d.", hr);
+  long hResult = m_TSBufferFile.OpenFile();
+  XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file opened return code %d.", hResult);
+
+  if (hResult != S_OK)
+    return hResult;
+
   m_lastZapPosition = 0;
   m_currentFileStartOffset = 0;
 
@@ -92,8 +102,8 @@ long MultiFileReader::OpenFile()
     XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file has zero length, closing, waiting 100 ms and re-opening. Attempt: %d.", retryCount);
     m_TSBufferFile.CloseFile();
     usleep(100000);
-    hr = m_TSBufferFile.OpenFile();
-    XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file opened return code %d.", hr);
+    hResult = m_TSBufferFile.OpenFile();
+    XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file opened return code %d.", hResult);
   }
 
   if (RefreshTSBufferFile() == S_FALSE)
@@ -115,7 +125,7 @@ long MultiFileReader::OpenFile()
 
   m_currentPosition = 0;
 
-  return hr;
+  return hResult;
 }
 
 //
@@ -267,7 +277,11 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
     {
       m_TSFile.CloseFile();
       m_TSFile.SetFileName(file->filename.c_str());
-      m_TSFile.OpenFile();
+      if (m_TSFile.OpenFile() != S_OK)
+      {
+        XBMC->Log(LOG_ERROR, "MultiFileReader: can't open %s\n", file->filename.c_str());
+        return S_FALSE;
+      }
 
       m_TSFileId = file->filePositionId;
       m_currentFileStartOffset = file->startPosition;
@@ -286,6 +300,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       if (posSeeked != seekPosition)
       {
         XBMC->Log(LOG_ERROR, "SEEK FAILED");
+        return S_FALSE;
       }
     }
 
@@ -300,6 +315,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       if (FAILED(hr))
       {
         XBMC->Log(LOG_ERROR, "READ FAILED1");
+        return S_FALSE;
       }
       m_currentPosition += bytesToRead;
 
@@ -490,13 +506,12 @@ long MultiFileReader::RefreshTSBufferFile()
     }
 
     // Get the real path of the buffer file
-    char* filename;
     std::string sFilename;
     std::string path;
 
-    m_TSBufferFile.GetFileName(&filename);
-    sFilename = filename;
-    size_t pos = sFilename.find_last_of(PATH_SEPARATOR_CHAR);
+    m_TSBufferFile.GetFileName(sFilename);
+    //size_t pos = sFilename.find_last_of(PATH_SEPARATOR_CHAR);
+    size_t pos = sFilename.find_last_of('/');
     path = sFilename.substr(0, pos+1);
 
     // Create a list of files in the .tsbuffer file.
@@ -615,42 +630,42 @@ long MultiFileReader::RefreshTSBufferFile()
 
 long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
 {
-#if defined(TARGET_WINDOWS)
-  //USES_CONVERSION;
-
-  length = 0;
-
-  // Try to open the file
-  CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(pFilename);
-  HANDLE hFile = ::CreateFileW(strWFile,   // The filename
-            (DWORD) GENERIC_READ,          // File access
-             (DWORD) (FILE_SHARE_READ |
-             FILE_SHARE_WRITE),            // Share access
-             NULL,                         // Security
-             (DWORD) OPEN_EXISTING,        // Open flags
-             (DWORD) 0,                    // More flags
-             NULL);                        // Template
-  if (hFile != INVALID_HANDLE_VALUE)
-  {
-    LARGE_INTEGER li;
-    li.QuadPart = 0;
-    li.LowPart = ::SetFilePointer(hFile, 0, &li.HighPart, FILE_END);
-    ::CloseHandle(hFile);
-
-    length = li.QuadPart;
-  }
-  else
-  {
-    //wchar_t msg[MAX_PATH];
-    DWORD dwErr = GetLastError();
-    //swprintf((LPWSTR)&msg, L"Failed to open file %s : 0x%x\n", pFilename, dwErr);
-    //::OutputDebugString(W2T((LPWSTR)&msg));
-    XBMC->Log(LOG_ERROR, "Failed to open file %s : 0x%x\n", pFilename, dwErr);
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to open file %s", pFilename);
-    return HRESULT_FROM_WIN32(dwErr);
-  }
-  return S_OK;
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
+//#if defined(TARGET_WINDOWS)
+//  //USES_CONVERSION;
+//
+//  length = 0;
+//
+//  // Try to open the file
+//  CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(pFilename);
+//  HANDLE hFile = ::CreateFileW(strWFile,   // The filename
+//            (DWORD) GENERIC_READ,          // File access
+//             (DWORD) (FILE_SHARE_READ |
+//             FILE_SHARE_WRITE),            // Share access
+//             NULL,                         // Security
+//             (DWORD) OPEN_EXISTING,        // Open flags
+//             (DWORD) 0,                    // More flags
+//             NULL);                        // Template
+//  if (hFile != INVALID_HANDLE_VALUE)
+//  {
+//    LARGE_INTEGER li;
+//    li.QuadPart = 0;
+//    li.LowPart = ::SetFilePointer(hFile, 0, &li.HighPart, FILE_END);
+//    ::CloseHandle(hFile);
+//
+//    length = li.QuadPart;
+//  }
+//  else
+//  {
+//    //wchar_t msg[MAX_PATH];
+//    DWORD dwErr = GetLastError();
+//    //swprintf((LPWSTR)&msg, L"Failed to open file %s : 0x%x\n", pFilename, dwErr);
+//    //::OutputDebugString(W2T((LPWSTR)&msg));
+//    XBMC->Log(LOG_ERROR, "Failed to open file %s : 0x%x\n", pFilename, dwErr);
+//    XBMC->QueueNotification(QUEUE_ERROR, "Failed to open file %s", pFilename);
+//    return HRESULT_FROM_WIN32(dwErr);
+//  }
+//  return S_OK;
+//#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
   //USES_CONVERSION;
 
   length = 0;
@@ -669,10 +684,10 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
     return S_FALSE;
   }
   return S_OK;
-#else
-#error FIXME: Add MultiFileReader::GetFileLenght implementation for your OS.
-  return S_FALSE;
-#endif
+//#else
+//#error FIXME: Add MultiFileReader::GetFileLenght implementation for your OS.
+//  return S_FALSE;
+//#endif
 }
 
 int64_t MultiFileReader::GetFileSize()
