@@ -194,14 +194,7 @@ bool Socket::accept ( Socket& new_socket ) const
 
 int Socket::send ( const std::string& data )
 {
-  if (!is_valid())
-  {
-    return 0;
-  }
-
-  int status = Socket::send( (const char*) data.c_str(), (const unsigned int) data.size());
-
-  return status;
+  return Socket::send( (const char*) data.c_str(), (const unsigned int) data.size());
 }
 
 
@@ -247,6 +240,7 @@ int Socket::send ( const char* data, const unsigned int len )
     errormessage( getLastError(), "Socket::send");
     XBMC->Log(LOG_ERROR, "Socket::send  - failed to send data");
     _sd = INVALID_SOCKET;
+    return 0;
   }
   return status;
 }
@@ -399,6 +393,9 @@ bool Socket::ReadLine (string& line)
   int            retries = 6;
   char           buffer[2048];
   size_t         pos1 = 0;
+
+  if (!is_valid())
+    return false;
 
   while (true)
   {
