@@ -630,42 +630,6 @@ long MultiFileReader::RefreshTSBufferFile()
 
 long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
 {
-//#if defined(TARGET_WINDOWS)
-//  //USES_CONVERSION;
-//
-//  length = 0;
-//
-//  // Try to open the file
-//  CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(pFilename);
-//  HANDLE hFile = ::CreateFileW(strWFile,   // The filename
-//            (DWORD) GENERIC_READ,          // File access
-//             (DWORD) (FILE_SHARE_READ |
-//             FILE_SHARE_WRITE),            // Share access
-//             NULL,                         // Security
-//             (DWORD) OPEN_EXISTING,        // Open flags
-//             (DWORD) 0,                    // More flags
-//             NULL);                        // Template
-//  if (hFile != INVALID_HANDLE_VALUE)
-//  {
-//    LARGE_INTEGER li;
-//    li.QuadPart = 0;
-//    li.LowPart = ::SetFilePointer(hFile, 0, &li.HighPart, FILE_END);
-//    ::CloseHandle(hFile);
-//
-//    length = li.QuadPart;
-//  }
-//  else
-//  {
-//    //wchar_t msg[MAX_PATH];
-//    DWORD dwErr = GetLastError();
-//    //swprintf((LPWSTR)&msg, L"Failed to open file %s : 0x%x\n", pFilename, dwErr);
-//    //::OutputDebugString(W2T((LPWSTR)&msg));
-//    XBMC->Log(LOG_ERROR, "Failed to open file %s : 0x%x\n", pFilename, dwErr);
-//    XBMC->QueueNotification(QUEUE_ERROR, "Failed to open file %s", pFilename);
-//    return HRESULT_FROM_WIN32(dwErr);
-//  }
-//  return S_OK;
-//#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
   //USES_CONVERSION;
 
   length = 0;
@@ -684,10 +648,6 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
     return S_FALSE;
   }
   return S_OK;
-//#else
-//#error FIXME: Add MultiFileReader::GetFileLenght implementation for your OS.
-//  return S_FALSE;
-//#endif
 }
 
 int64_t MultiFileReader::GetFileSize()
