@@ -205,6 +205,10 @@ long CTsReader::Open(const char* pszFileName)
     XBMC->Log(LOG_DEBUG, "open rtsp: %s", m_fileName.c_str());
 #ifdef LIVE555
     //strcpy(m_rtspClient.m_outFileName, "e:\\temp\\rtsptest.ts");
+    if (m_buffer)
+      delete m_buffer;
+    if (m_rtspClient)
+      delete m_rtspClient;
     m_buffer = new CMemoryBuffer();
     m_rtspClient = new CRTSPClient();
     m_rtspClient->Initialize(m_buffer);
@@ -332,7 +336,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   {
     if (m_fileReader)
     {
-      XBMC->Log(LOG_DEBUG,"TsReader: OnZap: request new PAT");
+      XBMC->Log(LOG_DEBUG,"%s: request new PAT", __FUNCTION__);
 
       int64_t pos_before, pos_after;
       MultiFileReader* fileReader = dynamic_cast<MultiFileReader*>(m_fileReader);
@@ -356,7 +360,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
       m_demultiplexer.RequestNewPat();
       fileReader->OnChannelChange();
 
-      XBMC->Log(LOG_DEBUG,"TsReader: OnZap: move from %I64d to %I64d tsbufpos  %I64d", pos_before, pos_after, timeShiftBufferPos);
+      XBMC->Log(LOG_DEBUG,"%s:: move from %I64d to %I64d tsbufpos  %I64d", __FUNCTION__, pos_before, pos_after, timeShiftBufferPos);
       usleep(100000);
       return true;
     }
