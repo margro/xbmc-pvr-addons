@@ -554,6 +554,8 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
   /* No thumbnail found yet */
   if (m_bDownloadThumbs)
   {
+    XBMC->Log(LOG_DEBUG, "Request backend thumb download for channel %s\n", strChannelName);
+
     PLATFORM::CLockObject critsec(m_mutex);
 
     CStdString command;
@@ -586,7 +588,7 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
     }
     /* -------------- */
 
-    if (result.empty() || result.front() == '0')
+    if (result.empty() || result[0] == '0')
     {
       /* Not found or error */
       XBMC->Log(LOG_DEBUG, "Backend has no thumb for: %s", strChannelName);
@@ -605,7 +607,7 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
     // [2] Thumb file length
 
     string strFileName = fields[1];
-    int64_t iFileLength = atoll(fields[2].c_str());
+    int iFileLength = atoi(fields[2].c_str());
 
     char* thumbBuffer = new char[iFileLength];
 
@@ -615,7 +617,7 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
       return false;
     }
 
-    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %I64d", strFileName.c_str(), iFileLength);
+    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %i", strFileName.c_str(), iFileLength);
 
     int read = m_tcpclient->receive(thumbBuffer, iFileLength, iFileLength);
 
@@ -639,6 +641,10 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
         return true;
       }
     }
+    else
+    {
+      m_tcpclient->close();
+    }
 
     //return line
   }
@@ -650,7 +656,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
   CStdString      command;
-  char*           baseCommand;
+  const char*     baseCommand;
   int             code;
   PVR_CHANNEL     tag;
   CStdString      stream;
@@ -2056,15 +2062,22 @@ void cPVRClientMediaPortal::LoadThumbSettings(void)
 
   /* Use local cache folders */
   strThumbPath = g_szUserPath;
+
   AddTrailingSlash(strThumbPath);
-  strThumbPath += "Thumbs" + PATH_SEPARATOR_CHAR;
+
+  strThumbPath += "Thumbs";
+  strThumbPath += PATH_SEPARATOR_CHAR;
+
+  XBMC->Log(LOG_DEBUG, "Thumb path = %s\n", strThumbPath.c_str());
 
   /* Check if the local thumb cache folder exists */
   if (!XBMC->DirectoryExists(strThumbPath.c_str()))
   {
+    XBMC->Log(LOG_DEBUG, "Thumb path %s does not exist\n", strThumbPath.c_str());
     /* Create local cache folder for thumb cache */
     if (!XBMC->CreateDirectory(strThumbPath.c_str()))
     {
+      XBMC->Log(LOG_ERROR, "Could not create thumb path %s\n", strThumbPath.c_str());
       m_bCheckForThumbs = false;
       m_bDownloadThumbs = false;
       return;
@@ -2075,8 +2088,12 @@ void cPVRClientMediaPortal::LoadThumbSettings(void)
   m_RadioThumbPath = strThumbPath + "Radio" + PATH_SEPARATOR_CHAR;
   m_TVThumbPath = strThumbPath + "TV" + PATH_SEPARATOR_CHAR;
 
+  XBMC->Log(LOG_DEBUG, "Radio thumb path: %s\n", m_RadioThumbPath.c_str());
+  XBMC->Log(LOG_DEBUG, "TV thumb path: %s\n", m_TVThumbPath.c_str());
+
   if (!XBMC->DirectoryExists(m_RadioThumbPath.c_str()))
   {
+    XBMC->Log(LOG_DEBUG, "Thumb path %s does not exist\n", m_RadioThumbPath.c_str());
     /* Create local cache folder for radio thumbs */
     if (!XBMC->CreateDirectory(m_RadioThumbPath.c_str()))
       m_RadioThumbPath.clear();
@@ -2084,6 +2101,7 @@ void cPVRClientMediaPortal::LoadThumbSettings(void)
 
   if (!XBMC->DirectoryExists(m_TVThumbPath.c_str()))
   {
+    XBMC->Log(LOG_DEBUG, "Thumb path %s does not exist\n", m_TVThumbPath.c_str());
     /* Create local cache folder for TV thumbs */
     if (!XBMC->CreateDirectory(m_TVThumbPath.c_str()))
       m_TVThumbPath.clear();
