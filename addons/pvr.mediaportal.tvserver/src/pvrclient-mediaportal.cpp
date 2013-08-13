@@ -47,8 +47,8 @@ int g_iTVServerXBMCBuild = 0;
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          107
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.122, 1.3.0.122, 1.4.0.122"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  122
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.124, 1.3.0.124 or 1.4.0.124"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  124
 
 /************************************************************/
 /** Class interface */
@@ -66,6 +66,8 @@ cPVRClientMediaPortal::cPVRClientMediaPortal()
   m_tsreader               = NULL;
   m_genretable             = NULL;
   m_iLastRecordingUpdate   = 0;
+  m_bCheckForThumbs        = false;
+  m_bDownloadThumbs        = false;
 }
 
 cPVRClientMediaPortal::~cPVRClientMediaPortal()
@@ -222,6 +224,7 @@ ADDON_STATUS cPVRClientMediaPortal::Connect()
   /* Load additional settings */
   LoadGenreTable();
   LoadCardSettings();
+  LoadThumbSettings();
 
   return ADDON_STATUS_OK;
 }
@@ -523,6 +526,126 @@ int cPVRClientMediaPortal::GetNumChannels(void)
   return atol(result.c_str());
 }
 
+bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRadio, string &strChannelThumb)
+{
+  string& strThumbPath = bRadio ? m_RadioThumbPath : m_TVThumbPath;
+  string strThumbName;
+
+  /* Check local cache first */
+  if (!strThumbPath.empty())
+  {
+    const int ciExtCount = 5;
+    const string strThumbExt [ciExtCount] = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
+    string strThumbBaseName;
+
+    strThumbBaseName = strThumbPath + ToThumbFileName(strChannelName);
+
+    for (int i=0; i < ciExtCount; i++)
+    {
+      strThumbName = strThumbBaseName + strThumbExt[i];
+      if ( XBMC->FileExists(strThumbName.c_str(), false) )
+      {
+        strChannelThumb = strThumbName;
+        return true;
+      }
+    }
+  }
+
+  /* No thumbnail found yet */
+  if (m_bDownloadThumbs)
+  {
+    PLATFORM::CLockObject critsec(m_mutex);
+
+    CStdString command;
+
+    command.Format("GetChannelThumb:%s|%s\n", strChannelName, (bRadio ? "True" : "False"));
+
+    /* -------------- */
+    if ( !m_tcpclient->send(command) )
+    {
+      if ( !m_tcpclient->is_valid() )
+      {
+        // Connection lost, try to reconnect
+        if ( Connect() == ADDON_STATUS_OK )
+        {
+          // Resend the command
+          if (!m_tcpclient->send(command))
+          {
+            XBMC->Log(LOG_ERROR, "SendCommand('%s') failed.", command.c_str());
+            return false;
+          }
+        }
+      }
+    }
+
+    string result;
+
+    if ( !m_tcpclient->ReadLine( result ) )
+    {
+      XBMC->Log(LOG_ERROR, "SendCommand - Failed.");
+    }
+    /* -------------- */
+
+    if (result.empty() || result.front() == '0')
+    {
+      /* Not found or error */
+      XBMC->Log(LOG_DEBUG, "Backend has no thumb for: %s", strChannelName);
+      return false;
+    }
+
+    vector<string> fields;
+
+    Tokenize(result, fields, "|");
+
+    if (fields.size() < 3)
+      return false;
+
+    // [0] success
+    // [1] Thumb file name
+    // [2] Thumb file length
+
+    string strFileName = fields[1];
+    int64_t iFileLength = atoll(fields[2].c_str());
+
+    char* thumbBuffer = new char[iFileLength];
+
+    if (thumbBuffer < 0)
+    {
+      m_tcpclient->close(); // to flush the pending thumb data
+      return false;
+    }
+
+    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %I64d", strFileName.c_str(), iFileLength);
+
+    int read = m_tcpclient->receive(thumbBuffer, iFileLength, iFileLength);
+
+    if (read == iFileLength)
+    {
+      if ( !m_tcpclient->ReadLine( result ) ) /* Result should contain "|END" */
+        m_tcpclient->close();
+
+      strThumbName = strThumbPath + strFileName;
+      void* handle = XBMC->OpenFileForWrite(strThumbName.c_str(), true);
+
+      if (handle)
+      {
+        int written = XBMC->WriteFile(handle, thumbBuffer, iFileLength);
+        XBMC->CloseFile(handle);
+
+        if (written < iFileLength)
+          return false;
+
+        strChannelThumb = strThumbName;
+        return true;
+      }
+    }
+
+    //return line
+  }
+
+  return false;
+}
+
 PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
@@ -579,40 +702,6 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
   if( !SendCommand2(command, code, lines) )
     return PVR_ERROR_SERVER_ERROR;
 
-#ifdef TARGET_WINDOWS
-  bool            bCheckForThumbs = false;
-
-  /* Check if we can find the MediaPortal channel logo folders on this machine */
-  std::string strThumbPath;
-  std::string strProgramData;
-
-  if (OS::GetEnvironmentVariable("PROGRAMDATA", strProgramData) == true)
-    strThumbPath = strProgramData + "\\Team MediaPortal\\MediaPortal\\Thumbs\\";
-  else
-  {
-    if (OS::Version() >= OS::WindowsVista)
-    {
-      /* Windows Vista/7/Server 2008 */
-      strThumbPath = "C:\\ProgramData\\Team MediaPortal\\MediaPortal\\Thumbs\\";
-    }
-    else
-    {
-      /* Windows XP */
-      if (OS::GetEnvironmentVariable("ALLUSERSPROFILE", strProgramData) == true)
-        strThumbPath = strProgramData + "\\Application Data\\Team MediaPortal\\MediaPortal\\thumbs\\";
-      else
-        strThumbPath = "C:\\Documents and Settings\\All Users\\Application Data\\Team MediaPortal\\MediaPortal\\thumbs\\";
-    }
-  }
-
-  if (bRadio)
-    strThumbPath += "Radio\\";
-  else
-    strThumbPath += "TV\\logos\\";
-
-  bCheckForThumbs = OS::CFile::Exists(strThumbPath);
-#endif // TARGET_WINDOWS
-
   memset(&tag, 0, sizeof(PVR_CHANNEL));
 
   for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
@@ -636,28 +725,18 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
       tag.iUniqueId = channel.UID();
       tag.iChannelNumber = channel.ExternalID();
       PVR_STRCPY(tag.strChannelName, channel.Name());
-      PVR_STRCLR(tag.strIconPath);
-#ifdef TARGET_WINDOWS
-      if (bCheckForThumbs)
+
+      string strChannelThumbName;
+
+      if (GetChannelThumb(channel.Name(), bRadio, strChannelThumbName) == true)
       {
-        const int ciExtCount = 5;
-        string strIconExt [ciExtCount] = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
-        string strIconName;
-        string strIconBaseName;
-
-        strIconBaseName = strThumbPath + ToThumbFileName(channel.Name());
-
-        for (int i=0; i < ciExtCount; i++)
-        {
-          strIconName = strIconBaseName + strIconExt[i];
-          if ( OS::CFile::Exists(strIconName) )
-          {
-            PVR_STRCPY(tag.strIconPath, strIconName.c_str());
-            break;
-          }
-        }
+        PVR_STRCPY(tag.strIconPath, strChannelThumbName.c_str());
       }
-#endif
+      else
+      {
+        PVR_STRCLR(tag.strIconPath);
+      }
+
       tag.iEncryptionSystem = channel.Encrypted();
       tag.bIsRadio = bRadio;
       tag.bIsHidden = !channel.VisibleInGuide();
@@ -1465,7 +1544,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         else
         {
           // RTSP url
-          XBMC->Log(LOG_DEBUG, "Skipping OnZap for TSReader RTSP");
+          XBMC->Log(LOG_NOTICE, "Skipping OnZap for TSReader RTSP");
           bReturn = true; //Fast forward seek (OnZap) does not work for RTSP
         }
 
@@ -1918,4 +1997,98 @@ void cPVRClientMediaPortal::LoadCardSettings()
   {
     m_cCards.ParseLines(lines);
   }
+}
+
+void cPVRClientMediaPortal::LoadThumbSettings(void)
+{
+  std::string strThumbPath;
+#ifdef TARGET_WINDOWS1
+  std::string strProgramData;
+
+  /* Check if we can find the MediaPortal channel logo folders on this machine */
+
+  if (OS::GetEnvironmentVariable("PROGRAMDATA", strProgramData) == true)
+    strThumbPath = strProgramData + "\\Team MediaPortal\\MediaPortal\\Thumbs\\";
+  else
+  {
+    if (OS::Version() >= OS::WindowsVista)
+    {
+      /* Windows Vista/7/Server 2008 */
+      strThumbPath = "C:\\ProgramData\\Team MediaPortal\\MediaPortal\\Thumbs\\";
+    }
+    else
+    {
+      /* Windows XP */
+      if (OS::GetEnvironmentVariable("ALLUSERSPROFILE", strProgramData) == true)
+        strThumbPath = strProgramData + "\\Application Data\\Team MediaPortal\\MediaPortal\\thumbs\\";
+      else
+        strThumbPath = "C:\\Documents and Settings\\All Users\\Application Data\\Team MediaPortal\\MediaPortal\\thumbs\\";
+    }
+  }
+
+  if (XBMC->DirectoryExists(strThumbPath.c_str())
+  {
+    m_bCheckForThumbs = true;
+    m_bDownloadThumbs = false;
+
+    m_RadioThumbPath = strThumbPath + "Radio\\";
+    m_TVThumbPath = strThumbPath + "TV\\logos\\";
+
+    if (!XBMC->DirectoryExists(m_RadioThumbPath.c_str()))
+        m_RadioThumbPath.clear();
+
+    if (!XBMC->DirectoryExists(m_TVThumbPath.c_str()))
+        m_TVThumbPath.clear();
+
+    return;
+  }
+#endif // TARGET_WINDOWS
+
+  /* No MediaPortal channel logo folders on this machine
+   * Download the thumbnails from the backend (supported since TVServerXBMC build 124)
+   */
+  if (g_iTVServerXBMCBuild < 124)
+  {
+    m_bCheckForThumbs = false;
+    m_bDownloadThumbs = false;
+    return;
+  }
+
+  /* Use local cache folders */
+  strThumbPath = g_szUserPath;
+  AddTrailingSlash(strThumbPath);
+  strThumbPath += "Thumbs" + PATH_SEPARATOR_CHAR;
+
+  /* Check if the local thumb cache folder exists */
+  if (!XBMC->DirectoryExists(strThumbPath.c_str()))
+  {
+    /* Create local cache folder for thumb cache */
+    if (!XBMC->CreateDirectory(strThumbPath.c_str()))
+    {
+      m_bCheckForThumbs = false;
+      m_bDownloadThumbs = false;
+      return;
+    }
+  }
+
+  /* Check if the Radio and TV thumb cache folders exist */
+  m_RadioThumbPath = strThumbPath + "Radio" + PATH_SEPARATOR_CHAR;
+  m_TVThumbPath = strThumbPath + "TV" + PATH_SEPARATOR_CHAR;
+
+  if (!XBMC->DirectoryExists(m_RadioThumbPath.c_str()))
+  {
+    /* Create local cache folder for radio thumbs */
+    if (!XBMC->CreateDirectory(m_RadioThumbPath.c_str()))
+      m_RadioThumbPath.clear();
+  }
+
+  if (!XBMC->DirectoryExists(m_TVThumbPath.c_str()))
+  {
+    /* Create local cache folder for TV thumbs */
+    if (!XBMC->CreateDirectory(m_TVThumbPath.c_str()))
+      m_TVThumbPath.clear();
+  }
+
+  m_bCheckForThumbs = true;
+  m_bDownloadThumbs = true;
 }

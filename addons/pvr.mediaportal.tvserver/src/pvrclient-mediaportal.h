@@ -112,6 +112,8 @@ private:
   bool GetChannel(unsigned int number, PVR_CHANNEL &channeldata);
   void LoadGenreTable(void);
   void LoadCardSettings(void);
+  void LoadThumbSettings(void);
+  bool GetChannelThumb(const char *strChannelName, bool bRadio, string &strChannelThumb);
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;
@@ -129,6 +131,10 @@ private:
   PLATFORM::CMutex        m_mutex;
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
+  std::string             m_TVThumbPath;
+  std::string             m_RadioThumbPath;
+  bool                    m_bCheckForThumbs;
+  bool                    m_bDownloadThumbs;
 
   void Close();
 

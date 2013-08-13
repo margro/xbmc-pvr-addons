@@ -181,6 +181,12 @@ std::string ToWindowsPath(const std::string& strFileName)
   return strWinFileName;
 }
 
+void AddTrailingSlash(std::string& strPath)
+{
+  if (strPath.back() != PATH_SEPARATOR_CHAR)
+    strPath += PATH_SEPARATOR_CHAR;
+}
+
 #if defined(TARGET_WINDOWS)
 //////////////////////////////////////////////////////////////////////////////
 //

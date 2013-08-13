@@ -55,6 +55,8 @@ std::string ToThumbFileName(const char* strChannelName);
 std::string ToXBMCPath(const std::string& strFileName);
 std::string ToWindowsPath(const std::string& strFileName);
 
+void AddTrailingSlash(std::string& strPath);
+
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util
 {
