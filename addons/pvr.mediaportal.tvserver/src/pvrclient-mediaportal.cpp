@@ -627,7 +627,7 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
       return false;
     }
 
-    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %i", strFileName.c_str(), iFileLength);
+    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %i", strThumbName, iFileLength);
 
     int read = m_tcpclient->receive(thumbBuffer, iFileLength, iFileLength);
 
