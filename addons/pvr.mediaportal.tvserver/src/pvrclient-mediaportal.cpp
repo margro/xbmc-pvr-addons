@@ -79,10 +79,8 @@ cPVRClientMediaPortal::~cPVRClientMediaPortal()
   SAFE_DELETE(m_genretable);
 }
 
-string cPVRClientMediaPortal::SendCommand(string command)
+bool cPVRClientMediaPortal::ReconnectSend(string& command)
 {
-  PLATFORM::CLockObject critsec(m_mutex);
-
   if ( !m_tcpclient->send(command) )
   {
     if ( !m_tcpclient->is_valid() )
@@ -94,11 +92,20 @@ string cPVRClientMediaPortal::SendCommand(string command)
         if (!m_tcpclient->send(command))
         {
           XBMC->Log(LOG_ERROR, "SendCommand('%s') failed.", command.c_str());
-          return "";
+          return false;
         }
       }
     }
   }
+  return true;
+}
+
+string cPVRClientMediaPortal::SendCommand(string command)
+{
+  PLATFORM::CLockObject critsec(m_mutex);
+
+  if (!ReconnectSend(command))
+    return "";
 
   string line;
 
@@ -113,22 +120,8 @@ bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<strin
 {
   PLATFORM::CLockObject critsec(m_mutex);
 
-  if ( !m_tcpclient->send(command) )
-  {
-    if ( !m_tcpclient->is_valid() )
-    {
-      // Connection lost, try to reconnect
-      if ( Connect() == ADDON_STATUS_OK )
-      {
-        // Resend the command
-        if (!m_tcpclient->send(command))
-        {
-          XBMC->Log(LOG_ERROR, "SendCommand2('%s') failed.", command.c_str());
-          return false;
-        }
-      }
-    }
-  }
+  if (!ReconnectSend(command))
+    return false;
 
   string result;
 
@@ -554,64 +547,81 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
   /* No thumbnail found yet */
   if (m_bDownloadThumbs)
   {
-    XBMC->Log(LOG_DEBUG, "Request backend thumb download for channel %s\n", strChannelName);
+    XBMC->Log(LOG_DEBUG, "Request backend thumb download for channel '%s'\n", strChannelName);
 
     PLATFORM::CLockObject critsec(m_mutex);
 
     CStdString command;
+    bool retVal = false;
 
     command.Format("GetChannelThumb:%s|%s\n", strChannelName, (bRadio ? "True" : "False"));
 
     /* -------------- */
-    if ( !m_tcpclient->send(command) )
-    {
-      if ( !m_tcpclient->is_valid() )
-      {
-        // Connection lost, try to reconnect
-        if ( Connect() == ADDON_STATUS_OK )
-        {
-          // Resend the command
-          if (!m_tcpclient->send(command))
-          {
-            XBMC->Log(LOG_ERROR, "SendCommand('%s') failed.", command.c_str());
-            return false;
-          }
-        }
-      }
-    }
+    if ( !ReconnectSend(command) )
+      return false;
 
-    string result;
+    const int msgBufferSize = 512;
+    char msgBuffer[msgBufferSize];
 
-    if ( !m_tcpclient->ReadLine( result ) )
+    if ( !m_tcpclient->receive(msgBuffer, sizeof(char)*2, sizeof(char)*2 ))
     {
       XBMC->Log(LOG_ERROR, "SendCommand - Failed.");
+      m_tcpclient->close();
+      return false;
     }
-    /* -------------- */
 
-    if (result.empty() || result[0] == '0')
+    if (msgBuffer[0] != '1')
     {
+      string answer2;
+      m_tcpclient->ReadLine(answer2);
+
       /* Not found or error */
       XBMC->Log(LOG_DEBUG, "Backend has no thumb for: %s", strChannelName);
       return false;
     }
 
-    vector<string> fields;
-
-    Tokenize(result, fields, "|");
-
-    if (fields.size() < 3)
+    /* field 1: thumb name length */
+    if ( !m_tcpclient->receive(msgBuffer, sizeof(int32_t), sizeof(int32_t) ))
+    {
+      m_tcpclient->close();
       return false;
+    }
+    int32_t iThumbNameLength = ntohl(*(int32_t*) msgBuffer);
 
-    // [0] success
-    // [1] Thumb file name
-    // [2] Thumb file length
+    if (iThumbNameLength <= 0 || iThumbNameLength > (msgBufferSize-1))
+    {
+      m_tcpclient->close();
+      return false;
+    }
 
-    string strFileName = fields[1];
-    int iFileLength = atoi(fields[2].c_str());
+    /* field 2: thumb name */
+    if ( !m_tcpclient->receive(msgBuffer, iThumbNameLength, iThumbNameLength ))
+    {
+      m_tcpclient->close();
+      return false;
+    }
+    msgBuffer[iThumbNameLength] = '\0';
 
+    string strFileName = msgBuffer;
+
+    /* field 3: file length */
+    if ( !m_tcpclient->receive(msgBuffer, sizeof(int32_t), sizeof(int32_t) ))
+    {
+      m_tcpclient->close();
+      return false;
+    }
+    int32_t iFileLength = ntohl(*(int32_t*) msgBuffer);
+
+    if (iFileLength <= 0)
+    {
+      m_tcpclient->close();
+      return false;
+    }
+
+    /* field 4: file data */
     char* thumbBuffer = new char[iFileLength];
 
-    if (thumbBuffer < 0)
+    if (thumbBuffer == NULL)
     {
       m_tcpclient->close(); // to flush the pending thumb data
       return false;
@@ -621,11 +631,11 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
 
     int read = m_tcpclient->receive(thumbBuffer, iFileLength, iFileLength);
 
+    /* field 5: end marker (4 bytes) */
+    m_tcpclient->receive(msgBuffer, 4, 4);
+
     if (read == iFileLength)
     {
-      if ( !m_tcpclient->ReadLine( result ) ) /* Result should contain "|END" */
-        m_tcpclient->close();
-
       strThumbName = strThumbPath + strFileName;
       void* handle = XBMC->OpenFileForWrite(strThumbName.c_str(), true);
 
@@ -635,10 +645,12 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
         XBMC->CloseFile(handle);
 
         if (written < iFileLength)
-          return false;
-
-        strChannelThumb = strThumbName;
-        return true;
+          retVal = false;
+        else
+        {
+          strChannelThumb = strThumbName;
+          retVal = true;
+        }
       }
     }
     else
@@ -646,7 +658,8 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
       m_tcpclient->close();
     }
 
-    //return line
+    delete[] thumbBuffer;
+    return retVal;
   }
 
   return false;

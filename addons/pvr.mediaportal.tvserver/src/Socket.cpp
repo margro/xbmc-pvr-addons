@@ -268,7 +268,7 @@ int Socket::sendto ( const char* data, unsigned int size, bool sendcompletebuffe
 }
 
 
-int Socket::receive ( std::string& data, unsigned int minpacketsize ) const
+int Socket::receive ( std::string& data, unsigned int minpacketsize )
 {
   char * buf = NULL;
   int status = 0;
@@ -359,7 +359,7 @@ bool Socket::ReadLine (string& line)
 }
 
 
-int Socket::receive ( std::string& data) const
+int Socket::receive ( std::string& data)
 {
   char buf[MAXRECV + 1];
   int status = 0;
@@ -376,11 +376,14 @@ int Socket::receive ( std::string& data) const
   return status;
 }
 
-int Socket::receive ( char* data, const unsigned int buffersize, const unsigned int minpacketsize ) const
+int Socket::receive ( char* data, const unsigned int buffersize, const unsigned int minpacketsize )
 {
+  fd_set         set_r, set_e;
+  timeval        timeout;
+  int            retries = 6;
 
   unsigned int receivedsize = 0;
-  int status = 0;
+  int result = 0;
 
   if ( !is_valid() )
   {
@@ -389,15 +392,49 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
 
   while ( (receivedsize <= minpacketsize) && (receivedsize < buffersize) )
   {
-    status = ::recv(_sd, data+receivedsize, (buffersize - receivedsize), 0 );
+    /* Check for data (with timeout) */
+    timeout.tv_sec  = RECEIVE_TIMEOUT;
+    timeout.tv_usec = 0;
 
-    if ( status == SOCKET_ERROR )
+    // fill with new data
+    FD_ZERO(&set_r);
+    FD_ZERO(&set_e);
+    FD_SET(_sd, &set_r);
+    FD_SET(_sd, &set_e);
+    result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
+
+    if (result < 0)
     {
-      errormessage( getLastError(), "Socket::receive" );
-      return status;
+      XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
+      errormessage(getLastError(), __FUNCTION__);
+      _sd = INVALID_SOCKET;
+      return false;
     }
 
-    receivedsize += status;
+    if (result == 0)
+    {
+      if (retries != 0)
+      {
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response, retrying... (%i)", __FUNCTION__, retries);
+         retries--;
+        continue;
+      } else {
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Aborting after 10 retries.", __FUNCTION__);
+         return false;
+      }
+    }
+    
+    
+    result = ::recv(_sd, data+receivedsize, (buffersize - receivedsize), 0 );
+
+    if ( result == SOCKET_ERROR )
+    {
+      errormessage( getLastError(), "Socket::receive" );
+      _sd = INVALID_SOCKET;
+      return result;
+    }
+
+    receivedsize += result;
   }
 
   return receivedsize;

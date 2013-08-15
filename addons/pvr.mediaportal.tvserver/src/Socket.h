@@ -237,7 +237,7 @@ class Socket
      * \param minpacketsize    The minimum number of bytes that should be received before returning from this function
      * \return    Number of bytes received or SOCKET_ERROR
      */
-    int receive ( std::string& data, unsigned int minpacketsize ) const;
+    int receive ( std::string& data, unsigned int minpacketsize );
 
     /*!
      * Socket receive function
@@ -245,7 +245,7 @@ class Socket
      * \param data    Reference to a std::string for storage of the received data.
      * \return    Number of bytes received or SOCKET_ERROR
      */
-    int receive ( std::string& data ) const;
+    int receive ( std::string& data );
 
     /*!
      * Socket receive function
@@ -255,7 +255,7 @@ class Socket
      * \param minpacketsize    Specifies the minimum number of bytes that need to be received before returning
      * \return    Number of bytes received or SOCKET_ERROR
      */
-    int receive ( char* data, const unsigned int buffersize, const unsigned int minpacketsize ) const;
+    int receive ( char* data, const unsigned int buffersize, const unsigned int minpacketsize );
 
     /*!
      * Socket recvfrom function
