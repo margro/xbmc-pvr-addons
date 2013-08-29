@@ -104,8 +104,22 @@ string cPVRClientMediaPortal::SendCommand(string command)
 {
   PLATFORM::CLockObject critsec(m_mutex);
 
-  if (!ReconnectSend(command))
-    return "";
+  if ( !m_tcpclient->send(command) )
+  {
+    if ( !m_tcpclient->is_valid() )
+    {
+      // Connection lost, try to reconnect
+      if ( Connect() == ADDON_STATUS_OK )
+      {
+        // Resend the command
+        if (!m_tcpclient->send(command))
+        {
+          XBMC->Log(LOG_ERROR, "SendCommand('%s') failed.", command.c_str());
+          return "";
+        }
+      }
+    }
+  }
 
   string line;
 
@@ -118,18 +132,10 @@ string cPVRClientMediaPortal::SendCommand(string command)
 
 bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<string>& lines)
 {
-  PLATFORM::CLockObject critsec(m_mutex);
+  string result = SendCommand(command);
 
-  if (!ReconnectSend(command))
+  if (result.empty())
     return false;
-
-  string result;
-
-  if (!m_tcpclient->ReadLine(result))
-  {
-    XBMC->Log(LOG_ERROR, "SendCommand2 - Failed.");
-    return false;
-  }
 
   Tokenize(result, lines, ",");
 
@@ -627,7 +633,7 @@ bool cPVRClientMediaPortal::GetChannelThumb(const char *strChannelName, bool bRa
       return false;
     }
 
-    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %i", strThumbName, iFileLength);
+    XBMC->Log(LOG_DEBUG, "Downloading thumb: %s length %i", strFileName.c_str(), iFileLength);
 
     int read = m_tcpclient->receive(thumbBuffer, iFileLength, iFileLength);
 
