@@ -119,15 +119,15 @@
     <ClCompile Include="..\..\src\lib\tsreader\MemorySink.cpp">
       <Filter>Source Files\lib%255ctsreader</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\GUIDialogRecordSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\channels.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\epg.h">
@@ -219,6 +219,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\lib\tsreader\TSDebug.h">
       <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\client.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GUIDialogRecordSettings.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
