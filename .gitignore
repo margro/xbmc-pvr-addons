@@ -31,7 +31,9 @@ missing
 *.lo
 *.la
 *.pvr
+*.dll
 *.zip
+*.obj
 
 # Windows specific generated files
 *.exp
@@ -40,6 +42,7 @@ missing
 *.ilk
 *.suo
 *.sdf
+*.obj
 *.opensdf
 *.vcxproj.user
 
@@ -57,6 +60,9 @@ addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
+lib/cmyth/Win32/Debug
+lib/cmyth/Win32/Release
 addons/*/addon/*.soaddons/*/addon/*.dll
 addons/*/addon/addon.xml
-addons/pvr.mediaportal.tvserver/src/lib/live555/objaddons/pvr.mediaportal.tvserver/src/lib/live555/shared
+addons/pvr.mediaportal.tvserver/src/lib/live555/obj
+addons/pvr.mediaportal.tvserver/src/lib/live555/shared
