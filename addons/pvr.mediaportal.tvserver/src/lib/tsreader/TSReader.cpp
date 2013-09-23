@@ -287,7 +287,7 @@ long CTsReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned 
     return m_fileReader->Read(pbData, lDataLength, dwReadBytes);
   }
 
-  dwReadBytes = 0;
+  *dwReadBytes = 0;
   return S_FALSE;
 }
 

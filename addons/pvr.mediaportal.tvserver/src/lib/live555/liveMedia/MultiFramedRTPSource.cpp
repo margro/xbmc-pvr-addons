@@ -440,7 +440,8 @@ BufferedPacket* BufferedPacketFactory
 ReorderingPacketBuffer
 ::ReorderingPacketBuffer(BufferedPacketFactory* packetFactory)
   : fThresholdTime(100000) /* default reordering threshold: 100 ms */,
-    fHaveSeenFirstPacket(False), fHeadPacket(NULL), fSavedPacket(NULL), fSavedPacketFree(True) {
+    fHaveSeenFirstPacket(False), fHeadPacket(NULL), fSavedPacket(NULL), fSavedPacketFree(True), fNextExpectedSeqNo(0)
+{
   fPacketFactory = (packetFactory == NULL)
     ? (new BufferedPacketFactory)
     : packetFactory;

@@ -1114,9 +1114,8 @@ Boolean RTSPClient::playMediaSession(MediaSession& session,
     if (!getResponse("PLAY", bytesRead, responseCode, firstLine, nextLineStart)) break;
 
     // Look for various headers that we understand:
-    char* lineStart;
     while (1) {
-      lineStart = nextLineStart;
+      char* lineStart = nextLineStart;
       if (lineStart == NULL) break;
 
       nextLineStart = getLine(lineStart);
@@ -1224,9 +1223,8 @@ Boolean RTSPClient::playMediaSubsession(MediaSubsession& subsession,
     if (!getResponse("PLAY", bytesRead, responseCode, firstLine, nextLineStart)) break;
 
     // Look for various headers that we understand:
-    char* lineStart;
     while (1) {
-      lineStart = nextLineStart;
+      char* lineStart = nextLineStart;
       if (lineStart == NULL) break;
 
       nextLineStart = getLine(lineStart);
@@ -2021,9 +2019,8 @@ void RTSPClient::checkForAuthenticationFailure(unsigned responseCode,
     // using the contents of a following "WWW-Authenticate:" line.
     // (Once we compute a 'response' for "authenticator", it can be
     //  used in a subsequent request - that will hopefully succeed.)
-    char* lineStart;
     while (1) {
-      lineStart = nextLineStart;
+      char* lineStart = nextLineStart;
       if (lineStart == NULL) break;
 
       nextLineStart = getLine(lineStart);

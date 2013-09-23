@@ -230,11 +230,10 @@ long our_random(void); /*forward*/
 void
 our_srandom(unsigned int x)
 {
-	register int i;
-
 	if (rand_type == TYPE_0)
 		state[0] = x;
 	else {
+		register int i;
 		state[0] = x;
 		for (i = 1; i < rand_deg; i++)
 			state[i] = 1103515245 * state[i - 1] + 12345;
