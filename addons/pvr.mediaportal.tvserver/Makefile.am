@@ -28,6 +28,7 @@ DEFINES+=$(DEFINES_LIVE555)
 libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/channels.cpp \
                                   src/client.cpp \
+                                  src/DateTime.cpp \
                                   src/epg.cpp \
                                   src/GenreTable.cpp \
                                   src/pvrclient-mediaportal.cpp \
