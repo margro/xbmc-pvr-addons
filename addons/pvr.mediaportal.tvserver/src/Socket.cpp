@@ -182,7 +182,11 @@ bool Socket::accept ( Socket& new_socket ) const
   socklen_t addr_length = sizeof( _sockaddr );
   new_socket._sd = ::accept(_sd, const_cast<sockaddr*>( (const sockaddr*) &_sockaddr), &addr_length );
 
+#ifdef TARGET_WINDOWS
+  if (new_socket._sd == INVALID_SOCKET)
+#else
   if (new_socket._sd <= 0)
+#endif
   {
     errormessage( getLastError(), "Socket::accept" );
     return false;
