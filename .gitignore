@@ -57,6 +57,6 @@ addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
-addons/*/addon/*.so
-addons/*/addon/*.dll
+addons/*/addon/*.soaddons/*/addon/*.dll
 addons/*/addon/addon.xml
+addons/pvr.mediaportal.tvserver/src/lib/live555/objaddons/pvr.mediaportal.tvserver/src/lib/live555/shared
