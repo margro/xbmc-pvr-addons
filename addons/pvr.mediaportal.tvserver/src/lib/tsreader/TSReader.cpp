@@ -205,6 +205,10 @@ long CTsReader::Open(const char* pszFileName)
     XBMC->Log(LOG_DEBUG, "open rtsp: %s", m_fileName.c_str());
 #ifdef LIVE555
     //strcpy(m_rtspClient.m_outFileName, "e:\\temp\\rtsptest.ts");
+    if (m_buffer)
+      delete m_buffer;
+    if (m_rtspClient)
+      delete m_rtspClient;
     m_buffer = new CMemoryBuffer();
     m_rtspClient = new CRTSPClient();
     m_rtspClient->Initialize(m_buffer);
