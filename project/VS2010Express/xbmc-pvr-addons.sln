@@ -28,7 +28,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv.cmyth", "..\..\a
 		{F9E6874D-60A8-49BA-9393-A2105E63ABCF} = {F9E6874D-60A8-49BA-9393-A2105E63ABCF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcmyth", "..\..\lib\cmyth\Win32\libcmyth.vcxproj", "{F9E6874D-60A8-49BA-9393-A2105E63ABCF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libcmyth", "..\..\lib\cmyth\Win32\pvrlib.libcmyth.vcxproj", "{F9E6874D-60A8-49BA-9393-A2105E63ABCF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\pvr.vuplus\project\VS2010Express\pvr.vuplus.vcxproj", "{848DCDD6-7142-4507-A75A-6872A9256F3F}"
 	ProjectSection(ProjectDependencies) = postProject
