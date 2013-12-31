@@ -15,15 +15,15 @@ LIBS            = @abs_top_builddir@/lib/tinyxml/libtinyxml.la
 include ../Makefile.include.am
 
 
-INCLUDES_LIVE555=-I${srcdir}/lib/live555 \ 
-                 -I${srcdir}/lib/live555/liveMedia/include \
-                 -I${srcdir}/lib/live555/BasicUsageEnvironment/include \
-                 -I${srcdir}/lib/live555/UsageEnvironment/include \
-                 -I${srcdir}/lib/live555/groupsock/include
+INCLUDES_LIVE555=-I${srcdir}/src/lib/live555 \
+                 -I${srcdir}/src/lib/live555/liveMedia/include \
+                 -I${srcdir}/src/lib/live555/BasicUsageEnvironment/include \
+                 -I${srcdir}/src/lib/live555/UsageEnvironment/include \
+                 -I${srcdir}/src/lib/live555/groupsock/include
 
 DEFINES_LIVE555=-DLIVE555 -DSOCKLEN_T=socklen_t -DBSD=1
 
-INCLUDES+=-I{srcdir} -I${srcdir}/lib/live555/ $(INCLUDES_LIVE555)
+INCLUDES+=-I${srcdir}/src $(INCLUDES_LIVE555)
 DEFINES+=$(DEFINES_LIVE555)
 
 libmediaportal_addon_la_SOURCES = src/Cards.cpp \
