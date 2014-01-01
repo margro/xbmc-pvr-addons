@@ -108,7 +108,7 @@ string cPVRClientMediaPortal::SendCommand(string command)
   return line;
 }
 
-bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<string>& lines)
+bool cPVRClientMediaPortal::SendCommand2(string command, vector<string>& lines)
 {
   PLATFORM::CLockObject critsec(m_mutex);
 
@@ -538,8 +538,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
   CStdString      command;
-  char*           baseCommand;
-  int             code;
+  const char*     baseCommand;
   PVR_CHANNEL     tag;
   CStdString      stream;
   CStdString      groups;
@@ -587,7 +586,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
   else
     command.Format("%s:%s\n", baseCommand, groups.c_str());
 
-  if( !SendCommand2(command, code, lines) )
+  if( !SendCommand2(command, lines) )
     return PVR_ERROR_SERVER_ERROR;
 
 #ifdef TARGET_WINDOWS
@@ -735,8 +734,7 @@ int cPVRClientMediaPortal::GetChannelGroupsAmount(void)
 PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
-  CStdString filters;
-  int code;
+  string          filters;
   PVR_CHANNEL_GROUP tag;
 
   if (!IsUp())
@@ -753,7 +751,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
     filters = g_szRadioGroup;
 
     XBMC->Log(LOG_DEBUG, "GetChannelGroups for radio");
-    if (!SendCommand2("ListRadioGroups\n", code, lines))
+    if (!SendCommand2("ListRadioGroups\n", lines))
       return PVR_ERROR_SERVER_ERROR;
   }
   else
@@ -761,7 +759,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
     filters = g_szTVGroup;
 
     XBMC->Log(LOG_DEBUG, "GetChannelGroups for TV");
-    if (!SendCommand2("ListGroups\n", code, lines))
+    if (!SendCommand2("ListGroups\n", lines))
       return PVR_ERROR_SERVER_ERROR;
   }
 
@@ -787,7 +785,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
     {
       if (!filters.empty())
       {
-        if (filters.Find(data.c_str()) == string::npos)
+        if (filters.find(data.c_str()) == string::npos)
         {
           // Skip this backend group. It is not in our filter list
           continue;
@@ -809,7 +807,6 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
   //TODO: code below is similar to GetChannels code. Refactor and combine...
   vector<string>           lines;
   CStdString               command;
-  int                      code;
   PVR_CHANNEL_GROUP_MEMBER tag;
 
   if (!IsUp())
@@ -834,7 +831,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
     command.Format("ListTVChannels:%s\n", uri::encode(uri::PATH_TRAITS, group.strGroupName).c_str());
   }
 
-  if (!SendCommand2(command, code, lines))
+  if (!SendCommand2(command, lines))
     return PVR_ERROR_SERVER_ERROR;
 
   memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
@@ -1280,7 +1277,7 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR cPVRClientMediaPortal::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+PVR_ERROR cPVRClientMediaPortal::DeleteTimer(const PVR_TIMER &timer, bool UNUSED(bForceDelete))
 {
   char           command[256];
   string         result;
@@ -1905,7 +1902,7 @@ const char* cPVRClientMediaPortal::GetLiveStreamURL(const PVR_CHANNEL &channelin
   }
 }
 
-void cPVRClientMediaPortal::PauseStream(bool bPaused)
+void cPVRClientMediaPortal::PauseStream(bool UNUSED(bPaused))
 {
   if (m_tsreader)
     m_tsreader->Pause();
@@ -1944,10 +1941,9 @@ void cPVRClientMediaPortal::LoadCardSettings()
   XBMC->Log(LOG_DEBUG, "Loading card settings");
 
   /* Retrieve card settings (needed for Live TV and recordings folders) */
-  int code;
   vector<string> lines;
 
-  if ( SendCommand2("GetCardSettings\n", code, lines) )
+  if ( SendCommand2("GetCardSettings\n", lines) )
   {
     m_cCards.ParseLines(lines);
   }

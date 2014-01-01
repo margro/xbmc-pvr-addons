@@ -33,6 +33,7 @@
  */
 
 #include "DeMultiplexer.h"
+#include "utils.h" //UNUSED()
 #include "client.h" //XBMC->Log()
 #include "TSReader.h"
 
@@ -70,7 +71,7 @@ void CDeMultiplexer::Start()
 
   while( (GetTickCount() - m_Time) < 5000  && m_bGotNewChannel == false)
   {
-    int BytesRead = ReadFromFile(false,false);
+    int BytesRead = ReadFromFile();
     if (0 == BytesRead)
       usleep(10000);
   }
@@ -86,7 +87,7 @@ void CDeMultiplexer::SetFileReader(FileReader* reader)
 /// and processes the raw data
 /// When a TS packet has been discovered, OnTsPacket(byte* tsPacket) gets called
 //  which in its turn deals with the packet
-int CDeMultiplexer::ReadFromFile(bool isAudio, bool isVideo)
+int CDeMultiplexer::ReadFromFile()
 {
   if (m_filter.IsSeeking())
     return 0;       // Ambass : to check
@@ -227,7 +228,7 @@ void CDeMultiplexer::RequestNewPat(void)
 
   while( (GetTickCount() - m_Time) < 5000 && m_bGotNewChannel == false)
   {
-    int BytesRead = ReadFromFile(false,false);
+    int BytesRead = ReadFromFile();
     if (0 == BytesRead)
       usleep(10000);
     dwBytesProcessed+=BytesRead;
@@ -241,7 +242,7 @@ void CDeMultiplexer::RequestNewPat(void)
 /// In this method we check if any audio/video/subtitle pid or format has changed
 /// If not, we simply return
 /// If something has changed we ask the MP to rebuild the graph
-void CDeMultiplexer::OnNewChannel(CChannelInfo& info)
+void CDeMultiplexer::OnNewChannel(CChannelInfo& UNUSED(info))
 {
   m_bGotNewChannel = true;
 }
