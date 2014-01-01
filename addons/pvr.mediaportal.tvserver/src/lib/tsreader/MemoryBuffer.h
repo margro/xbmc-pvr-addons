@@ -33,8 +33,6 @@
 #include "platform/threads/mutex.h"
 #include <vector>
 
-using namespace std;
-
 class CMemoryBuffer
 {
   public:
@@ -56,7 +54,7 @@ class CMemoryBuffer
     } BufferItem;
 
   protected:
-    vector<BufferItem *> m_Array;
+    std::vector<BufferItem *> m_Array;
     PLATFORM::CMutex m_BufferLock;
     unsigned long    m_BytesInBuffer;
     PLATFORM::CEvent m_event;
