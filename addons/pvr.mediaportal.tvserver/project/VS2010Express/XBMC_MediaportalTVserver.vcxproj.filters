@@ -229,13 +229,13 @@
     <ClInclude Include="..\..\src\lib\tsreader\TSDebug.h">
       <Filter>Header Files\lib%255ctsreader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\client.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\GUIDialogRecordSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\DateTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
