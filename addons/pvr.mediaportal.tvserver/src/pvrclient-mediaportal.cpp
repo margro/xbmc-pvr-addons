@@ -549,7 +549,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
   CStdString      command;
-  const char*     baseCommand;
+  const char *    baseCommand;
   PVR_CHANNEL     tag;
   CStdString      stream;
   CStdString      groups;
@@ -749,7 +749,7 @@ int cPVRClientMediaPortal::GetChannelGroupsAmount(void)
 PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
-  string          filters;
+  std::string   filters;
   PVR_CHANNEL_GROUP tag;
 
   if (!IsUp())
