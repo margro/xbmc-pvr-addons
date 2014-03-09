@@ -67,6 +67,10 @@ CGUIDialogRecordSettings::CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, c
 
   // needed for every dialog
   m_retVal = -1;				// init to failed load value (due to xml file not being found)
+  // Default skin should actually be "skin.confluence", but the fallback mechanism will only
+  // find the xml file and not the used image files. This will result in a transparent window
+  // which is basically useless. Therefore, it is better to let the dialog fail by using the
+  // incorrect fallback skin name "Confluence"
   m_window = GUI->Window_create("DialogRecordSettings.xml", "Confluence", false, true);
   if (m_window)
   {
