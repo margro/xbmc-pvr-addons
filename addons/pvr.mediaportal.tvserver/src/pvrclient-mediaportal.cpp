@@ -68,6 +68,8 @@ cPVRClientMediaPortal::cPVRClientMediaPortal()
   m_genretable             = NULL;
   m_iLastRecordingUpdate   = 0;
   m_signalStateCounter     = 0;
+  m_iSignal                = 0;
+  m_iSNR                   = 0;
 }
 
 cPVRClientMediaPortal::~cPVRClientMediaPortal()
