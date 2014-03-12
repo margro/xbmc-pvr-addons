@@ -1574,7 +1574,6 @@ Boolean RTSPClient::getMediaSessionParameter(MediaSession& /*session*/,
 
     // Skip every subsequent header line, until we see a blank line
     // The remaining data is assumed to be the parameter data that we want.
-    char* serverType = new char[fResponseBufferSize]; // ensures enough space
     int contentLength = -1;
     char* lineStart;
     while (1) {
@@ -1585,15 +1584,15 @@ Boolean RTSPClient::getMediaSessionParameter(MediaSession& /*session*/,
       if (lineStart[0] == '\0') break; // this is a blank line
 
       if (sscanf(lineStart, "Content-Length: %d", &contentLength) == 1
-	  || sscanf(lineStart, "Content-length: %d", &contentLength) == 1) {
-	if (contentLength < 0) {
-	  envir().setResultMsg("Bad \"Content-length:\" header: \"",
-			       lineStart, "\"");
-	  break;
-	}
+      || sscanf(lineStart, "Content-length: %d", &contentLength) == 1)
+      {
+        if (contentLength < 0) {
+          envir().setResultMsg("Bad \"Content-length:\" header: \"",
+          lineStart, "\"");
+          break;
+        }
       }
     }
-    delete[] serverType;
 
     // We're now at the end of the response header lines
     if (lineStart == NULL) {
