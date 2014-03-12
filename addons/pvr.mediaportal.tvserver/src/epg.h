@@ -31,8 +31,6 @@
 #include "GenreTable.h"
 #include "DateTime.h"
 
-using namespace std;
-
 class cEpg
 {
 private:
