@@ -277,13 +277,13 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF8ToUTF16 failed lasterror == 0x%X.", dwErr);
-      delete pszUTF16;
+      delete[] pszUTF16;
       return L"";
     }
 
     std::wstring strUTF16(pszUTF16);
 
-    delete pszUTF16;
+    delete[] pszUTF16;
 
     // Return resulting UTF16 string
     return strUTF16;
@@ -372,13 +372,13 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF16ToUTF8 failed lasterror == 0x%X.", dwErr);
-      delete pszUTF8;
+      delete[] pszUTF8;
       return "";
     }
 
     // Release internal CString buffer
     std::string strUTF8(pszUTF8);
-    delete pszUTF8;
+    delete[] pszUTF8;
 
     // Return resulting UTF-8 string
     return strUTF8;
