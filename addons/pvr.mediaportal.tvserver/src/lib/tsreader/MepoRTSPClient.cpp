@@ -22,6 +22,7 @@
 #include "MepoRTSPClient.h"
 #include "MemorySink.h"
 #include "client.h"
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -172,12 +173,12 @@ bool CRTSPClient::clientTearDownSession(Medium* client,MediaSession* session)
   return (rtspClient->teardownMediaSession(*session) ? true : false);
 }
 
-void my_subsessionAfterPlaying(void* clientData)
+void my_subsessionAfterPlaying(void* UNUSED(clientData))
 {
   XBMC->Log(LOG_DEBUG, "CRTSPClient::subsessionAfterPlaying()");
 }
 
-void my_subsessionByeHandler(void* clientData)
+void my_subsessionByeHandler(void* UNUSED(clientData))
 {
   XBMC->Log(LOG_DEBUG, "CRTSPClient::subsessionByeHandler()");
 }

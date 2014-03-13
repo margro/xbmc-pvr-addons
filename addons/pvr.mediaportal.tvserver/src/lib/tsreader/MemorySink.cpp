@@ -33,6 +33,7 @@
 #include "MemorySink.h"
 #include "GroupsockHelper.hh"
 #include "client.h"
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -76,7 +77,7 @@ void CMemorySink::afterGettingFrame(void* clientData, unsigned frameSize, unsign
   sink->continuePlaying();
 }
 
-void CMemorySink::addData(unsigned char* data, unsigned dataSize, struct timeval presentationTime)
+void CMemorySink::addData(unsigned char* data, unsigned dataSize, struct timeval UNUSED(presentationTime))
 {
   if (dataSize == 0 || data == NULL) return;
 
