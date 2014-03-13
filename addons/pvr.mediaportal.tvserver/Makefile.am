@@ -17,7 +17,7 @@ include ../Makefile.include.am
 INCLUDES_LIVE555=-Isrc/lib/live555/liveMedia/include \
                  -Isrc/lib/live555/BasicUsageEnvironment/include \
                  -Isrc/lib/live555/UsageEnvironment/include \
-                 -Isrc/lib/live555/groupsock/include
+                 -Isrc/lib/live555/groupsock/include \
                  -Isrc/lib/live555/
 
 DEFINES_LIVE555=-DLIVE555 -DSOCKLEN_T=socklen_t -DBSD=1
