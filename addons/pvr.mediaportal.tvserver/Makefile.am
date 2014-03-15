@@ -31,6 +31,7 @@ libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/DateTime.cpp \
                                   src/epg.cpp \
                                   src/GenreTable.cpp \
+                                  src/GUIDialogRecordSettings.cpp \
                                   src/pvrclient-mediaportal.cpp \
                                   src/recordings.cpp \
                                   src/Socket.cpp \
