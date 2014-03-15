@@ -34,7 +34,7 @@ typedef struct Card
   string    Name;
   int       Priority;
   bool      GrabEPG;
-  CDateTime LastEpgGrab;
+  MPTV::CDateTime LastEpgGrab;
   string    RecordingFolder;
   string    RecordingFolderUNC;
   int       IdServer;

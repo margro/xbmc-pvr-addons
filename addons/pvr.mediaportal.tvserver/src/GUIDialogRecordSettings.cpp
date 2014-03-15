@@ -42,6 +42,7 @@
 #define LABEL_PROGRAM_CHANNEL          22
 
 using namespace std;
+using namespace MPTV;
 
 CGUIDialogRecordSettings::CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, cTimer& timer, const std::string& channelName) :
   m_spinFrequency(NULL),

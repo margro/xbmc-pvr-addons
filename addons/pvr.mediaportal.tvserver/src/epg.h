@@ -37,9 +37,9 @@ private:
   string m_title;
   string m_shortText;
   string m_description;
-  CDateTime m_startTime;
-  CDateTime m_endTime;
-  CDateTime m_originalAirDate;
+  MPTV::CDateTime m_startTime;
+  MPTV::CDateTime m_endTime;
+  MPTV::CDateTime m_originalAirDate;
   int m_duration;
   string m_genre;
   int m_genre_type;

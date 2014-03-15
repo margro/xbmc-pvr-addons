@@ -23,6 +23,9 @@
 #include <cstdio>
 #include "DateTime.h"
 
+namespace MPTV
+{
+
 void CDateTime::InitLocale(void)
 {
   // Follow system default for date and time formatting
@@ -193,3 +196,5 @@ time_t CDateTime::Now()
 
   return now;
 }
+
+} // namespace MPTV

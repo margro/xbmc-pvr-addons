@@ -118,17 +118,17 @@ class cTimer
     int         m_channel;             ///> MediaPortal idChannel
     TvDatabase::ScheduleRecordingType m_schedtype; ///> MediaPortal scheduleType
     std::string m_title;               ///> MediaPortal programName
-    CDateTime   m_startTime;           ///> MediaPortal startTime
-    CDateTime   m_endTime;             ///> MediaPortal endTime
+    MPTV::CDateTime m_startTime;       ///> MediaPortal startTime
+    MPTV::CDateTime m_endTime;         ///> MediaPortal endTime
     //                                      skipped: maxAirings field
     int         m_priority;            ///> MediaPortal priority (not the XBMC one!!!)
     std::string m_directory;           ///> MediaPortal directory
     //                                      skipped:  quality field
     TvDatabase::KeepMethodType m_keepmethod;       ///> MediaPortal keepMethod
-    CDateTime   m_keepDate;            ///> MediaPortal keepDate
+    MPTV::CDateTime m_keepDate;        ///> MediaPortal keepDate
     int         m_prerecordinterval;   ///> MediaPortal preRecordInterval
     int         m_postrecordinterval;  ///> MediaPortal postRecordInterval
-    CDateTime   m_canceled;            ///> MediaPortal canceled (date + time)
+    MPTV::CDateTime m_canceled;        ///> MediaPortal canceled (date + time)
     //                                      skipped: recommendedCard
     bool        m_series;              ///> MediaPortal series
     //                                      skipped: idParentSchedule: not yet supported in XBMC

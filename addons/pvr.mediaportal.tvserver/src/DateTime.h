@@ -21,6 +21,9 @@
 #include <ctime>
 #include <string>
 
+namespace MPTV
+{
+
 class CDateTime
 {
 public:
@@ -76,3 +79,5 @@ private:
 
   struct tm m_time;
 };
+
+} // namespace MPTV

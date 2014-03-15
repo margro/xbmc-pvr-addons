@@ -40,19 +40,19 @@ private:
   std::string m_fileName;          ///< The recording filename without path
   std::string m_stream;
   std::string m_originalurl;
-  CDateTime m_startTime;
-  CDateTime m_endTime;
+  MPTV::CDateTime m_startTime;
+  MPTV::CDateTime m_endTime;
   int m_duration;
-  std::string m_title;             // Title of this event
-  std::string m_description;       // Description of this event
-  std::string m_episodeName;       // Short description of this event (typically the episode name in case of a series)
+  std::string m_title;             ///< Title of this event
+  std::string m_description;       ///< Description of this event
+  std::string m_episodeName;       ///< Short description of this event (typically the episode name in case of a series)
   std::string m_seriesNumber;
   std::string m_episodeNumber;
   std::string m_episodePart;
   int m_scheduleID;
   int m_keepUntil;
-  CDateTime m_keepUntilDate;     ///< MediaPortal keepUntilDate
-  CCards* m_cardSettings;     ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the recordings
+  MPTV::CDateTime m_keepUntilDate; ///< MediaPortal keepUntilDate
+  CCards* m_cardSettings;          ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the recordings
   string m_genre;
   int m_genre_type;
   int m_genre_subtype;

@@ -30,6 +30,7 @@ using namespace std;
 #include "DateTime.h"
 
 using namespace ADDON;
+using namespace MPTV;
 
 cTimer::cTimer() :
   m_keepDate(cUndefinedDate),
