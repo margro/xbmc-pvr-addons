@@ -75,7 +75,7 @@ void BasicTaskScheduler::SingleStep(unsigned maxDelayTime) {
     // it was called with no entries set in "readSet".  If this happens, ignore it:
     if (err == WSAEINVAL && readSet.fd_count == 0) {
       err = EINTR;
-      // To stop this from happening again, create a dummy readable socket:
+      // To stop this from happening again, create a dummy socket:
       int dummySocketNum = socket(AF_INET, SOCK_DGRAM, 0);
       FD_SET((unsigned)dummySocketNum, &fReadSet);
     }
@@ -87,7 +87,7 @@ void BasicTaskScheduler::SingleStep(unsigned maxDelayTime) {
 #if !defined(_WIN32_WCE)
 	perror("BasicTaskScheduler::SingleStep(): select() fails");
 #endif
-	abort();
+	internalError();
       }
   }
 

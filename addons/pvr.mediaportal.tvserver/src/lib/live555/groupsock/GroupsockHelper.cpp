@@ -313,10 +313,9 @@ int readSocketExact(UsageEnvironment& env,
      return the number of bytes actually read when an error occurs
   */
   int bsize = bufferSize;
-  int bytesRead = 0;
   int totBytesRead =0;
   do {
-    bytesRead = readSocket (env, socket, buffer + totBytesRead, bsize,
+    int bytesRead = readSocket (env, socket, buffer + totBytesRead, bsize,
                             fromAddress, timeout);
     if (bytesRead <= 0) break;
     totBytesRead += bytesRead;
@@ -562,13 +561,13 @@ Boolean loopbackWorks = 1;
 
 netAddressBits ourIPAddress(UsageEnvironment& env) {
   static netAddressBits ourAddress = 0;
-  int sock = -1;
   struct in_addr testAddr;
 
   if (ourAddress == 0) {
     // We need to find our source address
     struct sockaddr_in fromAddr;
     fromAddr.sin_addr.s_addr = 0;
+    int sock;
 
     // Get our address by sending a (0-TTL) multicast packet,
     // receiving it, and looking at the source address used.
@@ -752,7 +751,7 @@ int gettimeofday(struct timeval* tp, int* /*tz*/) {
   if (isFirstCall) {
     struct timeb tb;
     ftime(&tb);
-    tp->tv_sec = tb.time;
+    tp->tv_sec = (long) tb.time;
     tp->tv_usec = 1000*tb.millitm;
 
     // Also get our counter frequency:

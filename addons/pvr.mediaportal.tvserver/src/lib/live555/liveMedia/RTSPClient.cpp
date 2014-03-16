@@ -1019,7 +1019,7 @@ static char* createScaleString(float scale, float currentScale) {
     // This is the default value; we don't need a "Scale:" header:
     buf[0] = '\0';
   } else {
-    Locale l("C", LC_NUMERIC);
+    Locale l("C", Numeric);
     sprintf(buf, "Scale: %f\r\n", scale);
   }
 
@@ -1033,11 +1033,11 @@ static char* createRangeString(double start, double end) {
     buf[0] = '\0';
   } else if (end < 0) {
     // There's no end time:
-    Locale l("C", LC_NUMERIC);
+    Locale l("C", Numeric);
     sprintf(buf, "Range: npt=%.3f-\r\n", start);
   } else {
     // There's both a start and an end time; include them both in the "Range:" hdr
-    Locale l("C", LC_NUMERIC);
+    Locale l("C", Numeric);
     sprintf(buf, "Range: npt=%.3f-%.3f\r\n", start, end);
   }
 
@@ -1114,9 +1114,8 @@ Boolean RTSPClient::playMediaSession(MediaSession& session,
     if (!getResponse("PLAY", bytesRead, responseCode, firstLine, nextLineStart)) break;
 
     // Look for various headers that we understand:
-    char* lineStart;
     while (1) {
-      lineStart = nextLineStart;
+      char* lineStart = nextLineStart;
       if (lineStart == NULL) break;
 
       nextLineStart = getLine(lineStart);
@@ -1224,9 +1223,8 @@ Boolean RTSPClient::playMediaSubsession(MediaSubsession& subsession,
     if (!getResponse("PLAY", bytesRead, responseCode, firstLine, nextLineStart)) break;
 
     // Look for various headers that we understand:
-    char* lineStart;
     while (1) {
-      lineStart = nextLineStart;
+      char* lineStart = nextLineStart;
       if (lineStart == NULL) break;
 
       nextLineStart = getLine(lineStart);
@@ -1576,7 +1574,6 @@ Boolean RTSPClient::getMediaSessionParameter(MediaSession& /*session*/,
 
     // Skip every subsequent header line, until we see a blank line
     // The remaining data is assumed to be the parameter data that we want.
-    char* serverType = new char[fResponseBufferSize]; // ensures enough space
     int contentLength = -1;
     char* lineStart;
     while (1) {
@@ -1587,15 +1584,15 @@ Boolean RTSPClient::getMediaSessionParameter(MediaSession& /*session*/,
       if (lineStart[0] == '\0') break; // this is a blank line
 
       if (sscanf(lineStart, "Content-Length: %d", &contentLength) == 1
-	  || sscanf(lineStart, "Content-length: %d", &contentLength) == 1) {
-	if (contentLength < 0) {
-	  envir().setResultMsg("Bad \"Content-length:\" header: \"",
-			       lineStart, "\"");
-	  break;
-	}
+      || sscanf(lineStart, "Content-length: %d", &contentLength) == 1)
+      {
+        if (contentLength < 0) {
+          envir().setResultMsg("Bad \"Content-length:\" header: \"",
+          lineStart, "\"");
+          break;
+        }
       }
     }
-    delete[] serverType;
 
     // We're now at the end of the response header lines
     if (lineStart == NULL) {
@@ -2021,9 +2018,8 @@ void RTSPClient::checkForAuthenticationFailure(unsigned responseCode,
     // using the contents of a following "WWW-Authenticate:" line.
     // (Once we compute a 'response' for "authenticator", it can be
     //  used in a subsequent request - that will hopefully succeed.)
-    char* lineStart;
     while (1) {
-      lineStart = nextLineStart;
+      char* lineStart = nextLineStart;
       if (lineStart == NULL) break;
 
       nextLineStart = getLine(lineStart);
@@ -2329,7 +2325,7 @@ Boolean RTSPClient::parseScaleHeader(char const* line, float& scale) {
   if (_strncasecmp(line, "Scale: ", 7) != 0) return False;
   line += 7;
 
-  Locale l("C", LC_NUMERIC);
+  Locale l("C", Numeric);
   return sscanf(line, "%f", &scale) == 1;
 }
 

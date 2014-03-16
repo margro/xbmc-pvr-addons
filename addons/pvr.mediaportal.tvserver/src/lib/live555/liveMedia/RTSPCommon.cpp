@@ -14,7 +14,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 **********/
 // "liveMedia"
-// Copyright (c) 1996-2010 Live Networks, Inc.  All rights reserved.
+// Copyright (c) 1996-2012 Live Networks, Inc.  All rights reserved.
 // Common routines used by both RTSP clients and servers
 // Implementation
 
@@ -22,6 +22,13 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 #include "Locale.hh"
 #include <string.h>
 #include <stdio.h>
+#include <time.h> // for "strftime()" and "gmtime()"
+
+#if defined(__WIN32__) || defined(_WIN32) || defined(_QNX4)
+#else
+#include <signal.h>
+#define USE_SIGNALS 1
+#endif
 
 Boolean parseRTSPRequestString(char const* reqStr,
 			       unsigned reqStrSize,
@@ -146,7 +153,7 @@ Boolean parseRangeHeader(char const* buf, double& rangeStart, double& rangeEnd) 
   char const* fields = buf + 7;
   while (*fields == ' ') ++fields;
   double start, end;
-  Locale l("C", LC_NUMERIC);
+  Locale l("C", Numeric);
   if (sscanf(fields, "npt = %lf - %lf", &start, &end) == 2) {
     rangeStart = start;
     rangeEnd = end;
