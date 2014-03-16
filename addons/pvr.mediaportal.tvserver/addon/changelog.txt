@@ -1,3 +1,6 @@
+v1.9.13
+- Added: Series recording configuration support
+
 v1.9.12
 - Added: Live TV/Recordings: Report "permission denied" errors on SMB access failures
 - Changed: [Settings] enable fast channel switching by default
