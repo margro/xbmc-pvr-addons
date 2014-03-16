@@ -71,3 +71,6 @@ lib/tinyxml2/tinyxml2/Release
 addons/*/addon/*.so
 addons/*/addon/*.dll
 addons/*/addon/addon.xml
+
+addons/pvr.mediaportal.tvserver/src/lib/live555/obj
+addons/pvr.mediaportal.tvserver/src/lib/live555/shared
