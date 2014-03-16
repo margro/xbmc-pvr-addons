@@ -64,14 +64,16 @@ public:
   virtual void setResultMsg(MsgString msg) = 0;
   virtual void setResultMsg(MsgString msg1, MsgString msg2) = 0;
   virtual void setResultMsg(MsgString msg1, MsgString msg2, MsgString msg3) = 0;
-  virtual void setResultErrMsg(MsgString msg) = 0;
-	// like setResultMsg(), except that an 'errno' message is appended
+  virtual void setResultErrMsg(MsgString msg, int err = 0) = 0;
+	// like setResultMsg(), except that an 'errno' message is appended.  (If "err == 0", the "getErrno()" code is used instead.)
 
   virtual void appendToResultMsg(MsgString msg) = 0;
 
   virtual void reportBackgroundError() = 0;
 	// used to report a (previously set) error message within
 	// a background event
+
+  virtual void internalError(); // used to 'handle' a 'should not occur'-type error condition within the library.
 
   // 'errno'
   virtual int getErrno() const = 0;
@@ -141,6 +143,7 @@ public:
 	// to proceed.
         // (If "watchVariable" is not NULL, then we return from this
         // routine when *watchVariable != 0)
+  virtual void internalError(); // used to 'handle' a 'should not occur'-type error condition within the library.
 
 protected:
   TaskScheduler(); // abstract base class

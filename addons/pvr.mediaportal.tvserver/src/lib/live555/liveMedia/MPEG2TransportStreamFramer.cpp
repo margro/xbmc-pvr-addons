@@ -200,9 +200,8 @@ void MPEG2TransportStreamFramer
 
     // Hack (suggested by "Romain"): Don't update our estimate if this PCR appeared unusually quickly.
     // (This can produce more accurate estimates for wildly VBR streams.)
-    double meanPCRPeriod = 0.0;
     if (fTSPCRCount > 0) {
-      meanPCRPeriod=(double)fTSPacketCount/fTSPCRCount;
+      double meanPCRPeriod=(double)fTSPacketCount/fTSPCRCount;
       if (fTSPacketCount - pidStatus->lastPacketNum < meanPCRPeriod*PCR_PERIOD_VARIATION_RATIO) return;
     }
 
