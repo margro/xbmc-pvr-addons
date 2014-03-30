@@ -12,6 +12,7 @@ v1.9.12
 - Fixed: [SMB] Allow an empty username and password field
 - Fixed: [SMB] Don't replace \\ by smb:// when not at the start of the path
 - Fixed: Stop timeshifting at the backend side on buffer open failure.
+- Updated language files from Transifex
 
 v1.9.11
 - Updated language files from Transifex
