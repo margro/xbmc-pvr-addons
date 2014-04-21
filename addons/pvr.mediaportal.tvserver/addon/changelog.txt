@@ -1,5 +1,6 @@
 Development:
 - Restored: Live555 RTSP streaming support
+- Recordings: Check for in progress recordings and use play them always via the PVR addon
 
 v1.9.12
 - Updated language files from Transifex
