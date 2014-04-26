@@ -59,6 +59,7 @@ std::string ToWindowsPath(const std::string& strFileName);
 #  define UNUSED(x)  /* x */
 #endif
 
+
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util
 {
