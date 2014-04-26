@@ -43,7 +43,7 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.13"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.13-dev"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
@@ -986,28 +986,23 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
         PVR_STRCLR(tag.strDirectory);
       }
 
-      //if (g_bUseRecordingsDir == true)
-      if (g_bUseRTSP == false)
-      {
 #ifdef TARGET_WINDOWS
-        if (OS::CFile::Exists( recording.FilePath() ))
-          PVR_STRCPY(tag.strStreamURL, recording.FilePath());
-        else
+      if ( (g_bUseRTSP == false) && (recording.IsRecording() == false) && (OS::CFile::Exists( recording.FilePath() )))
+      {
+        // Direct access. Bypass the PVR addon completely (both ffmpeg and TSReader mode; Windows only)
+        PVR_STRCPY(tag.strStreamURL, recording.FilePath());
+      }
+      else
 #endif
+      if (g_eStreamingMethod==TSReader)
+      {
+        // Use ReadRecordedStream
         PVR_STRCLR(tag.strStreamURL);
       }
       else
       {
-        if (g_eStreamingMethod==TSReader)
-        {
-          // Use ReadRecordedStream
-          PVR_STRCLR(tag.strStreamURL);
-        }
-        else
-        {
-          // Use rtsp url and XBMC's internal FFMPeg playback
-          PVR_STRCPY(tag.strStreamURL, recording.Stream());
-        }
+        // Use rtsp url and XBMC's internal FFMPeg playback
+        PVR_STRCPY(tag.strStreamURL, recording.Stream());
       }
       PVR->TransferRecordingEntry(handle, &tag);
     }
@@ -1288,7 +1283,7 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
   if ( timerinfo.startTime <= 0)
   {
     // Refresh the recordings list to see the newly created recording
-    usleep(1000);
+    usleep(100000);
     PVR->TriggerRecordingUpdate();
   }
 
