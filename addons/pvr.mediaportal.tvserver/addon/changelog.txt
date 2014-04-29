@@ -1,6 +1,7 @@
-v1.9.13-dev:
-- Added: Live555 RTSP streaming support
-- Added: Series recording configuration support
+v1.9.14-dev:
+- Added: [TSReader] Live555 RTSP streaming support
+- Added: [GUI] Add series recording dialog to configure MediaPortal specific recording options
+- Fixed: [TSReader] Short hickup after in 1 second when tuning a radio channel
 
 v1.9.13
 - Added: Live TV/Recordings: Report "permission denied" errors on SMB access failures
