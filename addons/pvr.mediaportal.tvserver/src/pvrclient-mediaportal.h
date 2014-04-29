@@ -115,6 +115,7 @@ private:
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;
+  bool                    m_bCurrentChannelIsRadio;
   bool                    m_bConnected;
   bool                    m_bStop;
   bool                    m_bTimeShiftStarted;
