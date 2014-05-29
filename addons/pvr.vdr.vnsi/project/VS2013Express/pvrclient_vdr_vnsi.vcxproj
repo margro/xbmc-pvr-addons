@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6834B003-2511-4745-818D-F418E87DD941}</ProjectGuid>
-    <RootNamespace>pvr.wmc</RootNamespace>
-    <ProjectName>pvr.wmc</ProjectName>
+    <ProjectGuid>{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}</ProjectGuid>
+    <RootNamespace>pvrclient_vdr_vnsi</RootNamespace>
+    <ProjectName>pvr.vdr.vnsi</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -43,32 +43,29 @@
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>XBMC_WMC_win32</TargetName>
+    <TargetName>XBMC_VDR_vnsi_win32</TargetName>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>XBMC_WMC_win32</TargetName>
+    <TargetName>XBMC_VDR_vnsi_win32</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;HAS_DX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>LinkVerbose</ShowProgress>
+      <AdditionalDependencies>d3dx9.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PreBuildEvent />
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -77,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -89,42 +86,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
-    <ClCompile Include="..\..\src\DialogDeleteTimer.cpp" />
-    <ClCompile Include="..\..\src\DialogRecordPref.cpp" />
-    <ClCompile Include="..\..\src\pvr2wmc.cpp" />
-    <ClCompile Include="..\..\src\Socket.cpp" />
-    <ClCompile Include="..\..\src\utilities.cpp" />
+    <ClCompile Include="..\..\src\requestpacket.cpp" />
+    <ClCompile Include="..\..\src\responsepacket.cpp" />
+    <ClCompile Include="..\..\src\VNSIAdmin.cpp" />
+    <ClCompile Include="..\..\src\VNSIChannels.cpp" />
+    <ClCompile Include="..\..\src\VNSIChannelScan.cpp" />
+    <ClCompile Include="..\..\src\VNSIData.cpp" />
+    <ClCompile Include="..\..\src\VNSIDemux.cpp" />
+    <ClCompile Include="..\..\src\VNSIRecording.cpp" />
+    <ClCompile Include="..\..\src\VNSISession.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
-    <ClInclude Include="..\..\src\clientversion.h" />
-    <ClInclude Include="..\..\src\DialogDeleteTimer.h" />
-    <ClInclude Include="..\..\src\DialogRecordPref.h" />
-    <ClInclude Include="..\..\src\pvr2wmc.h" />
-    <ClInclude Include="..\..\src\Socket.h" />
-    <ClInclude Include="..\..\src\utilities.h" />
+    <ClInclude Include="..\..\src\requestpacket.h" />
+    <ClInclude Include="..\..\src\responsepacket.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+    <ClInclude Include="..\..\src\VNSIAdmin.h" />
+    <ClInclude Include="..\..\src\VNSIChannelScan.h" />
+    <ClInclude Include="..\..\src\vnsicommand.h" />
+    <ClInclude Include="..\..\src\VNSIData.h" />
+    <ClInclude Include="..\..\src\VNSIRecording.h" />
+    <ClInclude Include="..\..\src\VNSISession.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
+    <ProjectReference Include="..\..\..\..\project\VS2013Express\platform\platform.vcxproj">
       <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\project\VS2010Express\tinyxml\tinyxml.vcxproj">
-      <Project>{bdc7d21d-9fd9-41aa-bec8-8b70e1448c50}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\addon\addon.xml.in">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="..\..\addon\changelog.txt" />
-    <None Include="..\..\addon\resources\language\English\strings.po" />
-    <None Include="..\..\addon\resources\settings.xml" />
-    <None Include="..\..\addon\resources\skins\skin.confluence\720p\DeleteTimer.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="..\..\addon\resources\skins\skin.confluence\720p\RecordPrefs.xml">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

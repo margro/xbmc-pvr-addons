@@ -11,9 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F9F3E7B6-EF4C-4BD8-A921-3DE4C4268945}</ProjectGuid>
-    <RootNamespace>pvrclient_dvblink</RootNamespace>
-    <ProjectName>pvr.dvblink</ProjectName>
+    <ProjectGuid>{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}</ProjectGuid>
+    <RootNamespace>pvrdvbviewer</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -43,32 +42,28 @@
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.dll</TargetExt>
-    <TargetName>XBMC_DVBLink_win32</TargetName>
+    <TargetName>XBMC_dvbviewer_win32</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.dll</TargetExt>
-    <TargetName>XBMC_DVBLink_win32</TargetName>
+    <TargetName>XBMC_dvbviewer_win32</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;../../../../project/BuildDependencies/include;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;TSREADER;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
-    <ProjectReference>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -76,44 +71,35 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;../../../../project/BuildDependencies/include;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;TSREADER;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\base64.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
-    <ClCompile Include="..\..\src\DVBLinkClient.cpp" />
-    <ClCompile Include="..\..\src\HttpPostClient.cpp" />
-    <ClCompile Include="..\..\src\TimeShiftBuffer.cpp" />
+    <ClCompile Include="..\..\src\DvbData.cpp" />
+    <ClCompile Include="..\..\src\TimeshiftBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\base64.h" />
     <ClInclude Include="..\..\src\client.h" />
-    <ClInclude Include="..\..\src\DVBLinkClient.h" />
-    <ClInclude Include="..\..\src\HttpPostClient.h" />
-    <ClInclude Include="..\..\src\TimeShiftBuffer.h" />
+    <ClInclude Include="..\..\src\DvbData.h" />
+    <ClInclude Include="..\..\src\TimeshiftBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\lib\libdvblinkremote\project\VS2010Express\libdvblinkremote.vcxproj">
-      <Project>{db826a81-e848-4e39-be17-e779a49e2960}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\lib\tinyxml2\tinyxml2\tinyxml2.vcxproj">
-      <Project>{16a1d446-5415-444e-a7b4-f35b7da7ee8c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
+    <ProjectReference Include="..\..\..\..\project\VS2013Express\platform\platform.vcxproj">
       <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\project\VS2013Express\tinyxml\tinyxml.vcxproj">
+      <Project>{bdc7d21d-9fd9-41aa-bec8-8b70e1448c50}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
