@@ -39,7 +39,7 @@ public:
   cPVRClientMediaPortal();
   ~cPVRClientMediaPortal();
 
-  /* VTP Listening Thread */
+  /* TVServerXBMC Listening Thread */
   static void* Process(void*);
 
   /* Server handling */
@@ -115,6 +115,7 @@ private:
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;
+  bool                    m_bCurrentChannelIsRadio;
   bool                    m_bConnected;
   bool                    m_bStop;
   bool                    m_bTimeShiftStarted;
@@ -129,6 +130,7 @@ private:
   PLATFORM::CMutex        m_mutex;
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
+  std::map<int,std::string> m_channelNames;
   int                     m_signalStateCounter;
   int                     m_iSignal;
   int                     m_iSNR;
