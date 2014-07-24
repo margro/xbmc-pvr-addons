@@ -43,7 +43,7 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.14-dev"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.15-dev"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
@@ -245,9 +245,8 @@ ADDON_STATUS cPVRClientMediaPortal::Connect()
   LoadGenreTable();
   LoadCardSettings();
 
-  XBMC->Log(LOG_INFO, "Locale is: %s\n", setlocale(LC_ALL, NULL) );
+  /* The pvr addon cannot access XBMC's current locale settings, so just use the system default */
   setlocale(LC_ALL, "");
-  XBMC->Log(LOG_INFO, "Locale is: %s\n", setlocale(LC_ALL, NULL) );
 
   return ADDON_STATUS_OK;
 }
@@ -659,6 +658,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     if( channel.Parse(data) )
     {
       // Cache this channel in our local uid-channel list
+      // This cache is used for the GUIDialogRecordSettings
       m_channelNames[channel.UID()] = channel.Name();
 
       // Prepare the PVR_CHANNEL struct to transfer this channel to XBMC

@@ -1,7 +1,9 @@
-v1.9.14-dev:
+v1.9.15-dev:
 - Added: [TSReader] Live555 RTSP streaming support
-- Added: [GUI] Add series recording dialog to configure MediaPortal specific recording options
 - Fixed: [TSReader] Short hickup after in 1 second when tuning a radio channel
+
+v1.9.14
+- Added: Series recording support (requires skin specific dialog)
 - Fixed: [TSReader] Direct playback of recordings that are stored on a network share
 
 v1.9.13
