@@ -102,7 +102,7 @@ bool cEpg::ParseLine(string& data)
 
       m_title = epgfields[2];
       m_description = epgfields[3];
-      m_shortText = epgfields[2];
+      m_shortText = epgfields[9];
       m_genre = epgfields[4];
       if (m_genretable) m_genretable->GenreToTypes(m_genre, m_genre_type, m_genre_subtype);
 
