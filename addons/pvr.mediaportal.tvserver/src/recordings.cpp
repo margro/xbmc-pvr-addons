@@ -88,8 +88,6 @@ bool cRecording::ParseLine(const std::string& data)
 
     m_Index = atoi(fields[0].c_str());
 
-    
-
     if ( m_startTime.SetFromDateTime(fields[1]) == false )
     {
       XBMC->Log(LOG_ERROR, "%s: Unable to convert start time '%s' into date+time", __FUNCTION__, fields[1].c_str());
