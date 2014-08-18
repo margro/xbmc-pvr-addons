@@ -39,8 +39,19 @@ cVNSIData::~cVNSIData()
   Close();
 }
 
-bool cVNSIData::Open(const std::string& hostname, int port, const char* name)
+bool cVNSIData::Open(const std::string& hostname, int port, const char* name, const std::string& mac)
 {
+  /* First wake up the VDR server in case a MAC-Address is specified */
+  if (!mac.empty()) {
+    const char* temp_mac;
+    temp_mac = mac.c_str();
+
+    if (!XBMC->WakeOnLan(temp_mac)) {
+      XBMC->Log(LOG_ERROR, "Error waking up VNSI Server at MAC-Address %s", temp_mac);
+      return false;
+    }
+  }
+
   if(!cVNSISession::Open(hostname, port, name))
     return false;
 
@@ -236,6 +247,19 @@ bool cVNSIData::GetChannelsList(ADDON_HANDLE handle, bool radio)
     tag.iUniqueId         = vresp->extract_U32();
     tag.iEncryptionSystem = vresp->extract_U32();
     char *strCaids        = vresp->extract_String();
+    if (m_protocol >= 6)
+    {
+      std::string path = g_szIconPath;
+      std::string ref = vresp->extract_String();
+      if (!path.empty())
+      {
+        if (path[path.length()-1] != '/')
+          path += '/';
+        path += ref;
+        path += ".png";
+        strncpy(tag.strIconPath, path.c_str(), sizeof(tag.strIconPath) - 1);
+      }
+    }
     tag.bIsRadio          = radio;
 
     PVR->TransferChannelEntry(handle, &tag);
