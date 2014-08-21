@@ -36,7 +36,6 @@ class cEpg
 private:
   unsigned int m_uid;
   string m_title;
-  string m_shortText;
   string m_description;
   MPTV::CDateTime m_startTime;
   MPTV::CDateTime m_endTime;
@@ -65,7 +64,7 @@ public:
   time_t Duration(void) const { return m_duration; }
   time_t OriginalAirDate(void) const;
   const char *Title(void) const { return m_title.c_str(); }
-  const char *ShortText(void) const { return m_shortText.c_str(); }
+  const char *PlotOutline(void) const;
   const char *Description(void) const { return m_description.c_str(); }
   const char *Genre(void) const { return m_genre.c_str(); }
   int GenreType(void) const { return m_genre_type; }
