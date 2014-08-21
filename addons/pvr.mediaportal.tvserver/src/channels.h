@@ -34,6 +34,8 @@ private:
   bool iswebstream;
   bool visibleinguide;
   std::string url;
+  int majorChannelNr;
+  int minorChannelNr;
 
 public:
   cChannel();
@@ -47,5 +49,7 @@ public:
   bool IsWebstream(void) const { return iswebstream; }
   bool VisibleInGuide(void) const { return visibleinguide; }
   const char* URL(void) const { return url.c_str(); }
+  int MajorChannelNr(void) const { return majorChannelNr; }
+  int MinorChannelNr(void) const { return minorChannelNr; }
 };
 
