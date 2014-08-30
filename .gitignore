@@ -26,6 +26,7 @@ Makefile.include.in
 missing
 
 *.o
+*.obj
 *.a
 *.P
 *.lo
@@ -46,6 +47,7 @@ missing
 *.sdf
 *.opensdf
 *.vcxproj.user
+*.bak
 
 project/VS2010Express/objs
 project/VS2010Express/ipch
@@ -59,8 +61,12 @@ project/BuildDependencies/lib
 project/BuildDependencies/include
 addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
+lib/libdvblinkremote/project/VS2010Express/Debug
+lib/libdvblinkremote/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
+lib/tinyxml2/tinyxml2/Debug
+lib/tinyxml2/tinyxml2/Release
 addons/*/addon/*.so
 addons/*/addon/*.dll
 addons/*/addon/addon.xml
