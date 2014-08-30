@@ -47,8 +47,8 @@
     <ClInclude Include="..\librefmem\refmem_local.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>libcmyth</ProjectName>
-    <ProjectGuid>{F9E6874D-60A8-49BA-9393-A2105E63ABCF}</ProjectGuid>
+    <ProjectName>pvrlib.cmyth</ProjectName>
+    <ProjectGuid>{9278988D-5B6D-40AD-BE86-C135E6C401B3}</ProjectGuid>
     <RootNamespace>libcmyth</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
