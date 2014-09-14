@@ -22,7 +22,7 @@
     <ProjectGUID>{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
-    <ProjectName>libcppmyth</ProjectName>
+    <ProjectName>pvrlib.cppmyth</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

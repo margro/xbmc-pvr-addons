@@ -22,7 +22,7 @@
     <ProjectGUID>{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
-    <ProjectName>libjansson</ProjectName>
+    <ProjectName>pvrlib.jansson</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
