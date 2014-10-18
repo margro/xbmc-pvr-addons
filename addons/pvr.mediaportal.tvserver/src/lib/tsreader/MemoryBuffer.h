@@ -39,24 +39,24 @@ class CMemoryBuffer
     CMemoryBuffer(void);
     virtual ~CMemoryBuffer(void);
 
-    unsigned long ReadFromBuffer(unsigned char *pbData, long lDataLength);
-    long PutBuffer(unsigned char *pbData, long lDataLength);
+    size_t ReadFromBuffer(unsigned char *pbData, size_t lDataLength);
+    long PutBuffer(unsigned char *pbData, size_t lDataLength);
     void Clear();
-    unsigned long Size();
+    size_t Size();
     void Run(bool onOff);
     bool IsRunning();
 
     typedef struct
     {
       unsigned char* data;
-      int   nDataLength;
-      int   nOffset;
+      size_t   nDataLength;
+      size_t   nOffset;
     } BufferItem;
 
   protected:
     std::vector<BufferItem *> m_Array;
     PLATFORM::CMutex m_BufferLock;
-    unsigned long    m_BytesInBuffer;
+    size_t    m_BytesInBuffer;
     PLATFORM::CEvent m_event;
     bool m_bRunning;
 };

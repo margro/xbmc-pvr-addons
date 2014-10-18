@@ -51,9 +51,9 @@ public:
   CTsReader();
   ~CTsReader(void);
   long Open(const char* pszFileName);
-  long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
+  long Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes);
   void Close();
-  int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
+  int64_t SetFilePointer(int64_t llDistanceToMove, int iMoveMethod);
   int64_t GetFileSize();
   int64_t GetFilePointer();
   bool OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long timeshiftBufferID);

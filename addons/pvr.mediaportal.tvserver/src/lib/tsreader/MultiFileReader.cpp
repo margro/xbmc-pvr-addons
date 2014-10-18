@@ -154,7 +154,7 @@ bool MultiFileReader::IsFileInvalid()
   return m_TSBufferFile.IsFileInvalid();
 }
 
-int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, int dwMoveMethod)
 {
   RefreshTSBufferFile();
 
@@ -239,7 +239,7 @@ int64_t MultiFileReader::GetFilePointer()
   return m_currentPosition;
 }
 
-long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
+long MultiFileReader::Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes)
 {
   // If the file has already been closed, don't continue
   if (m_TSBufferFile.IsFileInvalid())
@@ -304,14 +304,14 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       }
     }
 
-    unsigned long bytesRead = 0;
+    ssize_t bytesRead = 0;
     long hr;
 
-    int64_t bytesToRead = file->length - seekPosition;
+    size_t bytesToRead = (size_t) (file->length - seekPosition);
     if ((int64_t)lDataLength > bytesToRead)
     {
       // XBMC->Log(LOG_DEBUG, "%s: datalength %lu bytesToRead %lli.", __FUNCTION__, lDataLength, bytesToRead);
-      hr = m_TSFile.Read(pbData, (unsigned long)bytesToRead, &bytesRead);
+      hr = m_TSFile.Read(pbData, bytesToRead, &bytesRead);
       if (FAILED(hr))
       {
         XBMC->Log(LOG_ERROR, "READ FAILED1");
@@ -319,7 +319,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       }
       m_currentPosition += bytesToRead;
 
-      hr = this->Read(pbData + bytesToRead, lDataLength - (unsigned long)bytesToRead, dwReadBytes);
+      hr = this->Read(pbData + bytesToRead, lDataLength - bytesToRead, dwReadBytes);
       if (FAILED(hr))
       {
         XBMC->Log(LOG_ERROR, "READ FAILED2");
@@ -355,7 +355,7 @@ long MultiFileReader::RefreshTSBufferFile()
     return S_FALSE;
   }
 
-  unsigned long bytesRead;
+  ssize_t bytesRead;
   MultiFileReaderFile *file;
 
   int64_t currentPosition;
@@ -386,7 +386,7 @@ long MultiFileReader::RefreshTSBufferFile()
 
     m_TSBufferFile.SetFilePointer(0, FILE_BEGIN);
 
-    uint32_t readLength = sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved);
+    size_t readLength = sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved);
     unsigned char* readBuffer = new unsigned char[readLength];
 
     long result = m_TSBufferFile.Read(readBuffer, readLength, &bytesRead);

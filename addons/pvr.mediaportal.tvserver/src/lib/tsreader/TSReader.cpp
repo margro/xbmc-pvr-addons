@@ -284,7 +284,7 @@ long CTsReader::Open(const char* pszFileName)
   return S_OK;
 }
 
-long CTsReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
+long CTsReader::Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes)
 {
   if (m_fileReader)
   {
@@ -450,7 +450,7 @@ int64_t CTsReader::GetFilePointer()
   return m_fileReader->GetFilePointer();
 }
 
-int64_t CTsReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+int64_t CTsReader::SetFilePointer(int64_t llDistanceToMove, int iMoveMethod)
 {
-  return m_fileReader->SetFilePointer(llDistanceToMove, dwMoveMethod);
+  return m_fileReader->SetFilePointer(llDistanceToMove, iMoveMethod);
 }

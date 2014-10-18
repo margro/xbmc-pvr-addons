@@ -72,7 +72,7 @@ void CMemoryBuffer::Clear()
   m_BytesInBuffer = 0;
 }
 
-unsigned long CMemoryBuffer::Size()
+size_t CMemoryBuffer::Size()
 {
   return m_BytesInBuffer;
 }
@@ -94,7 +94,7 @@ void CMemoryBuffer::Run(bool onOff)
   TSDEBUG(LOG_DEBUG, "memorybuffer: running:%d", onOff);
 }
 
-unsigned long CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, long lDataLength)
+size_t CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, size_t lDataLength)
 {
   if (pbData == NULL || lDataLength <= 0 || !m_bRunning)
     return 0;
@@ -109,7 +109,7 @@ unsigned long CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, long lDataLen
   }
 
   // XBMC->Log(LOG_DEBUG, "get..%d/%d", lDataLength, m_BytesInBuffer);
-  long bytesWritten = 0;
+  size_t bytesWritten = 0;
   PLATFORM::CLockObject BufferLock(m_BufferLock);
 
   while (bytesWritten < lDataLength)
@@ -127,14 +127,14 @@ unsigned long CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, long lDataLen
       return 0;
     }
 
-    long copyLength;
-    if ( (long) (item->nDataLength - item->nOffset) < (lDataLength - bytesWritten) )
+    size_t copyLength;
+    if ( (item->nDataLength - item->nOffset) < (lDataLength - bytesWritten) )
     {
-      copyLength = (long) (item->nDataLength - item->nOffset);
+      copyLength = item->nDataLength - item->nOffset;
     }
     else
     {
-      copyLength = (lDataLength - bytesWritten);
+      copyLength = lDataLength - bytesWritten;
     }
 
     if (NULL == item->data)
@@ -159,7 +159,7 @@ unsigned long CMemoryBuffer::ReadFromBuffer(unsigned char *pbData, long lDataLen
   return bytesWritten;
 }
 
-long CMemoryBuffer::PutBuffer(unsigned char *pbData, long lDataLength)
+long CMemoryBuffer::PutBuffer(unsigned char *pbData, size_t lDataLength)
 {
   if (lDataLength <= 0 || pbData == NULL) return E_FAIL;
 
@@ -180,7 +180,7 @@ long CMemoryBuffer::PutBuffer(unsigned char *pbData, long lDataLength)
       sleep = true;
       XBMC->Log(LOG_DEBUG, "memorybuffer:put full buffer (%d)",m_BytesInBuffer);
       BufferItem *item2 = m_Array.at(0);
-      int copyLength = item2->nDataLength - item2->nOffset;
+      size_t copyLength = item2->nDataLength - item2->nOffset;
 
       m_BytesInBuffer -= copyLength;
       m_Array.erase(m_Array.begin());
