@@ -41,20 +41,20 @@ CMemoryReader::~CMemoryReader(void)
 {
 }
 
-long CMemoryReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
+long CMemoryReader::Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes)
 {
-  *dwReadBytes = m_buffer.ReadFromBuffer(pbData,lDataLength);
+  *dwReadBytes = m_buffer.ReadFromBuffer(pbData, lDataLength);
   if ((*dwReadBytes) <=0)
     return S_FALSE;
   return S_OK;
 }
 
-unsigned long CMemoryReader::setFilePointer(int64_t UNUSED(llDistanceToMove), unsigned long UNUSED(dwMoveMethod))
+int64_t CMemoryReader::setFilePointer(int64_t UNUSED(llDistanceToMove), int UNUSED(dwMoveMethod))
 {
   return 0;
 }
 
-int CMemoryReader::HasData()
+size_t CMemoryReader::HasData()
 {
   return (m_buffer.Size());
 }

@@ -1596,8 +1596,8 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  unsigned long read_wanted = iBufferSize;
-  unsigned long read_done   = 0;
+  ssize_t read_wanted = iBufferSize;
+  size_t read_done   = 0;
   static int read_timeouts  = 0;
   unsigned char* bufptr = pBuffer;
 
@@ -1614,19 +1614,20 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
     return -1;
   }
 
-  while (read_done < (unsigned long) iBufferSize)
+  while (read_done < (size_t) iBufferSize)
   {
+    ssize_t readCount = 0;
     read_wanted = iBufferSize - read_done;
 
-    if (m_tsreader->Read(bufptr, read_wanted, &read_wanted) > 0)
+    if (m_tsreader->Read(bufptr, read_wanted, &readCount) > 0)
     {
       usleep(20000);
       read_timeouts++;
-      return read_wanted;
+      return readCount;
     }
-    read_done += read_wanted;
+    read_done += readCount;
 
-    if ( read_done < (unsigned long) iBufferSize )
+    if ( read_done < (size_t) iBufferSize )
     {
       if (read_timeouts > 200)
       {
@@ -1642,7 +1643,7 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
 
         return read_done;
       }
-      bufptr += read_wanted;
+      bufptr += readCount;
       read_timeouts++;
       usleep(10000);
     }
@@ -1895,29 +1896,31 @@ void cPVRClientMediaPortal::CloseRecordedStream(void)
 
 int cPVRClientMediaPortal::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  unsigned long read_wanted = iBufferSize;
-  unsigned long read_done   = 0;
+  size_t read_wanted = (size_t) iBufferSize;
+  size_t read_done   = 0;
   unsigned char* bufptr = pBuffer;
 
   if (g_eStreamingMethod == ffmpeg)
     return -1;
 
-  while (read_done < (unsigned long) iBufferSize)
+  while (read_done < iBufferSize)
   {
     read_wanted = iBufferSize - read_done;
     if (!m_tsreader)
       return -1;
 
-    if (m_tsreader->Read(bufptr, read_wanted, &read_wanted) > 0)
+    ssize_t readCount;
+
+    if (m_tsreader->Read(bufptr, read_wanted, &readCount) > 0)
     {
       usleep(20000);
-      return read_wanted;
+      return readCount;
     }
-    read_done += read_wanted;
+    read_done += readCount;
 
-    if ( read_done < (unsigned long) iBufferSize )
+    if ( read_done < iBufferSize )
     {
-      bufptr += read_wanted;
+      bufptr += readCount;
       usleep(20000);
     }
   }

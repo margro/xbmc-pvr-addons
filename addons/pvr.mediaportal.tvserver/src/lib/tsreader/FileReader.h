@@ -48,14 +48,14 @@ class FileReader
     virtual long OpenFile(const std::string& fileName);
     virtual long OpenFile();
     virtual long CloseFile();
-    virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
+    virtual long Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes);
     virtual bool IsFileInvalid();
-    virtual int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
+    virtual int64_t SetFilePointer(int64_t llDistanceToMove, int dwMoveMethod);
     virtual int64_t GetFilePointer();
     virtual int64_t GetFileSize();
     virtual bool IsBuffer() { return false; };
     virtual int64_t OnChannelChange(void);
-    virtual int HasData(){return 0; } ;
+    virtual size_t HasData(){return 0; };
 
   protected:
     void*      m_hFile;               // Handle to file for streaming

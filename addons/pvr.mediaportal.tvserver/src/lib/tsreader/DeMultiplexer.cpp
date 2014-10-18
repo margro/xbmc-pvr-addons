@@ -97,13 +97,13 @@ int CDeMultiplexer::ReadFromFile()
     return false;
 
   byte buffer[READ_SIZE];
-  unsigned long dwReadBytes = 0;
+  ssize_t dwReadBytes = 0;
 
   // if we are playing a RTSP stream
   if (m_reader->IsBuffer())
   {
     // and, the current buffer holds data
-    int nBytesToRead = m_reader->HasData();
+    size_t nBytesToRead = m_reader->HasData();
 
     if (nBytesToRead > (int) sizeof(buffer))
     {
@@ -118,7 +118,7 @@ int CDeMultiplexer::ReadFromFile()
     if (nBytesToRead)
     {
       // then read raw data from the buffer
-      m_reader->Read(buffer, nBytesToRead, (unsigned long*)&dwReadBytes);
+      m_reader->Read(buffer, nBytesToRead, &dwReadBytes);
       if (dwReadBytes > 0)
       {
         // yes, then process the raw data
@@ -147,7 +147,7 @@ int CDeMultiplexer::ReadFromFile()
   {
     // playing a local file.
     // read raw data from the file
-    if (SUCCEEDED(m_reader->Read(buffer, sizeof(buffer), (unsigned long*)&dwReadBytes)))
+    if (SUCCEEDED(m_reader->Read(buffer, sizeof(buffer), &dwReadBytes)))
     {
       if ((m_filter.IsTimeShifting()) && (dwReadBytes < sizeof(buffer)))
       {

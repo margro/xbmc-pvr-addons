@@ -185,7 +185,7 @@ inline bool FileReader::IsFileInvalid()
 }
 
 
-int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, int dwMoveMethod)
 {
   TSDEBUG(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
   int64_t rc = XBMC->SeekFile(m_hFile, llDistanceToMove, dwMoveMethod);
@@ -200,12 +200,17 @@ int64_t FileReader::GetFilePointer()
 }
 
 
-long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
+long FileReader::Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes)
 {
   *dwReadBytes = XBMC->ReadFile(m_hFile, (void*)pbData, lDataLength);//Read file data into buffer
   TSDEBUG(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
 
-  if (*dwReadBytes < lDataLength)
+  if (*dwReadBytes < 0)
+  {
+    return S_FALSE;
+  }
+
+  if (*dwReadBytes < (ssize_t) lDataLength)
   {
     XBMC->Log(LOG_NOTICE, "%s: requested %d bytes, read only %d bytes.", __FUNCTION__, lDataLength, *dwReadBytes);
     return S_FALSE;

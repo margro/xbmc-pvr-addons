@@ -39,11 +39,11 @@ class CMemoryReader : public FileReader
   public:
     CMemoryReader(CMemoryBuffer& buffer);
     virtual ~CMemoryReader(void);
-    long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
-    unsigned long setFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
+    long Read(unsigned char* pbData, size_t lDataLength, ssize_t *dwReadBytes);
+    int64_t setFilePointer(int64_t llDistanceToMove, int iMoveMethod);
     bool IsBuffer() { return true; };
     long CloseFile() { return S_OK; };
-    int HasData();
+    size_t HasData();
 
   private:
     CMemoryBuffer& m_buffer;
