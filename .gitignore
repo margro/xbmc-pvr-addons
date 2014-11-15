@@ -45,9 +45,9 @@ compile
 *.lib
 *.pdb
 *.ilk
+*.obj
 *.suo
 *.sdf
-*.obj
 *.opensdf
 *.vcxproj.user
 
@@ -65,6 +65,10 @@ addons/*/project/VS201?Express/Debug
 addons/*/project/VS201?Express/Release
 lib/jsoncpp/project/VS201?Express/Debug
 lib/jsoncpp/project/VS201?Express/Release
+lib/libdvblinkremote/project/VS201?Express/Debug
+lib/libdvblinkremote/project/VS201?Express/Release
+lib/tinyxml2/tinyxml2/Debug
+lib/tinyxml2/tinyxml2/Release
 addons/*/addon/*.so
 addons/*/addon/*.dll
 addons/*/addon/addon.xml
