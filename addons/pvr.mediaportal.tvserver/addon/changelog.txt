@@ -1,6 +1,9 @@
-v1.9.20-dev:
+v1.9.20+dev:
 - Added: [TSReader] Live555 RTSP streaming support
 - Fixed: [TSReader] Short hickup after in 1 second when tuning a radio channel
+
+v1.9.20
+- fixed deadlock when activating the addon on some darwin (osx, ios) runtimes
 
 v1.9.19
 - Updated language files from Transifex
