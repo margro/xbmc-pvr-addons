@@ -118,14 +118,14 @@
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>XBMC_mythtv_win32</TargetName>
+    <TargetName>Kodi_MythTV_win32</TargetName>
     <OutDir>..\..\addon\</OutDir>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
     <CustomBuildBeforeTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>XBMC_MythTV_win32</TargetName>
+    <TargetName>Kodi_MythTV_win32</TargetName>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
   </PropertyGroup>

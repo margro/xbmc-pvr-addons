@@ -1,7 +1,9 @@
-v1.9.20+dev:
+v1.9.21+dev:
 - Added: [TSReader] Live555 RTSP streaming support
 - Fixed: [TSReader] Short hickup after in 1 second when tuning a radio channel
 
+v1.9.21
+- change library name to Kodi
 v1.9.20
 - fixed deadlock when activating the addon on some darwin (osx, ios) runtimes
 
