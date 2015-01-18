@@ -49,6 +49,7 @@ compile
 *.sdf
 *.opensdf
 *.vcxproj.user
+*.log
 
 project/VS2010Express/objs
 project/VS2010Express/ipch
