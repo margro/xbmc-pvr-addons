@@ -22,7 +22,7 @@ INCLUDES_LIVE555=-Isrc/lib/live555/liveMedia/include \
 
 DEFINES_LIVE555=-DLIVE555 -DSOCKLEN_T=socklen_t -DBSD=1
 
-INCLUDES+=-Isrc $(INCLUDES_LIVE555)
+AM_CPPFLAGS+=-Isrc $(INCLUDES_LIVE555)
 DEFINES+=$(DEFINES_LIVE555)
 
 libmediaportal_addon_la_SOURCES = src/Cards.cpp \

@@ -42,7 +42,7 @@ cChannel::~cChannel()
 
 bool cChannel::Parse(const std::string& data)
 {
-  vector<string> fields;
+  std::vector<std::string> fields;
 
   Tokenize(data, fields, "|");
 

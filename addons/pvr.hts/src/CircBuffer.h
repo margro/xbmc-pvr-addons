@@ -16,13 +16,13 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
 
 #include "platform/os.h"
+#include "platform/threads/mutex.h"
 
 class CCircBuffer
 {
@@ -48,5 +48,8 @@ protected:
   size_t m_count;
   size_t m_pin;
   size_t m_pout;
+
+private:
+  mutable PLATFORM::CMutex m_mutex;
 
 };

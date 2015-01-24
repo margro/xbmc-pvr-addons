@@ -35,6 +35,7 @@ public:
 	virtual bool IsServerDown();
 	virtual void UnLoading();
 	const char *GetBackendVersion(void);
+	virtual PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed);
 
 	// channels
 	virtual int GetChannelsAmount(void);
@@ -79,7 +80,8 @@ public:
 	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
 	
 	bool CheckErrorOnServer();
-	void TriggerUpdates(vector<CStdString> results);
+	void TriggerUpdates(std::vector<CStdString> results);
+	void ExtractDriveSpace(std::vector<CStdString> results);
 
 private:
 	int _serverBuild;
@@ -87,6 +89,9 @@ private:
 	CStdString Channel2String(const PVR_CHANNEL &xTmr);
 
 	Socket _socketClient;
+
+	long long _diskTotal;
+	long long _diskUsed;
 
 	int _signalStatusCount;				// call backend for signal status every N calls (because XBMC calls every 1 second!)
 	bool _discardSignalStatus;			// flag to discard signal status for channels where the backend had an error

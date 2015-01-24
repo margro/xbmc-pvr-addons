@@ -24,6 +24,7 @@
 #include "GenreTable.h"
 #include "DateTime.h"
 
+
 #define DEFAULTFRAMESPERSECOND 25.0
 #define MAXPRIORITY 99
 #define MAXLIFETIME 99 //Based on VDR addon and VDR documentation. 99=Keep forever, 0=can be deleted at any time, 1..98=days to keep
@@ -53,7 +54,7 @@ private:
   int m_keepUntil;
   MPTV::CDateTime m_keepUntilDate; ///< MediaPortal keepUntilDate
   CCards* m_cardSettings;          ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the recordings
-  string m_genre;
+  std::string m_genre;
   int m_genre_type;
   int m_genre_subtype;
   bool m_isRecording;
@@ -102,7 +103,7 @@ public:
   /**
    * \brief Override the directory where this recording is stored
    */
-  //void SetDirectory( string& directory );
+  //void SetDirectory( std::string& directory );
 
   /**
    * \brief The RTSP stream URL for this recording (hostname resolved to IP-address)
