@@ -101,7 +101,7 @@
     <ClInclude Include="..\..\src\HTSPTypes.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\lib\libhts\Win32\libhts_2010.vcxproj">
+    <ProjectReference Include="..\..\..\..\lib\libhts\Win32\pvrlibhts_2010.vcxproj">
       <Project>{9203056B-6FD4-47E0-A598-DDD7045D7939}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
