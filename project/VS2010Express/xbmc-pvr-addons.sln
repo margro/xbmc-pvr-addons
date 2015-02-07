@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platfo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcxproj", "{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhts", "..\..\lib\libhts\Win32\libhts_2010.vcxproj", "{00700E12-A63B-4E54-B962-4011A90584BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libhts", "..\..\lib\libhts\Win32\libhts_2010.vcxproj", "{9203056B-6FD4-47E0-A598-DDD7045D7939}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.hts", "..\..\addons\pvr.hts\project\VS2010Express\pvrclient_tvheadend.vcxproj", "{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}"
 EndProject
@@ -23,7 +23,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.njoy", "..\..\addons\pv
 		{FE4573F6-A794-4AD3-B37F-49E51F1140E6} = {FE4573F6-A794-4AD3-B37F-49E51F1140E6}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjsoncpp", "..\..\lib\jsoncpp\project\VS2010Express\libjsoncpp.vcxproj", "{F3A72A50-E295-49BA-ACD7-8696907E0351}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libjsoncpp", "..\..\lib\jsoncpp\project\VS2010Express\libjsoncpp.vcxproj", "{F3A72A50-E295-49BA-ACD7-8696907E0351}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\pvr.vuplus\project\VS2010Express\pvr.vuplus.vcxproj", "{848DCDD6-7142-4507-A75A-6872A9256F3F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -38,11 +38,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.argustv", "..\..\addons
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.iptvsimple", "..\..\addons\pvr.iptvsimple\project\VS2010Express\pvr.iptvsimple.vcxproj", "{6C67B057-CE98-4732-AABF-0E374C718815}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml2", "..\..\lib\tinyxml2\tinyxml2\tinyxml2.vcxproj", "{D1C528B6-AA02-4D29-9D61-DC08E317A70D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.tinyxml2", "..\..\lib\tinyxml2\tinyxml2\tinyxml2.vcxproj", "{D1C528B6-AA02-4D29-9D61-DC08E317A70D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.live555", "..\..\addons\pvr.mediaportal.tvserver\src\lib\live555\LiveMedia555.vcxproj", "{3C398BD4-5714-4802-AB86-D43ADD15B3C0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libdvblinkremote", "..\..\lib\libdvblinkremote\project\VS2010Express\libdvblinkremote.vcxproj", "{DB826A81-E848-4E39-BE17-E779A49E2960}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libdvblinkremote", "..\..\lib\libdvblinkremote\project\VS2010Express\libdvblinkremote.vcxproj", "{DB826A81-E848-4E39-BE17-E779A49E2960}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D1C528B6-AA02-4D29-9D61-DC08E317A70D} = {D1C528B6-AA02-4D29-9D61-DC08E317A70D}
 	EndProjectSection
@@ -53,7 +53,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.wmc", "..\..\addons\pvr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv", "..\..\addons\pvr.mythtv\project\VS2010Express\pvr.mythtv.vcxproj", "{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcppmyth", "..\..\lib\cppmyth\project\VS2010Express\cppmyth\libcppmyth.vcxproj", "{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.cppmyth", "..\..\lib\cppmyth\project\VS2010Express\cppmyth\libcppmyth.vcxproj", "{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,18 +91,18 @@ Global
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.Build.0 = Debug|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|x64.ActiveCfg = Debug|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.MinSizeRel|Win32.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.MinSizeRel|Win32.Build.0 = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.MinSizeRel|x64.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.Build.0 = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|x64.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.RelWithDebInfo|Win32.Build.0 = Release|Win32
-		{00700E12-A63B-4E54-B962-4011A90584BD}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Debug|Win32.Build.0 = Debug|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Debug|x64.ActiveCfg = Debug|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.MinSizeRel|Win32.Build.0 = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.MinSizeRel|x64.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Release|Win32.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Release|Win32.Build.0 = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.Release|x64.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{9203056B-6FD4-47E0-A598-DDD7045D7939}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.Build.0 = Debug|Win32
 		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|x64.ActiveCfg = Debug|Win32
