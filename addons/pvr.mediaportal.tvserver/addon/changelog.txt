@@ -1,6 +1,9 @@
 v1.9.26+dev:
 - Added: [TSReader] Live555 RTSP streaming support
 - Fixed: [TSReader] Short hickup after in 1 second when tuning a radio channel
+- Fixed: Remove using namespace std from the headers files
+- Fixed: Schedules: Fix displaying an incorrect day in Kodi for 'Weekly' and 'WeeklyEveryTimeOnThisChannel' series recordings
+- Fixed: Schedules: change the displayed days for 'EveryTimeOnThisChannel' and 'EveryTimeOnEveryChannel' to all days instead of sunday
 
 v1.9.26
 - Updated language files from Transifex
