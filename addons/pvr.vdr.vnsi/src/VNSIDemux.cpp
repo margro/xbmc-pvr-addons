@@ -257,8 +257,9 @@ bool cVNSIDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
 
 time_t cVNSIDemux::GetPlayingTime()
 {
-  time_t ret;
-  ret = m_ReferenceTime + (m_CurrentDTS - m_ReferenceDTS) / DVD_TIME_BASE;
+  time_t ret = 0;
+  if (m_ReferenceTime)
+    ret = m_ReferenceTime + (m_CurrentDTS - m_ReferenceDTS) / DVD_TIME_BASE;
   return ret;
 }
 
@@ -338,6 +339,20 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       newStream.strLanguage[2]  = language[2];
       newStream.strLanguage[3]  = 0;
       newStream.iIdentifier     = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+
+      newStreams.push_back(newStream);
+
+      delete[] language;
+    }
+    else if (codecId.Codec().codec_type == XBMC_CODEC_TYPE_RDS)
+    {
+      const char *language     = resp->extract_String();
+      uint32_t rel_channel_pid = resp->extract_U32();
+      newStream.strLanguage[0]  = language[0];
+      newStream.strLanguage[1]  = language[1];
+      newStream.strLanguage[2]  = language[2];
+      newStream.strLanguage[3]  = 0;
+      newStream.iIdentifier     = -1;
 
       newStreams.push_back(newStream);
 

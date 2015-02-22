@@ -26,7 +26,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.njoy", "..\..\addons\pv
 		{FE4573F6-A794-4AD3-B37F-49E51F1140E6} = {FE4573F6-A794-4AD3-B37F-49E51F1140E6}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrlib.libjsoncpp", "..\..\lib\jsoncpp\project\VS2013Express\libjsoncpp.vcxproj", "{F3A72A50-E295-49BA-ACD7-8696907E0351}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjsoncpp", "..\..\lib\jsoncpp\project\VS2013Express\libjsoncpp.vcxproj", "{F3A72A50-E295-49BA-ACD7-8696907E0351}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\pvr.vuplus\project\VS2013Express\pvr.vuplus.vcxproj", "{848DCDD6-7142-4507-A75A-6872A9256F3F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -55,8 +55,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.wmc", "..\..\addons\pvr.wmc\project\VS2013Express\pvrclient_wmc.vcxproj", "{6834B003-2511-4745-818D-F418E87DD941}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv", "..\..\addons\pvr.mythtv\project\VS2010Express\pvr.mythtv.vcxproj", "{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjansson", "..\..\lib\cppmyth\project\VS2010Express\jansson\libjansson.vcxproj", "{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcppmyth", "..\..\lib\cppmyth\project\VS2010Express\cppmyth\libcppmyth.vcxproj", "{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}"
 EndProject
@@ -188,12 +186,6 @@ Global
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Release|Win32.ActiveCfg = Release|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Release|Win32.Build.0 = Release|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Release|x64.ActiveCfg = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Debug|Win32.Build.0 = Debug|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Debug|x64.ActiveCfg = Debug|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Release|Win32.ActiveCfg = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Release|Win32.Build.0 = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Release|x64.ActiveCfg = Release|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.Debug|Win32.ActiveCfg = Debug|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.Debug|Win32.Build.0 = Debug|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.Debug|x64.ActiveCfg = Debug|Win32

@@ -17,15 +17,13 @@ global:
   CloseLiveStream;
   CloseRecordedStream;
   DeleteChannel;
+  DeleteAllRecordingsFromTrash;
   DeleteRecording;
   DeleteTimer;
   DemuxAbort;
   DemuxFlush;
   DemuxRead;
   DemuxReset;
-  DialogAddChannel;
-  DialogChannelScan;
-  DialogChannelSettings;
   GetAddonCapabilities;
   GetBackendHostname;
   GetBackendName;
@@ -58,6 +56,9 @@ global:
   LengthLiveStream;
   LengthRecordedStream;
   MoveChannel;
+  OpenDialogChannelAdd;
+  OpenDialogChannelScan;
+  OpenDialogChannelSettings;
   OpenLiveStream;
   OpenRecordedStream;
   PauseStream;
@@ -75,6 +76,7 @@ global:
   SetSpeed;
   SignalStatus;
   SwitchChannel;
+  UndeleteRecording;
   UpdateTimer;
 
 local:
