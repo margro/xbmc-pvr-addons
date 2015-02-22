@@ -22,35 +22,33 @@
 #include <string>
 #include "DateTime.h"
 
-using namespace std;
-
 /**
  * MediaPortal TVServer card settings ("card" table in the database)
  */
 typedef struct Card
 {
-  int       IdCard;
-  string    DevicePath;
-  string    Name;
-  int       Priority;
-  bool      GrabEPG;
+  int            IdCard;
+  std::string    DevicePath;
+  std::string    Name;
+  int            Priority;
+  bool           GrabEPG;
   MPTV::CDateTime LastEpgGrab;
-  string    RecordingFolder;
-  string    RecordingFolderUNC;
-  int       IdServer;
-  bool      Enabled;
-  int       CamType;
-  string    TimeshiftFolder;
-  string    TimeshiftFolderUNC;
-  int       RecordingFormat;
-  int       DecryptLimit;
-  bool      Preload;
-  bool      CAM;
-  int       NetProvider;
-  bool      StopGraph;
+  std::string    RecordingFolder;
+  std::string    RecordingFolderUNC;
+  int            IdServer;
+  bool           Enabled;
+  int            CamType;
+  std::string    TimeshiftFolder;
+  std::string    TimeshiftFolderUNC;
+  int            RecordingFormat;
+  int            DecryptLimit;
+  bool           Preload;
+  bool           CAM;
+  int            NetProvider;
+  bool           StopGraph;
 } Card;
 
-class CCards: public vector<Card>
+class CCards: public std::vector<Card>
 {
   public:
 
@@ -61,7 +59,7 @@ class CCards: public vector<Card>
      * \param lines Vector with response lines
      * \return True on success, False on failure
      */
-    bool ParseLines(vector<string>& lines);
+	bool ParseLines(std::vector<std::string>& lines);
 
     /**
      * \brief Return the data for the card with the given id

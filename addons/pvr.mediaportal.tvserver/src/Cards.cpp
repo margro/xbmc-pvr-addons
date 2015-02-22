@@ -25,6 +25,7 @@
 #include "DateTime.h"
 
 using namespace ADDON;
+using namespace std;
 
 bool CCards::ParseLines(vector<string>& lines)
 {

@@ -53,7 +53,7 @@ private:
   int m_keepUntil;
   MPTV::CDateTime m_keepUntilDate; ///< MediaPortal keepUntilDate
   CCards* m_cardSettings;          ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the recordings
-  string m_genre;
+  std::string m_genre;
   int m_genre_type;
   int m_genre_subtype;
   bool m_isRecording;

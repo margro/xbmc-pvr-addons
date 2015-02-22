@@ -41,6 +41,7 @@
 #include "FileUtils.h"
 
 using namespace ADDON;
+using namespace std;
 
 CTsReader::CTsReader(): m_demultiplexer( *this )
 {
